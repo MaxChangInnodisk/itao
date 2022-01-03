@@ -1,0 +1,86 @@
+random_seed: 42
+yolov4_config {
+  big_anchor_shape: "[(25.06,41.44), (33.66,33.33), (30.37,38.13)]"
+  mid_anchor_shape: "[(19.24,42.34), (35.44,23.12), (35.18,27.92)]"
+  small_anchor_shape: "[(34.42,15.61), (14.17,41.44), (35.44,19.22)]"
+  box_matching_iou: 0.25
+  matching_neutral_box_iou: 0.5
+  arch: "resnet"
+  nlayers: 10
+  arch_conv_blocks: 2
+  loss_loc_weight: 0.8
+  loss_neg_obj_weights: 100.0
+  loss_class_weights: 0.5
+  label_smoothing: 0.0
+  big_grid_xy_extend: 0.05
+  mid_grid_xy_extend: 0.1
+  small_grid_xy_extend: 0.2
+  freeze_bn: false
+  #freeze_blocks: 0
+  force_relu: false
+}
+training_config {
+  batch_size_per_gpu: 16
+  num_epochs: 50
+  enable_qat: false
+  checkpoint_interval: 10
+  learning_rate {
+    soft_start_cosine_annealing_schedule {
+      min_learning_rate: 1e-7
+      max_learning_rate: 1e-4
+      soft_start: 0.3
+    }
+  }
+  regularizer {
+    type: L1
+    weight: 3e-5
+  }
+  optimizer {
+    adam {
+      epsilon: 1e-7
+      beta1: 0.9
+      beta2: 0.999
+      amsgrad: false
+    }
+  }
+  pretrain_model_path: "/workspace/tao-experiments/yolo_v4/pretrained_resnet10/pretrained_object_detection_vresnet10/resnet_10.hdf5"
+}
+eval_config {
+  average_precision_mode: SAMPLE
+  batch_size: 8
+  matching_iou_threshold: 0.5
+}
+nms_config {
+  confidence_threshold: 0.001
+  clustering_iou_threshold: 0.5
+  top_k: 200
+}
+augmentation_config {
+  hue: 0.1
+  saturation: 1.5
+  exposure:1.5
+  vertical_flip:0
+  horizontal_flip: 0.5
+  jitter: 0.3
+  output_width: 224
+  output_height: 224
+  output_channel: 3
+  randomize_input_shape_period: 0
+  mosaic_prob: 0.5
+  mosaic_min_ratio:0.2
+}
+dataset_config {
+  data_sources: {
+      label_directory_path: "/workspace/tao-experiments/data/usb_dets/labels"
+      image_directory_path: "/workspace/tao-experiments/data/usb_dets/images"
+  }
+  include_difficult_in_training: true
+  target_class_mapping {
+      key: "usb"
+      value: "usb"
+  }
+  validation_data_sources: {
+      label_directory_path: "/workspace/tao-experiments/data/usb_dets/labels"
+      image_directory_path: "/workspace/tao-experiments/data/usb_dets/images"
+  }
+}

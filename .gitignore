@@ -1,0 +1,8 @@
+tasks/*/*
+!tasks/*/specs
+
+tasks_original/
+
+**/__pycache__
+__pycache__/
+*.py[cod]
