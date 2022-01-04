@@ -20,9 +20,9 @@ activate "tao-test" and startup iTAO demo.
 ```
 
 ## Debug Mode
-any actions which spending a lot time in the NVIDIA TAO Toolkit won't be enabled.
+You can enable target option for debug. DEBUG_PAGE means the page from 1 to 4 and DEBUG_OPT is the feature in DEBUG_PAGE (e.g. train, kmeans, eval, etc.)
 ```bash
-./itao.sh run debug
+./itao.sh debug <DEBUG_PAGE> <DEBUG_OPT>
 ```
 
 ## Developer Mode

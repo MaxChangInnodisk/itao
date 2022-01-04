@@ -21,6 +21,11 @@ function help(){
     echo "[OPT]"
     echo "build     build itao environment."
     echo "run       run itao with QT window."
+    echo "debug     run debug mode for target feature."
+    echo ""
+    echo "$ ./itao.sh debug [DEBUG_PAGE] [DEBUG_OPT]"
+    echo "DEBUG_PAGE    which page you want to debug (from 1 to 4)"
+    echo "DEBUG_OPT     which option you want to debug (e.g. train, eval, kmeans, etc.)"
     echo "---------------------------------------"
 }
 
