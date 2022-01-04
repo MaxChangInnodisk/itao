@@ -78,16 +78,13 @@ class ReTrainCMD(QThread):
             return 0
 
     def split_format(self, line, fmt):
-        return (line.split(fmt)[1]).split('-')[0]
+        return (line.split(fmt)[1])
 
     def check_loss_in_line_new(self, line):
-        if 'val_loss: ' in line:
-            # self.val = round(float( self.split_format(line, 'loss: ') ), 3)
-            self.data['avg_loss'] = round(float( self.split_format(line, 'loss: ') ), 3)
-            self.data['val_loss'] = round(float( self.split_format(line, 'val_loss: ') ), 3)
-            return 1
-        else:
-            return 0 
+        if 'ms/step - loss: ' in line:# and ( 'ETA' in line or 'step' in line):
+            res = line.split('ms/step - loss: ')[1]
+            self.data['avg_loss'] = round(float(res), 3)
+        return 0
 
     def run(self):
         proc = subprocess.Popen(self.cmd, stdout=subprocess.PIPE)    
@@ -100,17 +97,26 @@ class ReTrainCMD(QThread):
 
             for line in proc.stdout:
                 
-                line = line.decode('utf-8', 'ignore').rstrip('\n')
-                if line.rstrip(): self.logger.debug(line)
-
-                if self.check_epoch_in_line(line):
-                    continue
+                # line = line.decode('utf-8', 'ignore').rstrip('\n').rstrip('\r').replace('\x08', '')
+                line = line.decode('utf-8', 'ignore').rstrip('\n').replace('\x08', '')
                 
-                if self.symbol in line:
-                    self.trigger.emit({'INFO':f"{self.symbol} {line.split(self.symbol)[1]}"})
+                self.logger.debug(line)
 
-                if self.check_loss_in_line_new(line):
-                    self.trigger.emit(self.data)
-                    time.sleep(0.001)
+                # check epoch and put current epoch into self.data['epoch']
+                self.check_epoch_in_line(line)
+                    
+                # check loss -> only get the last time with symbol ('ms/step - loss: ')
+                symbol = 'ms/step - loss: '
+                if ('INFO' in line or symbol in line) and line.rstrip():
+                    
+
+                    # get loss and send data
+                    if symbol in line:
+                        cap_loss = line.split(symbol)[1]
+                        
+                        if (cap_loss.replace('.', '').rstrip()).isdigit():
+                            # print('\n\nIts digit!!!!!! Send data ... ', flush=True)
+                            self.data['avg_loss'] = round( float(cap_loss.rstrip()), 3)
+                            self.trigger.emit(self.data)
 
         self.trigger.emit({})  

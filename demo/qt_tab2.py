@@ -28,10 +28,16 @@ class Tab2(Init):
         self.backup = False
         self.kmeans_enable = False
 
+        self.run_t2_option = {
+            'kmeans':True,
+            'train':True,
+            'eval':True
+        }
         if self.debug:
-            self.t2_debug = True
-            if int(self.debug_page)==2:
-                self.t2_debug = False
+            for key in self.run_t2_option.keys():
+                self.run_t2_option[key]=True if int(self.debug_page)==2 and key==self.debug_opt else False
+                                
+            
 
     """ 當按下 train 按鈕的時候進行的事件 """
     def train_event(self):
@@ -46,7 +52,7 @@ class Tab2(Init):
             self.logger.info(info)
             self.insert_text(info)
 
-            if not self.t2_debug: self.get_anchor_event()
+            if self.run_t2_option['kmeans']: self.get_anchor_event()
 
         info = "Start training ... "
         self.logger.info(info)
@@ -65,7 +71,7 @@ class Tab2(Init):
 
         self.worker = self.train_cmd( args = cmd_args )
 
-        if not self.t2_debug:
+        if self.run_t2_option['train']:
             self.worker.trigger.connect(self.update_train_log)
             self.worker.start()
         else:
@@ -137,10 +143,6 @@ class Tab2(Init):
             self.train_spec.mapping('small_anchor_shape', f'"[{data[0]}]"' )
             self.train_spec.mapping('mid_anchor_shape', f'"[{data[1]}]"')
             self.train_spec.mapping('big_anchor_shape', f'"[{data[2]}]"')
-
-            self.retrain_spec.mapping('small_anchor_shape', f'"[{data[0]}]"' )
-            self.retrain_spec.mapping('mid_anchor_shape', f'"[{data[1]}]"')
-            self.retrain_spec.mapping('big_anchor_shape', f'"[{data[2]}]"')
             self.worker_kmeans.quit()
         else:
             self.logger.error("kmeans error: {}".format(data))
@@ -210,7 +212,7 @@ class Tab2(Init):
 
         self.worker_eval = self.eval_cmd(args=args)
 
-        if self.worker is not None and not self.t2_debug:    
+        if self.worker is not None and self.run_t2_option['eval']:    
             self.worker_eval.start()
             self.worker_eval.trigger.connect(self.update_eval_log)
         else:

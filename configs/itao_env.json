@@ -30,9 +30,24 @@
   "SPECS_DIR": "/workspace/tao-experiments/yolo_v4/specs",
   "RETRAIN": {
     "LOCAL_SPECS": "/workspace/max/itao/tasks/yolo_v4/specs/yolo_v4_retrain_kitti_seq_spec.txt",
-    "SPECS": "/workspace/tao-experiments/yolo_v4/specs/yolo_v4_retrain_kitti_seq_spec.txt"
+    "SPECS": "/workspace/tao-experiments/yolo_v4/specs/yolo_v4_retrain_kitti_seq_spec.txt",
+    "INPUT_MODEL": "/workspace/tao-experiments/yolo_v4/output/resnet10_pruned/resnet10_pruned.tlt",
+    "EPOCH": "50",
+    "BATCH_SIZE": "16",
+    "LR": "0.006",
+    "OUTPUT_DIR": "/workspace/tao-experiments/yolo_v4/output_retrain",
+    "OUTPUT_MODEL": "/workspace/tao-experiments/yolo_v4/output_retrain/weights/resnet_050.tlt"
   },
   "NLAYER": "10",
   "LOCAL_DATASET": "/workspace/max/itao/tasks/data/usb_dets",
-  "DATASET": "/workspace/tao-experiments/data/usb_dets"
+  "DATASET": "/workspace/tao-experiments/data/usb_dets",
+  "PRUNE": {
+    "OUTPUT_MODEL": "/workspace/tao-experiments/yolo_v4/output/resnet10_pruned/resnet10_pruned.tlt",
+    "LOCAL_OUTPUT_MODEL": "/workspace/max/itao/tasks/yolo_v4/output/resnet10_pruned/resnet10_pruned.tlt",
+    "INPUT_MODEL": "/workspace/tao-experiments/yolo_v4/output/weights/yolov4_resnet10_epoch_050.tlt",
+    "KEY": "nvidia_tlt",
+    "THRES": 0.3,
+    "EQ": "intersection",
+    "EPOCH": "50"
+  }
 }

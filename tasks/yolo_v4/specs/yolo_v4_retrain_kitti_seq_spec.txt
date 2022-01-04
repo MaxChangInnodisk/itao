@@ -1,12 +1,12 @@
 random_seed: 42
 yolov4_config {
-  big_anchor_shape: "[(114.94, 60.67), (159.06, 114.59), (297.59, 176.38)]"
-  mid_anchor_shape: "[(42.99, 31.91), (79.57, 31.75), (56.80, 56.93)]"
-  small_anchor_shape: "[(15.60, 13.88), (30.25, 20.25), (20.67, 49.63)]"
+  big_anchor_shape: "[(25.82,41.14),(32.90,34.83),(29.87,38.73)]"
+  mid_anchor_shape: "[(35.44,22.22),(22.02,42.04),(34.93,29.13)]"
+  small_anchor_shape: "[(13.67,41.14),(34.93,16.51),(17.72,42.04)]"
   box_matching_iou: 0.25
   matching_neutral_box_iou: 0.5
   arch: "resnet"
-  nlayers: 18
+  nlayers: 10
   arch_conv_blocks: 2
   loss_loc_weight: 0.8
   loss_neg_obj_weights: 100.0
@@ -21,7 +21,7 @@ yolov4_config {
 }
 training_config {
   batch_size_per_gpu: 16
-  num_epochs: 80
+  num_epochs: 50
   enable_qat: false
   checkpoint_interval: 10
   learning_rate {
@@ -62,8 +62,8 @@ augmentation_config {
   vertical_flip:0
   horizontal_flip: 0.5
   jitter: 0.3
-  output_width: 1248
-  output_height: 384
+  output_width: 224
+  output_height: 224
   output_channel: 3
   randomize_input_shape_period: 0
   mosaic_prob: 0.5
@@ -71,32 +71,16 @@ augmentation_config {
 }
 dataset_config {
   data_sources: {
-      label_directory_path: "/workspace/tao-experiments/data/training/label_2"
-      image_directory_path: "/workspace/tao-experiments/data/training/image_2"
+      label_directory_path: "/workspace/tao-experiments/data/usb_dets/labels"
+      image_directory_path: "/workspace/tao-experiments/data/usb_dets/images"
   }
   include_difficult_in_training: true
   target_class_mapping {
-      key: "car"
-      value: "car"
-  }
-  target_class_mapping {
-      key: "pedestrian"
-      value: "pedestrian"
-  }
-  target_class_mapping {
-      key: "cyclist"
-      value: "cyclist"
-  }
-  target_class_mapping {
-      key: "van"
-      value: "car"
-  }
-  target_class_mapping {
-      key: "person_sitting"
-      value: "pedestrian"
+      key: "usb"
+      value: "usb"
   }
   validation_data_sources: {
-      label_directory_path: "/workspace/tao-experiments/data/val/label"
-      image_directory_path: "/workspace/tao-experiments/data/val/image"
+      label_directory_path: "/workspace/tao-experiments/data/usb_dets/labels"
+      image_directory_path: "/workspace/tao-experiments/data/usb_dets/images"
   }
 }

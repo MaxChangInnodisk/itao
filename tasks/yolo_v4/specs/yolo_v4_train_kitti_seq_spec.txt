@@ -1,8 +1,8 @@
 random_seed: 42
 yolov4_config {
-  big_anchor_shape: "[(25.31,41.44), (32.90,34.83), (29.87,38.73)]"
-  mid_anchor_shape: "[(35.44,22.22), (20.50,42.34), (34.93,29.13)]"
-  small_anchor_shape: "[(13.16,41.14), (34.93,16.51), (16.20,42.04)]"
+  big_anchor_shape: "[(25.82,41.14), (32.90,34.83), (29.87,38.73)]"
+  mid_anchor_shape: "[(35.44,22.22), (22.02,42.04), (34.93,29.13)]"
+  small_anchor_shape: "[(13.67,41.14), (34.93,16.51), (17.72,42.04)]"
   box_matching_iou: 0.25
   matching_neutral_box_iou: 0.5
   arch: "resnet"

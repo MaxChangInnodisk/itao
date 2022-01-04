@@ -1,74 +1,528 @@
-01-04 09:10:14 INFO Create Logger: dev
-01-04 09:10:14 INFO Initial iTAO ... 
-01-04 09:10:14 INFO Setting Basic Variable ... 
-01-04 09:10:14 WARN Debug Mode
-01-04 09:10:14 INFO Created Environment File
-01-04 09:10:14 INFO Page Change: Tab 1 
-01-04 09:10:14 INFO First time loading tab 1 ... 
-01-04 09:10:14 INFO Checking environment (iTAO) ... Actived
-01-04 09:10:14 INFO Installed NGC CLI
-01-04 09:10:16 INFO Update combo box: task
-01-04 09:10:16 INFO Updating Env: "NGC_TASK" -> object_detection
-01-04 09:10:17 INFO Update combo box: model
-01-04 09:10:17 INFO Updating Env: "TASK" -> yolo_v4
-01-04 09:10:19 INFO Update combo box: backbone
-01-04 09:10:19 INFO Updating Env: "BACKBONE" -> resnet
-01-04 09:10:19 INFO Updating Env: "LOCAL_PROJECT_DIR" -> /workspace/max/itao/tasks
-01-04 09:10:19 INFO Updating Env: "LOCAL_EXPERIMENT_DIR" -> /workspace/max/itao/tasks/yolo_v4
-01-04 09:10:19 INFO Updating Env: "USER_EXPERIMENT_DIR" -> /workspace/tao-experiments/yolo_v4
-01-04 09:10:19 INFO Updating Env: "LOCAL_DATA_DIR" -> /workspace/max/itao/data
-01-04 09:10:19 INFO Updating Env: "DATA_DOWNLOAD_DIR" -> /workspace/tao-experiments/yolo_v4
-01-04 09:10:19 INFO Updating Env: "LOCAL_OUTPUT_DIR" -> /workspace/max/itao/tasks/yolo_v4/output
-01-04 09:10:19 INFO Updating Env: "OUTPUT_DIR" -> /workspace/tao-experiments/yolo_v4/output
-01-04 09:10:19 INFO Updating Env: "LOCAL_SPECS_DIR" -> /workspace/max/itao/tasks/yolo_v4/specs
-01-04 09:10:19 INFO Updating Env: "SPECS_DIR" -> /workspace/tao-experiments/yolo_v4/specs
-01-04 09:10:19 INFO Get specification ... 
-01-04 09:10:19 INFO Updating Env: "LOCAL_SPECS" -> /workspace/max/itao/tasks/yolo_v4/specs/yolo_v4_train_kitti_seq_spec.txt
-01-04 09:10:19 INFO Updating Env: "SPECS" -> /workspace/tao-experiments/yolo_v4/specs/yolo_v4_train_kitti_seq_spec.txt
-01-04 09:10:19 INFO Get specification ... 
-01-04 09:10:19 INFO Updating Env: "LOCAL_SPECS" -> /workspace/max/itao/tasks/yolo_v4/specs/yolo_v4_retrain_kitti_seq_spec.txt
-01-04 09:10:19 INFO Updating Env: "SPECS" -> /workspace/tao-experiments/yolo_v4/specs/yolo_v4_retrain_kitti_seq_spec.txt
-01-04 09:10:19 INFO Loading Target Module ... 
-01-04 09:10:20 INFO Update combo box: n_layers
-01-04 09:10:20 INFO Updating Env: "NLAYER" -> 10
-01-04 09:10:20 INFO Start to download model ... 
-01-04 09:10:20 INFO Updating Env: "LOCAL_PRETRAINED_MODEL" -> /workspace/max/itao/tasks/yolo_v4/pretrained_resnet10/pretrained_object_detection_vresnet10/resnet_10.hdf5
-01-04 09:10:20 INFO Pre-trained Model is downloaded. (/workspace/max/itao/tasks/yolo_v4/pretrained_resnet10/pretrained_object_detection_vresnet10/resnet_10.hdf5)
-01-04 09:10:22 INFO Updating Env: "LOCAL_DATASET" -> /workspace/max/itao/tasks/data/usb_dets
-01-04 09:10:22 INFO Updating Env: "DATASET" -> /workspace/tao-experiments/data/usb_dets
-01-04 09:10:22 INFO Update environ of mount file ... 
-01-04 09:10:22 INFO Creating json file for mount path into docker ... 
-01-04 09:10:22 INFO Calculating number of labels ...
-01-04 09:10:22 INFO Find 1 classes (0.11s)
-01-04 09:10:22 DEBU --------------------
-01-04 09:10:22 DEBU [0] usb
-01-04 09:10:22 DEBU [078]       key: "usb"     ->       key: "usb"
+01-04 10:46:54 INFO Create Logger: dev
+01-04 10:46:54 INFO Initial iTAO ... 
+01-04 10:46:54 INFO Setting Basic Variable ... 
+01-04 10:46:54 WARN Debug Mode
+01-04 10:46:54 INFO Created Environment File
+01-04 10:46:54 INFO Page Change: Tab 1 
+01-04 10:46:54 INFO First time loading tab 1 ... 
+01-04 10:46:55 INFO Checking environment (iTAO) ... Actived
+01-04 10:46:55 INFO Installed NGC CLI
+01-04 10:46:56 INFO Update combo box: task
+01-04 10:46:56 INFO Upd env: "NGC_TASK" -> object_detection
+01-04 10:46:57 INFO Update combo box: model
+01-04 10:46:57 INFO Upd env: "TASK" -> yolo_v4
+01-04 10:46:59 INFO Update combo box: backbone
+01-04 10:46:59 INFO Upd env: "BACKBONE" -> resnet
+01-04 10:46:59 INFO Upd env: "LOCAL_PROJECT_DIR" -> /workspace/max/itao/tasks
+01-04 10:46:59 INFO Upd env: "LOCAL_EXPERIMENT_DIR" -> /workspace/max/itao/tasks/yolo_v4
+01-04 10:46:59 INFO Upd env: "USER_EXPERIMENT_DIR" -> /workspace/tao-experiments/yolo_v4
+01-04 10:46:59 INFO Upd env: "LOCAL_DATA_DIR" -> /workspace/max/itao/data
+01-04 10:46:59 INFO Upd env: "DATA_DOWNLOAD_DIR" -> /workspace/tao-experiments/yolo_v4
+01-04 10:46:59 INFO Upd env: [TRAIN][LOCAL_OUTPUT_DIR]=/workspace/max/itao/tasks/yolo_v4/output
+01-04 10:46:59 INFO Upd env: [TRAIN][OUTPUT_DIR]=/workspace/tao-experiments/yolo_v4/output
+01-04 10:46:59 INFO Upd env: "LOCAL_SPECS_DIR" -> /workspace/max/itao/tasks/yolo_v4/specs
+01-04 10:46:59 INFO Upd env: "SPECS_DIR" -> /workspace/tao-experiments/yolo_v4/specs
+01-04 10:46:59 INFO Get specification ... 
+01-04 10:46:59 INFO Upd env: [TRAIN][LOCAL_SPECS]=/workspace/max/itao/tasks/yolo_v4/specs/yolo_v4_train_kitti_seq_spec.txt
+01-04 10:46:59 INFO Upd env: [TRAIN][SPECS]=/workspace/tao-experiments/yolo_v4/specs/yolo_v4_train_kitti_seq_spec.txt
+01-04 10:46:59 INFO Get specification ... 
+01-04 10:46:59 INFO Upd env: [RETRAIN][LOCAL_SPECS]=/workspace/max/itao/tasks/yolo_v4/specs/yolo_v4_retrain_kitti_seq_spec.txt
+01-04 10:46:59 INFO Upd env: [RETRAIN][SPECS]=/workspace/tao-experiments/yolo_v4/specs/yolo_v4_retrain_kitti_seq_spec.txt
+01-04 10:46:59 INFO Loading Target Module ... 
+01-04 10:47:00 INFO Update combo box: n_layers
+01-04 10:47:00 INFO Upd env: "NLAYER" -> 10
+01-04 10:47:01 INFO Start to download model ... 
+01-04 10:47:01 INFO Upd env: [TRAIN][LOCAL_PRETRAINED_MODEL]=/workspace/max/itao/tasks/yolo_v4/pretrained_resnet10/pretrained_object_detection_vresnet10/resnet_10.hdf5
+01-04 10:47:01 INFO Pre-trained Model is downloaded. (/workspace/max/itao/tasks/yolo_v4/pretrained_resnet10/pretrained_object_detection_vresnet10/resnet_10.hdf5)
+01-04 10:47:03 INFO Upd env: "LOCAL_DATASET" -> /workspace/max/itao/tasks/data/usb_dets
+01-04 10:47:03 INFO Upd env: "DATASET" -> /workspace/tao-experiments/data/usb_dets
+01-04 10:47:03 INFO Update environ of mount file ... 
+01-04 10:47:03 INFO Creating json file for mount path into docker ... 
+01-04 10:47:03 INFO Calculating number of labels ...
+01-04 10:47:03 INFO Find 1 classes (0.14s)
+01-04 10:47:03 DEBU --------------------
+01-04 10:47:03 DEBU [0] usb
+01-04 10:47:03 DEBU [078]       key: "usb"     ->       key: "usb"
    
-01-04 09:10:22 DEBU [079]       value: "usb"   ->       value: "usb"
+01-04 10:47:03 DEBU [079]       value: "usb"   ->       value: "usb"
  
-01-04 09:10:22 DEBU Done
-01-04 09:10:22 INFO Selected Folder: /workspace/max/itao/tasks/data/usb_dets
-01-04 09:10:25 INFO Page Change: Tab 2 
-01-04 09:10:25 INFO First time loading tab 2 ... 
-01-04 09:10:26 INFO Updating self.train_conf ... 
-01-04 09:10:26 INFO Updating Env: "KEY" -> nvidia_tlt
-01-04 09:10:26 INFO Updating Env: "EPOCH" -> 50
-01-04 09:10:26 INFO Updating Env: "INPUT_SHAPE" -> 3,224,224
-01-04 09:10:26 INFO Updating Env: "LR" -> 0.006
-01-04 09:10:26 INFO Updating Env: "BATCH_SIZE" -> 16
-01-04 09:10:26 INFO Updating Env: "CUSTOM" -> 
-01-04 09:10:26 DEBU Get shape: 3, 224, 224
-01-04 09:10:26 INFO Updating Env: "LOCAL_OUTPUT_MODEL" -> /workspace/max/itao/tasks/yolo_v4/output/weights/yolov4_resnet10_epoch_050.tlt
-01-04 09:10:26 INFO Updating Env: "OUTPUT_MODEL" -> /workspace/tao-experiments/yolo_v4/output/weights/yolov4_resnet10_epoch_050.tlt
-01-04 09:10:26 INFO Calculate kmeans for yolo ...
-01-04 09:10:26 INFO Start training ... 
-01-04 09:10:26 INFO ----------------
-01-04 09:10:26 INFO ['tao', 'yolo_v4', 'train', '-e', '/workspace/tao-experiments/yolo_v4/specs/yolo_v4_train_kitti_seq_spec.txt', '-r', '/workspace/tao-experiments/yolo_v4/output', '-k', 'nvidia_tlt', '--gpus', '1']
-01-04 09:10:26 INFO ----------------
-01-04 09:10:26 INFO Training Model ... Finished !
-01-04 09:10:26 INFO Start to evaluate model ... 
-01-04 09:10:26 INFO ----------------
-01-04 09:10:26 INFO ['tao', 'yolo_v4', 'evaluate', '-e', '/workspace/tao-experiments/yolo_v4/specs/yolo_v4_train_kitti_seq_spec.txt', '-k', 'nvidia_tlt', '-m', '/workspace/tao-experiments/yolo_v4/output/weights/yolov4_resnet10_epoch_050.tlt']
-01-04 09:10:26 INFO ----------------
-01-04 09:10:26 INFO Evaluating Model ... Done !
+01-04 10:47:03 DEBU Done
+01-04 10:47:03 INFO Selected Folder: /workspace/max/itao/tasks/data/usb_dets
+01-04 10:47:04 INFO Page Change: Tab 2 
+01-04 10:47:04 INFO First time loading tab 2 ... 
+01-04 10:47:05 INFO Updating self.train_conf ... 
+01-04 10:47:05 INFO Upd env: [TRAIN][KEY]=nvidia_tlt
+01-04 10:47:05 INFO Upd env: [TRAIN][EPOCH]=50
+01-04 10:47:05 INFO Upd env: [TRAIN][INPUT_SHAPE]=3,224,224
+01-04 10:47:05 INFO Upd env: [TRAIN][LR]=0.006
+01-04 10:47:05 INFO Upd env: [TRAIN][BATCH_SIZE]=16
+01-04 10:47:05 INFO Upd env: [TRAIN][CUSTOM]=
+01-04 10:47:05 DEBU Get shape: 3, 224, 224
+01-04 10:47:05 INFO Upd env: [TRAIN][LOCAL_OUTPUT_MODEL]=/workspace/max/itao/tasks/yolo_v4/output/weights/yolov4_resnet10_epoch_050.tlt
+01-04 10:47:05 INFO Upd env: [TRAIN][OUTPUT_MODEL]=/workspace/tao-experiments/yolo_v4/output/weights/yolov4_resnet10_epoch_050.tlt
+01-04 10:47:05 INFO Calculate kmeans for yolo ...
+01-04 10:47:05 INFO Start training ... 
+01-04 10:47:05 INFO ----------------
+01-04 10:47:05 INFO ['tao', 'yolo_v4', 'train', '-e', '/workspace/tao-experiments/yolo_v4/specs/yolo_v4_train_kitti_seq_spec.txt', '-r', '/workspace/tao-experiments/yolo_v4/output', '-k', 'nvidia_tlt', '--gpus', '1']
+01-04 10:47:05 INFO ----------------
+01-04 10:47:05 INFO Training Model ... Finished !
+01-04 10:47:05 INFO Start to evaluate model ... 
+01-04 10:47:05 INFO ----------------
+01-04 10:47:05 INFO ['tao', 'yolo_v4', 'evaluate', '-e', '/workspace/tao-experiments/yolo_v4/specs/yolo_v4_train_kitti_seq_spec.txt', '-k', 'nvidia_tlt', '-m', '/workspace/tao-experiments/yolo_v4/output/weights/yolov4_resnet10_epoch_050.tlt']
+01-04 10:47:05 INFO ----------------
+01-04 10:47:05 INFO Evaluating Model ... Done !
 
+01-04 10:47:06 INFO Page Change: Tab 3 
+01-04 10:47:06 INFO First time loading tab 3 ... 
+01-04 10:47:06 INFO Define retrain specification ... 
+01-04 10:47:06 INFO Pruning model ... 
+01-04 10:47:06 INFO Updating PRUNE_CONF ... 
+01-04 10:47:06 INFO Upd env: [PRUNE][OUTPUT_MODEL]=/workspace/tao-experiments/yolo_v4/output/resnet10_pruned/resnet10_pruned.tlt
+01-04 10:47:06 INFO Upd env: [PRUNE][LOCAL_OUTPUT_MODEL]=/workspace/max/itao/tasks/yolo_v4/output/resnet10_pruned/resnet10_pruned.tlt
+01-04 10:47:06 INFO Upd env: [PRUNE][INPUT_MODEL]=/workspace/tao-experiments/yolo_v4/output/weights/yolov4_resnet10_epoch_050.tlt
+01-04 10:47:06 INFO Upd env: [PRUNE][KEY]=nvidia_tlt
+01-04 10:47:06 INFO Upd env: [PRUNE][THRES]=0.3
+01-04 10:47:06 INFO Upd env: [PRUNE][EQ]=intersection
+01-04 10:47:06 INFO ----------------
+01-04 10:47:06 INFO ['tao', 'yolo_v4', 'prune', '-m', '/workspace/tao-experiments/yolo_v4/output/weights/yolov4_resnet10_epoch_050.tlt', '-e', '/workspace/tao-experiments/yolo_v4/specs/yolo_v4_train_kitti_seq_spec.txt', '-o', '/workspace/tao-experiments/yolo_v4/output/resnet10_pruned/resnet10_pruned.tlt', '-eq', 'intersection', '-pth', '0.3', '-k', 'nvidia_tlt']
+01-04 10:47:06 INFO ----------------
+01-04 10:47:06 INFO Comparing Model ... 
+01-04 10:47:08 INFO Updating self.retrain_conf ... 
+01-04 10:47:08 INFO Upd env: [RETRAIN][INPUT_MODEL]=/workspace/tao-experiments/yolo_v4/output/resnet10_pruned/resnet10_pruned.tlt
+01-04 10:47:08 INFO Upd env: [RETRAIN][EPOCH]=50
+01-04 10:47:08 INFO Upd env: [RETRAIN][BATCH_SIZE]=16
+01-04 10:47:08 INFO Upd env: [RETRAIN][LR]=0.006
+01-04 10:47:08 INFO Upd env: [PRUNE][EPOCH]=50
+01-04 10:47:08 INFO Upd env: [RETRAIN][OUTPUT_DIR]=/workspace/tao-experiments/yolo_v4/output_retrain
+01-04 10:47:08 INFO Upd env: [RETRAIN][OUTPUT_MODEL]=/workspace/tao-experiments/yolo_v4/output_retrain/weights/resnet_050.tlt
+01-04 10:47:08 INFO Calculating number of labels ...
+01-04 10:47:08 INFO Find 1 classes (0.11s)
+01-04 10:47:08 DEBU --------------------
+01-04 10:47:08 DEBU [0] usb
+01-04 10:47:08 DEBU [078]       key: "usb"     ->       key: "usb"
+   
+01-04 10:47:08 DEBU [079]       value: "usb"   ->       value: "usb"
+ 
+01-04 10:47:08 DEBU Done
+01-04 10:47:08 INFO Start retraining ... 
+01-04 10:47:08 INFO ----------------
+01-04 10:47:08 INFO ['tao', 'yolo_v4', 'train', '-e', '/workspace/tao-experiments/yolo_v4/specs/yolo_v4_retrain_kitti_seq_spec.txt', '-r', '/workspace/tao-experiments/yolo_v4/output_retrain', '-k', 'nvidia_tlt', '--gpus', '1']
+01-04 10:47:08 INFO ----------------
+01-04 10:47:11 DEBU Matplotlib created a temporary config/cache directory at /tmp/matplotlib-625tncnj because the default path (/.config/matplotlib) is not a writable directory; it is highly recommended to set the MPLCONFIGDIR environment variable to a writable directory, in particular to speed up the import of Matplotlib and to better support multiprocessing.
+01-04 10:47:12 DEBU Using TensorFlow backend.
+01-04 10:47:14 DEBU Using TensorFlow backend.
+01-04 10:47:15 DEBU WARNING:tensorflow:Deprecation warnings have been disabled. Set TF_ENABLE_DEPRECATION_WARNINGS=1 to re-enable them.
+01-04 10:47:18 DEBU WARNING:tensorflow:From /usr/local/lib/python3.6/dist-packages/horovod/tensorflow/__init__.py:117: The name tf.global_variables is deprecated. Please use tf.compat.v1.global_variables instead.
+01-04 10:47:18 DEBU 
+01-04 10:47:18 DEBU 2022-01-04 02:47:18,366 [WARNING] tensorflow: From /usr/local/lib/python3.6/dist-packages/horovod/tensorflow/__init__.py:117: The name tf.global_variables is deprecated. Please use tf.compat.v1.global_variables instead.
+01-04 10:47:18 DEBU 
+01-04 10:47:18 DEBU WARNING:tensorflow:From /usr/local/lib/python3.6/dist-packages/horovod/tensorflow/__init__.py:143: The name tf.get_default_graph is deprecated. Please use tf.compat.v1.get_default_graph instead.
+01-04 10:47:18 DEBU 
+01-04 10:47:18 DEBU 2022-01-04 02:47:18,366 [WARNING] tensorflow: From /usr/local/lib/python3.6/dist-packages/horovod/tensorflow/__init__.py:143: The name tf.get_default_graph is deprecated. Please use tf.compat.v1.get_default_graph instead.
+01-04 10:47:18 DEBU 
+01-04 10:47:18 DEBU WARNING:tensorflow:From /root/.cache/bazel/_bazel_root/ed34e6d125608f91724fda23656f1726/execroot/ai_infra/bazel-out/k8-fastbuild/bin/magnet/packages/iva/build_wheel.runfiles/ai_infra/iva/yolo_v4/scripts/train.py:40: The name tf.ConfigProto is deprecated. Please use tf.compat.v1.ConfigProto instead.
+01-04 10:47:18 DEBU 
+01-04 10:47:18 DEBU 2022-01-04 02:47:18,500 [WARNING] tensorflow: From /root/.cache/bazel/_bazel_root/ed34e6d125608f91724fda23656f1726/execroot/ai_infra/bazel-out/k8-fastbuild/bin/magnet/packages/iva/build_wheel.runfiles/ai_infra/iva/yolo_v4/scripts/train.py:40: The name tf.ConfigProto is deprecated. Please use tf.compat.v1.ConfigProto instead.
+01-04 10:47:18 DEBU 
+01-04 10:47:18 DEBU WARNING:tensorflow:From /root/.cache/bazel/_bazel_root/ed34e6d125608f91724fda23656f1726/execroot/ai_infra/bazel-out/k8-fastbuild/bin/magnet/packages/iva/build_wheel.runfiles/ai_infra/iva/yolo_v4/scripts/train.py:43: The name tf.Session is deprecated. Please use tf.compat.v1.Session instead.
+01-04 10:47:18 DEBU 
+01-04 10:47:18 DEBU 2022-01-04 02:47:18,502 [WARNING] tensorflow: From /root/.cache/bazel/_bazel_root/ed34e6d125608f91724fda23656f1726/execroot/ai_infra/bazel-out/k8-fastbuild/bin/magnet/packages/iva/build_wheel.runfiles/ai_infra/iva/yolo_v4/scripts/train.py:43: The name tf.Session is deprecated. Please use tf.compat.v1.Session instead.
+01-04 10:47:18 DEBU 
+01-04 10:47:18 DEBU WARNING:tensorflow:From /usr/local/lib/python3.6/dist-packages/keras/backend/tensorflow_backend.py:517: The name tf.placeholder is deprecated. Please use tf.compat.v1.placeholder instead.
+01-04 10:47:18 DEBU 
+01-04 10:47:18 DEBU 2022-01-04 02:47:18,931 [WARNING] tensorflow: From /usr/local/lib/python3.6/dist-packages/keras/backend/tensorflow_backend.py:517: The name tf.placeholder is deprecated. Please use tf.compat.v1.placeholder instead.
+01-04 10:47:18 DEBU 
+01-04 10:47:18 DEBU WARNING:tensorflow:From /usr/local/lib/python3.6/dist-packages/keras/backend/tensorflow_backend.py:4138: The name tf.random_uniform is deprecated. Please use tf.random.uniform instead.
+01-04 10:47:18 DEBU 
+01-04 10:47:18 DEBU 2022-01-04 02:47:18,933 [WARNING] tensorflow: From /usr/local/lib/python3.6/dist-packages/keras/backend/tensorflow_backend.py:4138: The name tf.random_uniform is deprecated. Please use tf.random.uniform instead.
+01-04 10:47:18 DEBU 
+01-04 10:47:18 DEBU WARNING:tensorflow:From /usr/local/lib/python3.6/dist-packages/keras/backend/tensorflow_backend.py:1834: The name tf.nn.fused_batch_norm is deprecated. Please use tf.compat.v1.nn.fused_batch_norm instead.
+01-04 10:47:18 DEBU 
+01-04 10:47:18 DEBU 2022-01-04 02:47:18,954 [WARNING] tensorflow: From /usr/local/lib/python3.6/dist-packages/keras/backend/tensorflow_backend.py:1834: The name tf.nn.fused_batch_norm is deprecated. Please use tf.compat.v1.nn.fused_batch_norm instead.
+01-04 10:47:18 DEBU 
+01-04 10:47:19 DEBU WARNING:tensorflow:From /opt/nvidia/third_party/keras/tensorflow_backend.py:183: The name tf.nn.max_pool is deprecated. Please use tf.nn.max_pool2d instead.
+01-04 10:47:19 DEBU 
+01-04 10:47:19 DEBU 2022-01-04 02:47:19,312 [WARNING] tensorflow: From /opt/nvidia/third_party/keras/tensorflow_backend.py:183: The name tf.nn.max_pool is deprecated. Please use tf.nn.max_pool2d instead.
+01-04 10:47:19 DEBU 
+01-04 10:47:19 DEBU WARNING:tensorflow:From /usr/local/lib/python3.6/dist-packages/keras/backend/tensorflow_backend.py:2018: The name tf.image.resize_nearest_neighbor is deprecated. Please use tf.compat.v1.image.resize_nearest_neighbor instead.
+01-04 10:47:19 DEBU 
+01-04 10:47:19 DEBU 2022-01-04 02:47:19,568 [WARNING] tensorflow: From /usr/local/lib/python3.6/dist-packages/keras/backend/tensorflow_backend.py:2018: The name tf.image.resize_nearest_neighbor is deprecated. Please use tf.compat.v1.image.resize_nearest_neighbor instead.
+01-04 10:47:19 DEBU 
+01-04 10:47:22 DEBU WARNING:tensorflow:From /usr/local/lib/python3.6/dist-packages/keras/backend/tensorflow_backend.py:174: The name tf.get_default_session is deprecated. Please use tf.compat.v1.get_default_session instead.
+01-04 10:47:22 DEBU 
+01-04 10:47:22 DEBU 2022-01-04 02:47:22,181 [WARNING] tensorflow: From /usr/local/lib/python3.6/dist-packages/keras/backend/tensorflow_backend.py:174: The name tf.get_default_session is deprecated. Please use tf.compat.v1.get_default_session instead.
+01-04 10:47:22 DEBU 
+01-04 10:47:22 DEBU WARNING:tensorflow:From /usr/local/lib/python3.6/dist-packages/keras/backend/tensorflow_backend.py:199: The name tf.is_variable_initialized is deprecated. Please use tf.compat.v1.is_variable_initialized instead.
+01-04 10:47:22 DEBU 
+01-04 10:47:22 DEBU 2022-01-04 02:47:22,182 [WARNING] tensorflow: From /usr/local/lib/python3.6/dist-packages/keras/backend/tensorflow_backend.py:199: The name tf.is_variable_initialized is deprecated. Please use tf.compat.v1.is_variable_initialized instead.
+01-04 10:47:22 DEBU 
+01-04 10:47:22 DEBU WARNING:tensorflow:From /usr/local/lib/python3.6/dist-packages/keras/backend/tensorflow_backend.py:206: The name tf.variables_initializer is deprecated. Please use tf.compat.v1.variables_initializer instead.
+01-04 10:47:22 DEBU 
+01-04 10:47:22 DEBU 2022-01-04 02:47:22,711 [WARNING] tensorflow: From /usr/local/lib/python3.6/dist-packages/keras/backend/tensorflow_backend.py:206: The name tf.variables_initializer is deprecated. Please use tf.compat.v1.variables_initializer instead.
+01-04 10:47:22 DEBU 
+01-04 10:47:23 DEBU /usr/local/lib/python3.6/dist-packages/keras/engine/saving.py:292: UserWarning: No training configuration found in save file: the model was *not* compiled. Compile it manually.
+01-04 10:47:23 DEBU   warnings.warn('No training configuration found in save file: '
+01-04 10:47:38 DEBU WARNING:tensorflow:From /root/.cache/bazel/_bazel_root/ed34e6d125608f91724fda23656f1726/execroot/ai_infra/bazel-out/k8-fastbuild/bin/magnet/packages/iva/build_wheel.runfiles/ai_infra/iva/common/losses/base_loss.py:40: The name tf.log is deprecated. Please use tf.math.log instead.
+01-04 10:47:38 DEBU 
+01-04 10:47:38 DEBU 2022-01-04 02:47:38,338 [WARNING] tensorflow: From /root/.cache/bazel/_bazel_root/ed34e6d125608f91724fda23656f1726/execroot/ai_infra/bazel-out/k8-fastbuild/bin/magnet/packages/iva/build_wheel.runfiles/ai_infra/iva/common/losses/base_loss.py:40: The name tf.log is deprecated. Please use tf.math.log instead.
+01-04 10:47:38 DEBU 
+01-04 10:47:38 DEBU WARNING:tensorflow:From /usr/local/lib/python3.6/dist-packages/keras/optimizers.py:790: The name tf.train.Optimizer is deprecated. Please use tf.compat.v1.train.Optimizer instead.
+01-04 10:47:38 DEBU 
+01-04 10:47:38 DEBU 2022-01-04 02:47:38,512 [WARNING] tensorflow: From /usr/local/lib/python3.6/dist-packages/keras/optimizers.py:790: The name tf.train.Optimizer is deprecated. Please use tf.compat.v1.train.Optimizer instead.
+01-04 10:47:38 DEBU 
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU Layer (type)                    Output Shape         Param #     Connected to                     
+01-04 10:47:38 DEBU ==================================================================================================
+01-04 10:47:38 DEBU Input (InputLayer)              (None, 3, 224, 224)  0                                            
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU conv1 (Conv2D)                  (None, 40, 112, 112) 5880        Input[0][0]                      
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU bn_conv1 (BatchNormalization)   (None, 40, 112, 112) 160         conv1[0][0]                      
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU activation_2 (Activation)       (None, 40, 112, 112) 0           bn_conv1[0][0]                   
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU block_1a_conv_1 (Conv2D)        (None, 56, 56, 56)   20160       activation_2[0][0]               
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU block_1a_bn_1 (BatchNormalizati (None, 56, 56, 56)   224         block_1a_conv_1[0][0]            
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU block_1a_relu_1 (Activation)    (None, 56, 56, 56)   0           block_1a_bn_1[0][0]              
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU block_1a_conv_2 (Conv2D)        (None, 32, 56, 56)   16128       block_1a_relu_1[0][0]            
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU block_1a_conv_shortcut (Conv2D) (None, 32, 56, 56)   1280        activation_2[0][0]               
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU block_1a_bn_2 (BatchNormalizati (None, 32, 56, 56)   128         block_1a_conv_2[0][0]            
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU block_1a_bn_shortcut (BatchNorm (None, 32, 56, 56)   128         block_1a_conv_shortcut[0][0]     
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU add_5 (Add)                     (None, 32, 56, 56)   0           block_1a_bn_2[0][0]              
+01-04 10:47:38 DEBU                                                                  block_1a_bn_shortcut[0][0]       
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU block_1a_relu (Activation)      (None, 32, 56, 56)   0           add_5[0][0]                      
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU block_2a_conv_1 (Conv2D)        (None, 128, 28, 28)  36864       block_1a_relu[0][0]              
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU block_2a_bn_1 (BatchNormalizati (None, 128, 28, 28)  512         block_2a_conv_1[0][0]            
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU block_2a_relu_1 (Activation)    (None, 128, 28, 28)  0           block_2a_bn_1[0][0]              
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU block_2a_conv_2 (Conv2D)        (None, 88, 28, 28)   101376      block_2a_relu_1[0][0]            
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU block_2a_conv_shortcut (Conv2D) (None, 88, 28, 28)   2816        block_1a_relu[0][0]              
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU block_2a_bn_2 (BatchNormalizati (None, 88, 28, 28)   352         block_2a_conv_2[0][0]            
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU block_2a_bn_shortcut (BatchNorm (None, 88, 28, 28)   352         block_2a_conv_shortcut[0][0]     
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU add_6 (Add)                     (None, 88, 28, 28)   0           block_2a_bn_2[0][0]              
+01-04 10:47:38 DEBU                                                                  block_2a_bn_shortcut[0][0]       
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU block_2a_relu (Activation)      (None, 88, 28, 28)   0           add_6[0][0]                      
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU block_3a_conv_1 (Conv2D)        (None, 256, 14, 14)  202752      block_2a_relu[0][0]              
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU block_3a_bn_1 (BatchNormalizati (None, 256, 14, 14)  1024        block_3a_conv_1[0][0]            
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU block_3a_relu_1 (Activation)    (None, 256, 14, 14)  0           block_3a_bn_1[0][0]              
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU block_3a_conv_2 (Conv2D)        (None, 232, 14, 14)  534528      block_3a_relu_1[0][0]            
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU block_3a_conv_shortcut (Conv2D) (None, 232, 14, 14)  20416       block_2a_relu[0][0]              
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU block_3a_bn_2 (BatchNormalizati (None, 232, 14, 14)  928         block_3a_conv_2[0][0]            
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU block_3a_bn_shortcut (BatchNorm (None, 232, 14, 14)  928         block_3a_conv_shortcut[0][0]     
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU add_7 (Add)                     (None, 232, 14, 14)  0           block_3a_bn_2[0][0]              
+01-04 10:47:38 DEBU                                                                  block_3a_bn_shortcut[0][0]       
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU block_3a_relu (Activation)      (None, 232, 14, 14)  0           add_7[0][0]                      
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU block_4a_conv_1 (Conv2D)        (None, 512, 14, 14)  1069056     block_3a_relu[0][0]              
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU block_4a_bn_1 (BatchNormalizati (None, 512, 14, 14)  2048        block_4a_conv_1[0][0]            
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU block_4a_relu_1 (Activation)    (None, 512, 14, 14)  0           block_4a_bn_1[0][0]              
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU block_4a_conv_2 (Conv2D)        (None, 464, 14, 14)  2138112     block_4a_relu_1[0][0]            
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU block_4a_conv_shortcut (Conv2D) (None, 464, 14, 14)  107648      block_3a_relu[0][0]              
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU block_4a_bn_2 (BatchNormalizati (None, 464, 14, 14)  1856        block_4a_conv_2[0][0]            
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU block_4a_bn_shortcut (BatchNorm (None, 464, 14, 14)  1856        block_4a_conv_shortcut[0][0]     
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU add_8 (Add)                     (None, 464, 14, 14)  0           block_4a_bn_2[0][0]              
+01-04 10:47:38 DEBU                                                                  block_4a_bn_shortcut[0][0]       
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU block_4a_relu (Activation)      (None, 464, 14, 14)  0           add_8[0][0]                      
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU yolo_spp_pool_1 (MaxPooling2D)  (None, 464, 14, 14)  0           block_4a_relu[0][0]              
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU yolo_spp_pool_2 (MaxPooling2D)  (None, 464, 14, 14)  0           block_4a_relu[0][0]              
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU yolo_spp_pool_3 (MaxPooling2D)  (None, 464, 14, 14)  0           block_4a_relu[0][0]              
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU yolo_spp_concat (Concatenate)   (None, 1856, 14, 14) 0           yolo_spp_pool_1[0][0]            
+01-04 10:47:38 DEBU                                                                  yolo_spp_pool_2[0][0]            
+01-04 10:47:38 DEBU                                                                  yolo_spp_pool_3[0][0]            
+01-04 10:47:38 DEBU                                                                  block_4a_relu[0][0]              
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU yolo_spp_conv (Conv2D)          (None, 512, 14, 14)  950272      yolo_spp_concat[0][0]            
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU yolo_spp_conv_bn (BatchNormaliz (None, 512, 14, 14)  2048        yolo_spp_conv[0][0]              
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU yolo_spp_conv_lrelu (LeakyReLU) (None, 512, 14, 14)  0           yolo_spp_conv_bn[0][0]           
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU yolo_expand_conv1 (Conv2D)      (None, 512, 7, 7)    2359296     yolo_spp_conv_lrelu[0][0]        
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU yolo_expand_conv1_bn (BatchNorm (None, 512, 7, 7)    2048        yolo_expand_conv1[0][0]          
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU yolo_expand_conv1_lrelu (LeakyR (None, 512, 7, 7)    0           yolo_expand_conv1_bn[0][0]       
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU yolo_conv1_1 (Conv2D)           (None, 256, 7, 7)    131072      yolo_expand_conv1_lrelu[0][0]    
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU yolo_conv1_1_bn (BatchNormaliza (None, 256, 7, 7)    1024        yolo_conv1_1[0][0]               
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU yolo_conv1_1_lrelu (LeakyReLU)  (None, 256, 7, 7)    0           yolo_conv1_1_bn[0][0]            
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU yolo_conv1_2 (Conv2D)           (None, 512, 7, 7)    1179648     yolo_conv1_1_lrelu[0][0]         
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU yolo_conv1_2_bn (BatchNormaliza (None, 512, 7, 7)    2048        yolo_conv1_2[0][0]               
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU yolo_conv1_2_lrelu (LeakyReLU)  (None, 512, 7, 7)    0           yolo_conv1_2_bn[0][0]            
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU yolo_conv1_3 (Conv2D)           (None, 256, 7, 7)    131072      yolo_conv1_2_lrelu[0][0]         
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU yolo_conv1_3_bn (BatchNormaliza (None, 256, 7, 7)    1024        yolo_conv1_3[0][0]               
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU yolo_conv1_3_lrelu (LeakyReLU)  (None, 256, 7, 7)    0           yolo_conv1_3_bn[0][0]            
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU yolo_conv1_4 (Conv2D)           (None, 504, 7, 7)    1161216     yolo_conv1_3_lrelu[0][0]         
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU yolo_conv1_4_bn (BatchNormaliza (None, 504, 7, 7)    2016        yolo_conv1_4[0][0]               
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU yolo_conv1_4_lrelu (LeakyReLU)  (None, 504, 7, 7)    0           yolo_conv1_4_bn[0][0]            
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU yolo_conv1_5 (Conv2D)           (None, 256, 7, 7)    129024      yolo_conv1_4_lrelu[0][0]         
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU yolo_conv1_5_bn (BatchNormaliza (None, 256, 7, 7)    1024        yolo_conv1_5[0][0]               
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU yolo_conv1_5_lrelu (LeakyReLU)  (None, 256, 7, 7)    0           yolo_conv1_5_bn[0][0]            
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU yolo_conv2 (Conv2D)             (None, 128, 7, 7)    32768       yolo_conv1_5_lrelu[0][0]         
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU yolo_conv2_bn (BatchNormalizati (None, 128, 7, 7)    512         yolo_conv2[0][0]                 
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU yolo_conv2_lrelu (LeakyReLU)    (None, 128, 7, 7)    0           yolo_conv2_bn[0][0]              
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU upsample0 (UpSampling2D)        (None, 128, 14, 14)  0           yolo_conv2_lrelu[0][0]           
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU concatenate_3 (Concatenate)     (None, 360, 14, 14)  0           upsample0[0][0]                  
+01-04 10:47:38 DEBU                                                                  block_3a_relu[0][0]              
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU yolo_conv3_1 (Conv2D)           (None, 128, 14, 14)  46080       concatenate_3[0][0]              
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU yolo_conv3_1_bn (BatchNormaliza (None, 128, 14, 14)  512         yolo_conv3_1[0][0]               
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU yolo_conv3_1_lrelu (LeakyReLU)  (None, 128, 14, 14)  0           yolo_conv3_1_bn[0][0]            
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU yolo_conv3_2 (Conv2D)           (None, 256, 14, 14)  294912      yolo_conv3_1_lrelu[0][0]         
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU yolo_conv3_2_bn (BatchNormaliza (None, 256, 14, 14)  1024        yolo_conv3_2[0][0]               
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU yolo_conv3_2_lrelu (LeakyReLU)  (None, 256, 14, 14)  0           yolo_conv3_2_bn[0][0]            
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU yolo_conv3_3 (Conv2D)           (None, 128, 14, 14)  32768       yolo_conv3_2_lrelu[0][0]         
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU yolo_conv3_3_bn (BatchNormaliza (None, 128, 14, 14)  512         yolo_conv3_3[0][0]               
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU yolo_conv3_3_lrelu (LeakyReLU)  (None, 128, 14, 14)  0           yolo_conv3_3_bn[0][0]            
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU yolo_conv3_4 (Conv2D)           (None, 256, 14, 14)  294912      yolo_conv3_3_lrelu[0][0]         
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU yolo_conv3_4_bn (BatchNormaliza (None, 256, 14, 14)  1024        yolo_conv3_4[0][0]               
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU yolo_conv3_4_lrelu (LeakyReLU)  (None, 256, 14, 14)  0           yolo_conv3_4_bn[0][0]            
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU yolo_conv3_5 (Conv2D)           (None, 128, 14, 14)  32768       yolo_conv3_4_lrelu[0][0]         
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU yolo_conv3_5_bn (BatchNormaliza (None, 128, 14, 14)  512         yolo_conv3_5[0][0]               
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU yolo_conv3_5_lrelu (LeakyReLU)  (None, 128, 14, 14)  0           yolo_conv3_5_bn[0][0]            
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU yolo_conv4 (Conv2D)             (None, 64, 14, 14)   8192        yolo_conv3_5_lrelu[0][0]         
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU yolo_conv4_bn (BatchNormalizati (None, 64, 14, 14)   256         yolo_conv4[0][0]                 
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU yolo_conv4_lrelu (LeakyReLU)    (None, 64, 14, 14)   0           yolo_conv4_bn[0][0]              
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU upsample1 (UpSampling2D)        (None, 64, 28, 28)   0           yolo_conv4_lrelu[0][0]           
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU concatenate_4 (Concatenate)     (None, 152, 28, 28)  0           upsample1[0][0]                  
+01-04 10:47:38 DEBU                                                                  block_2a_relu[0][0]              
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU yolo_conv5_1 (Conv2D)           (None, 64, 28, 28)   9728        concatenate_4[0][0]              
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU yolo_conv5_1_bn (BatchNormaliza (None, 64, 28, 28)   256         yolo_conv5_1[0][0]               
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU yolo_conv5_1_lrelu (LeakyReLU)  (None, 64, 28, 28)   0           yolo_conv5_1_bn[0][0]            
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU yolo_conv5_2 (Conv2D)           (None, 128, 28, 28)  73728       yolo_conv5_1_lrelu[0][0]         
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU yolo_conv5_2_bn (BatchNormaliza (None, 128, 28, 28)  512         yolo_conv5_2[0][0]               
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU yolo_conv5_2_lrelu (LeakyReLU)  (None, 128, 28, 28)  0           yolo_conv5_2_bn[0][0]            
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU yolo_conv5_3 (Conv2D)           (None, 64, 28, 28)   8192        yolo_conv5_2_lrelu[0][0]         
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU yolo_conv5_3_bn (BatchNormaliza (None, 64, 28, 28)   256         yolo_conv5_3[0][0]               
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU yolo_conv5_3_lrelu (LeakyReLU)  (None, 64, 28, 28)   0           yolo_conv5_3_bn[0][0]            
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU yolo_conv5_4 (Conv2D)           (None, 128, 28, 28)  73728       yolo_conv5_3_lrelu[0][0]         
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU yolo_conv5_4_bn (BatchNormaliza (None, 128, 28, 28)  512         yolo_conv5_4[0][0]               
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU yolo_conv5_4_lrelu (LeakyReLU)  (None, 128, 28, 28)  0           yolo_conv5_4_bn[0][0]            
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU yolo_conv5_5 (Conv2D)           (None, 64, 28, 28)   8192        yolo_conv5_4_lrelu[0][0]         
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU yolo_conv5_5_bn (BatchNormaliza (None, 64, 28, 28)   256         yolo_conv5_5[0][0]               
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU yolo_conv5_5_lrelu (LeakyReLU)  (None, 64, 28, 28)   0           yolo_conv5_5_bn[0][0]            
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU yolo_conv1_6 (Conv2D)           (None, 360, 7, 7)    829440      yolo_conv1_5_lrelu[0][0]         
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU yolo_conv3_6 (Conv2D)           (None, 256, 14, 14)  294912      yolo_conv3_5_lrelu[0][0]         
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU yolo_conv5_6 (Conv2D)           (None, 128, 28, 28)  73728       yolo_conv5_5_lrelu[0][0]         
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU yolo_conv1_6_bn (BatchNormaliza (None, 360, 7, 7)    1440        yolo_conv1_6[0][0]               
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU yolo_conv3_6_bn (BatchNormaliza (None, 256, 14, 14)  1024        yolo_conv3_6[0][0]               
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU yolo_conv5_6_bn (BatchNormaliza (None, 128, 28, 28)  512         yolo_conv5_6[0][0]               
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU yolo_conv1_6_lrelu (LeakyReLU)  (None, 360, 7, 7)    0           yolo_conv1_6_bn[0][0]            
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU yolo_conv3_6_lrelu (LeakyReLU)  (None, 256, 14, 14)  0           yolo_conv3_6_bn[0][0]            
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU yolo_conv5_6_lrelu (LeakyReLU)  (None, 128, 28, 28)  0           yolo_conv5_6_bn[0][0]            
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU conv_big_object (Conv2D)        (None, 18, 7, 7)     6498        yolo_conv1_6_lrelu[0][0]         
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU conv_mid_object (Conv2D)        (None, 18, 14, 14)   4626        yolo_conv3_6_lrelu[0][0]         
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU conv_sm_object (Conv2D)         (None, 18, 28, 28)   2322        yolo_conv5_6_lrelu[0][0]         
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU bg_permute (Permute)            (None, 7, 7, 18)     0           conv_big_object[0][0]            
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU md_permute (Permute)            (None, 14, 14, 18)   0           conv_mid_object[0][0]            
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU sm_permute (Permute)            (None, 28, 28, 18)   0           conv_sm_object[0][0]             
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU bg_reshape (Reshape)            (None, 147, 6)       0           bg_permute[0][0]                 
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU md_reshape (Reshape)            (None, 588, 6)       0           md_permute[0][0]                 
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU sm_reshape (Reshape)            (None, 2352, 6)      0           sm_permute[0][0]                 
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU bg_anchor (YOLOAnchorBox)       (None, 147, 6)       0           conv_big_object[0][0]            
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU bg_bbox_processor (BBoxPostProc (None, 147, 6)       0           bg_reshape[0][0]                 
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU md_anchor (YOLOAnchorBox)       (None, 588, 6)       0           conv_mid_object[0][0]            
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU md_bbox_processor (BBoxPostProc (None, 588, 6)       0           md_reshape[0][0]                 
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU sm_anchor (YOLOAnchorBox)       (None, 2352, 6)      0           conv_sm_object[0][0]             
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU sm_bbox_processor (BBoxPostProc (None, 2352, 6)      0           sm_reshape[0][0]                 
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU encoded_bg (Concatenate)        (None, 147, 12)      0           bg_anchor[0][0]                  
+01-04 10:47:38 DEBU                                                                  bg_bbox_processor[0][0]          
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU encoded_md (Concatenate)        (None, 588, 12)      0           md_anchor[0][0]                  
+01-04 10:47:38 DEBU                                                                  md_bbox_processor[0][0]          
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU encoded_sm (Concatenate)        (None, 2352, 12)     0           sm_anchor[0][0]                  
+01-04 10:47:38 DEBU                                                                  sm_bbox_processor[0][0]          
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU encoded_detections (Concatenate (None, 3087, 12)     0           encoded_bg[0][0]                 
+01-04 10:47:38 DEBU                                                                  encoded_md[0][0]                 
+01-04 10:47:38 DEBU                                                                  encoded_sm[0][0]                 
+01-04 10:47:38 DEBU ==================================================================================================
+01-04 10:47:38 DEBU Total params: 12,456,958
+01-04 10:47:38 DEBU Trainable params: 12,441,534
+01-04 10:47:38 DEBU Non-trainable params: 15,424
+01-04 10:47:38 DEBU __________________________________________________________________________________________________
+01-04 10:47:38 DEBU WARNING:tensorflow:From /root/.cache/bazel/_bazel_root/ed34e6d125608f91724fda23656f1726/execroot/ai_infra/bazel-out/k8-fastbuild/bin/magnet/packages/iva/build_wheel.runfiles/ai_infra/iva/yolo_v3/utils/tensor_utils.py:7: The name tf.local_variables_initializer is deprecated. Please use tf.compat.v1.local_variables_initializer instead.
+01-04 10:47:38 DEBU 
+01-04 10:47:38 DEBU 2022-01-04 02:47:38,758 [WARNING] tensorflow: From /root/.cache/bazel/_bazel_root/ed34e6d125608f91724fda23656f1726/execroot/ai_infra/bazel-out/k8-fastbuild/bin/magnet/packages/iva/build_wheel.runfiles/ai_infra/iva/yolo_v3/utils/tensor_utils.py:7: The name tf.local_variables_initializer is deprecated. Please use tf.compat.v1.local_variables_initializer instead.
+01-04 10:47:38 DEBU 
+01-04 10:47:38 DEBU WARNING:tensorflow:From /root/.cache/bazel/_bazel_root/ed34e6d125608f91724fda23656f1726/execroot/ai_infra/bazel-out/k8-fastbuild/bin/magnet/packages/iva/build_wheel.runfiles/ai_infra/iva/yolo_v3/utils/tensor_utils.py:8: The name tf.tables_initializer is deprecated. Please use tf.compat.v1.tables_initializer instead.
+01-04 10:47:38 DEBU 
+01-04 10:47:38 DEBU 2022-01-04 02:47:38,759 [WARNING] tensorflow: From /root/.cache/bazel/_bazel_root/ed34e6d125608f91724fda23656f1726/execroot/ai_infra/bazel-out/k8-fastbuild/bin/magnet/packages/iva/build_wheel.runfiles/ai_infra/iva/yolo_v3/utils/tensor_utils.py:8: The name tf.tables_initializer is deprecated. Please use tf.compat.v1.tables_initializer instead.
+01-04 10:47:38 DEBU 
+01-04 10:47:38 DEBU WARNING:tensorflow:From /root/.cache/bazel/_bazel_root/ed34e6d125608f91724fda23656f1726/execroot/ai_infra/bazel-out/k8-fastbuild/bin/magnet/packages/iva/build_wheel.runfiles/ai_infra/iva/yolo_v3/utils/tensor_utils.py:9: The name tf.get_collection is deprecated. Please use tf.compat.v1.get_collection instead.
+01-04 10:47:38 DEBU 
+01-04 10:47:38 DEBU 2022-01-04 02:47:38,759 [WARNING] tensorflow: From /root/.cache/bazel/_bazel_root/ed34e6d125608f91724fda23656f1726/execroot/ai_infra/bazel-out/k8-fastbuild/bin/magnet/packages/iva/build_wheel.runfiles/ai_infra/iva/yolo_v3/utils/tensor_utils.py:9: The name tf.get_collection is deprecated. Please use tf.compat.v1.get_collection instead.
+01-04 10:47:38 DEBU 
+01-04 10:47:40 DEBU WARNING:tensorflow:From /usr/local/lib/python3.6/dist-packages/keras/backend/tensorflow_backend.py:986: The name tf.assign_add is deprecated. Please use tf.compat.v1.assign_add instead.
+01-04 10:47:40 DEBU 
+01-04 10:47:40 DEBU 2022-01-04 02:47:40,340 [WARNING] tensorflow: From /usr/local/lib/python3.6/dist-packages/keras/backend/tensorflow_backend.py:986: The name tf.assign_add is deprecated. Please use tf.compat.v1.assign_add instead.
+01-04 10:47:40 DEBU 
+01-04 10:47:41 DEBU WARNING:tensorflow:From /usr/local/lib/python3.6/dist-packages/keras/backend/tensorflow_backend.py:973: The name tf.assign is deprecated. Please use tf.compat.v1.assign instead.
+01-04 10:47:41 DEBU 
+01-04 10:47:41 DEBU 2022-01-04 02:47:41,226 [WARNING] tensorflow: From /usr/local/lib/python3.6/dist-packages/keras/backend/tensorflow_backend.py:973: The name tf.assign is deprecated. Please use tf.compat.v1.assign instead.
+01-04 10:47:41 DEBU 
+01-04 10:47:44 DEBU Epoch 1/50
+01-04 10:48:08 DEBU   1/188 [..............................] - ETA: 1:03:38 - loss: 1.3871  2/188 [..............................] - ETA: 37:08 - loss: 1.3054  /usr/local/lib/python3.6/dist-packages/keras/callbacks.py:122: UserWarning: Method on_batch_end() is slow compared to the batch update (1.686184). Check your callbacks.
+01-04 10:48:08 DEBU   % delta_t_median)
+01-04 10:49:57 DEBU   3/188 [..............................] - ETA: 24:45 - loss: 1.3060  4/188 [..............................] - ETA: 18:33 - loss: 1.3657  5/188 [..............................] - ETA: 14:50 - loss: 1.3097  6/188 [..............................] - ETA: 12:21 - loss: 1.2832  7/188 [>.............................] - ETA: 10:35 - loss: 1.3087  8/188 [>.............................] - ETA: 9:15 - loss: 1.3492   9/188 [>.............................] - ETA: 8:13 - loss: 1.4032 10/188 [>.............................] - ETA: 7:23 - loss: 1.4462 11/188 [>.............................] - ETA: 6:43 - loss: 1.4397 12/188 [>.............................] - ETA: 6:09 - loss: 1.4504 13/188 [=>............................] - ETA: 5:40 - loss: 1.4473 14/188 [=>............................] - ETA: 5:16 - loss: 1.4486 15/188 [=>............................] - ETA: 4:55 - loss: 1.4484 16/188 [=>............................] - ETA: 4:36 - loss: 1.4420 17/188 [=>............................] - ETA: 4:19 - loss: 1.4407 18/188 [=>............................] - ETA: 4:05 - loss: 1.4271 19/188 [==>...........................] - ETA: 3:52 - loss: 1.4343 20/188 [==>...........................] - ETA: 3:40 - loss: 1.4308 21/188 [==>...........................] - ETA: 3:29 - loss: 1.4343 22/188 [==>...........................] - ETA: 3:20 - loss: 1.4277 23/188 [==>...........................] - ETA: 3:59 - loss: 1.4163 24/188 [==>...........................] - ETA: 3:48 - loss: 1.4087 25/188 [==>...........................] - ETA: 3:52 - loss: 1.4033 26/188 [===>..........................] - ETA: 3:42 - loss: 1.3936 27/188 [===>..........................] - ETA: 3:34 - loss: 1.3996 28/188 [===>..........................] - ETA: 3:25 - loss: 1.3954 29/188 [===>..........................] - ETA: 3:18 - loss: 1.3868 30/188 [===>..........................] - ETA: 3:11 - loss: 1.3772 31/188 [===>..........................] - ETA: 3:04 - loss: 1.3799 32/188 [====>.........................] - ETA: 2:58 - loss: 1.3729 33/188 [====>.........................] - ETA: 2:52 - loss: 1.3705 34/188 [====>.........................] - ETA: 2:46 - loss: 1.3720 35/188 [====>.........................] - ETA: 2:41 - loss: 1.3667 36/188 [====>.........................] - ETA: 2:36 - loss: 1.3798 37/188 [====>.........................] - ETA: 2:31 - loss: 1.3853 38/188 [=====>........................] - ETA: 2:35 - loss: 1.3831 39/188 [=====>........................] - ETA: 2:32 - loss: 1.3821 40/188 [=====>........................] - ETA: 2:41 - loss: 1.3805 41/188 [=====>........................] - ETA: 2:37 - loss: 1.3850 42/188 [=====>........................] - ETA: 2:36 - loss: 1.3840 43/188 [=====>........................] - ETA: 2:31 - loss: 1.3810 44/188 [======>.......................] - ETA: 2:27 - loss: 1.3805 45/188 [======>.......................] - ETA: 2:23 - loss: 1.3794 46/188 [======>.......................] - ETA: 2:20 - loss: 1.3869 47/188 [======>.......................] - ETA: 2:16 - loss: 1.3864 48/188 [======>.......................] - ETA: 2:15 - loss: 1.3919 49/188 [======>.......................] - ETA: 2:12 - loss: 1.3968 50/188 [======>.......................] - ETA: 2:09 - loss: 1.3878 51/188 [=======>......................] - ETA: 2:06 - loss: 1.3948 52/188 [=======>......................] - ETA: 2:03 - loss: 1.3903 53/188 [=======>......................] - ETA: 2:07 - loss: 1.3895 54/188 [=======>......................] - ETA: 2:04 - loss: 1.3954 55/188 [=======>......................] - ETA: 2:01 - loss: 1.3932 56/188 [=======>......................] - ETA: 2:04 - loss: 1.3906 57/188 [========>.....................] - ETA: 2:01 - loss: 1.3812 58/188 [========>.....................] - ETA: 2:02 - loss: 1.3813 59/188 [========>.....................] - ETA: 2:00 - loss: 1.3798 60/188 [========>.....................] - ETA: 1:59 - loss: 1.3764 61/188 [========>.....................] - ETA: 1:57 - loss: 1.3752 62/188 [========>.....................] - ETA: 1:54 - loss: 1.3724 63/188 [=========>....................] - ETA: 1:52 - loss: 1.3703 64/188 [=========>....................] - ETA: 1:49 - loss: 1.3656 65/188 [=========>....................] - ETA: 1:47 - loss: 1.3622 66/188 [=========>....................] - ETA: 1:45 - loss: 1.3582 67/188 [=========>....................] - ETA: 1:43 - loss: 1.3619 68/188 [=========>....................] - ETA: 1:41 - loss: 1.3597 69/188 [==========>...................] - ETA: 1:38 - loss: 1.3590 70/188 [==========>...................] - ETA: 1:38 - loss: 1.3558 71/188 [==========>...................] - ETA: 1:41 - loss: 1.3538 72/188 [==========>...................] - ETA: 1:40 - loss: 1.3578 73/188 [==========>...................] - ETA: 1:38 - loss: 1.3527 74/188 [==========>...................] - ETA: 1:37 - loss: 1.3524 75/188 [==========>...................] - ETA: 1:35 - loss: 1.3503 76/188 [===========>..................] - ETA: 1:33 - loss: 1.3472 77/188 [===========>..................] - ETA: 1:31 - loss: 1.3452 78/188 [===========>..................] - ETA: 1:30 - loss: 1.3448 79/188 [===========>..................] - ETA: 1:29 - loss: 1.3411 80/188 [===========>..................] - ETA: 1:27 - loss: 1.3415 81/188 [===========>..................] - ETA: 1:30 - loss: 1.3403 82/188 [============>.................] - ETA: 1:28 - loss: 1.3392 83/188 [============>.................] - ETA: 1:27 - loss: 1.3343 84/188 [============>.................] - ETA: 1:25 - loss: 1.3312 85/188 [============>.................] - ETA: 1:23 - loss: 1.3289 86/188 [============>.................] - ETA: 1:22 - loss: 1.3260 87/188 [============>.................] - ETA: 1:22 - loss: 1.3236 88/188 [=============>................] - ETA: 1:21 - loss: 1.3215 89/188 [=============>................] - ETA: 1:20 - loss: 1.3172 90/188 [=============>................] - ETA: 1:19 - loss: 1.3153 91/188 [=============>................] - ETA: 1:19 - loss: 1.3176 92/188 [=============>................] - ETA: 1:17 - loss: 1.3157 93/188 [=============>................] - ETA: 1:16 - loss: 1.3132 94/188 [==============>...............] - ETA: 1:14 - loss: 1.3122 95/188 [==============>...............] - ETA: 1:13 - loss: 1.3081 96/188 [==============>...............] - ETA: 1:11 - loss: 1.3054 97/188 [==============>...............] - ETA: 1:11 - loss: 1.3013 98/188 [==============>...............] - ETA: 1:10 - loss: 1.2998 99/188 [==============>...............] - ETA: 1:12 - loss: 1.2969100/188 [==============>...............] - ETA: 1:10 - loss: 1.2943101/188 [===============>..............] - ETA: 1:09 - loss: 1.2927102/188 [===============>..............] - ETA: 1:08 - loss: 1.2926103/188 [===============>..............] - ETA: 1:06 - loss: 1.2921104/188 [===============>..............] - ETA: 1:07 - loss: 1.2921105/188 [===============>..............] - ETA: 1:06 - loss: 1.2922106/188 [===============>..............] - ETA: 1:04 - loss: 1.2925107/188 [================>.............] - ETA: 1:03 - loss: 1.2900108/188 [================>.............] - ETA: 1:02 - loss: 1.2894109/188 [================>.............] - ETA: 1:00 - loss: 1.2874110/188 [================>.............] - ETA: 59s - loss: 1.2839 111/188 [================>.............] - ETA: 59s - loss: 1.2809112/188 [================>.............] - ETA: 58s - loss: 1.2774113/188 [=================>............] - ETA: 57s - loss: 1.2756114/188 [=================>............] - ETA: 56s - loss: 1.2740115/188 [=================>............] - ETA: 56s - loss: 1.2727116/188 [=================>............] - ETA: 56s - loss: 1.2702117/188 [=================>............] - ETA: 55s - loss: 1.2686118/188 [=================>............] - ETA: 54s - loss: 1.2670119/188 [=================>............] - ETA: 53s - loss: 1.2643120/188 [==================>...........] - ETA: 52s - loss: 1.2650121/188 [==================>...........] - ETA: 51s - loss: 1.2631122/188 [==================>...........] - ETA: 50s - loss: 1.2620123/188 [==================>...........] - ETA: 49s - loss: 1.2589124/188 [==================>...........] - ETA: 48s - loss: 1.2578125/188 [==================>...........] - ETA: 47s - loss: 1.2553126/188 [===================>..........] - ETA: 46s - loss: 1.2530127/188 [===================>..........] - ETA: 45s - loss: 1.2516128/188 [===================>..........] - ETA: 44s - loss: 1.2498129/188 [===================>..........] - ETA: 43s - loss: 1.2466130/188 [===================>..........] - ETA: 43s - loss: 1.2449131/188 [===================>..........] - ETA: 43s - loss: 1.2449132/188 [====================>.........] - ETA: 42s - loss: 1.2428133/188 [====================>.........] - ETA: 41s - loss: 1.2423134/188 [====================>.........] - ETA: 41s - loss: 1.2426135/188 [====================>.........] - ETA: 40s - loss: 1.2399136/188 [====================>.........] - ETA: 39s - loss: 1.2391137/188 [====================>.........] - ETA: 38s - loss: 1.2391138/188 [=====================>........] - ETA: 37s - loss: 1.2374139/188 [=====================>........] - ETA: 36s - loss: 1.2355140/188 [=====================>........] - ETA: 35s - loss: 1.2336141/188 [=====================>........] - ETA: 34s - loss: 1.2327142/188 [=====================>........] - ETA: 33s - loss: 1.2321143/188 [=====================>........] - ETA: 32s - loss: 1.2296144/188 [=====================>........] - ETA: 32s - loss: 1.2277145/188 [======================>.......] - ETA: 32s - loss: 1.2257146/188 [======================>.......] - ETA: 31s - loss: 1.2242147/188 [======================>.......] - ETA: 30s - loss: 1.2227148/188 [======================>.......] - ETA: 29s - loss: 1.2199149/188 [======================>.......] - ETA: 28s - loss: 1.2185150/188 [======================>.......] - ETA: 28s - loss: 1.2184151/188 [=======================>......] - ETA: 27s - loss: 1.2173152/188 [=======================>......] - ETA: 26s - loss: 1.2162153/188 [=======================>......] - ETA: 25s - loss: 1.2151154/188 [=======================>......] - ETA: 24s - loss: 1.2129155/188 [=======================>......] - ETA: 24s - loss: 1.2132156/188 [=======================>......] - ETA: 23s - loss: 1.2117157/188 [========================>.....] - ETA: 22s - loss: 1.2120158/188 [========================>.....] - ETA: 21s - loss: 1.2109159/188 [========================>.....] - ETA: 21s - loss: 1.2102160/188 [========================>.....] - ETA: 20s - loss: 1.2093161/188 [========================>.....] - ETA: 20s - loss: 1.2072162/188 [========================>.....] - ETA: 19s - loss: 1.2080163/188 [=========================>....] - ETA: 18s - loss: 1.2062164/188 [=========================>....] - ETA: 17s - loss: 1.2043165/188 [=========================>....] - ETA: 16s - loss: 1.2024166/188 [=========================>....] - ETA: 16s - loss: 1.2029167/188 [=========================>....] - ETA: 15s - loss: 1.2019168/188 [=========================>....] - ETA: 14s - loss: 1.2003169/188 [=========================>....] - ETA: 13s - loss: 1.1993170/188 [==========================>...] - ETA: 12s - loss: 1.1980171/188 [==========================>...] - ETA: 12s - loss: 1.1964172/188 [==========================>...] - ETA: 11s - loss: 1.1950173/188 [==========================>...] - ETA: 10s - loss: 1.1941174/188 [==========================>...] - ETA: 10s - loss: 1.1928175/188 [==========================>...] - ETA: 9s - loss: 1.1913 176/188 [===========================>..] - ETA: 8s - loss: 1.1907177/188 [===========================>..] - ETA: 8s - loss: 1.1896178/188 [===========================>..] - ETA: 7s - loss: 1.1887179/188 [===========================>..] - ETA: 6s - loss: 1.1876180/188 [===========================>..] - ETA: 5s - loss: 1.1867181/188 [===========================>..] - ETA: 5s - loss: 1.1858182/188 [============================>.] - ETA: 4s - loss: 1.1843183/188 [============================>.] - ETA: 3s - loss: 1.1839184/188 [============================>.] - ETA: 2s - loss: 1.1832185/188 [============================>.] - ETA: 2s - loss: 1.1818186/188 [============================>.] - ETA: 1s - loss: 1.1806187/188 [============================>.] - ETA: 0s - loss: 1.1789188/188 [==============================] - 133s 705ms/step - loss: 1.1785
+01-04 10:50:01 DEBU eb453a4d79b1:60:96 [0] NCCL INFO Bootstrap : Using [0]lo:127.0.0.1<0> [1]eth0:172.17.0.2<0>
+01-04 10:50:01 DEBU eb453a4d79b1:60:96 [0] NCCL INFO NET/Plugin : Plugin load returned 0 : libnccl-net.so: cannot open shared object file: No such file or directory.
+01-04 10:50:01 DEBU eb453a4d79b1:60:96 [0] NCCL INFO NET/IB : No device found.
+01-04 10:50:01 DEBU eb453a4d79b1:60:96 [0] NCCL INFO NET/Socket : Using [0]lo:127.0.0.1<0> [1]eth0:172.17.0.2<0>
+01-04 10:50:01 DEBU eb453a4d79b1:60:96 [0] NCCL INFO Using network Socket
+01-04 10:50:01 DEBU NCCL version 2.7.8+cuda11.1
+01-04 10:50:01 DEBU eb453a4d79b1:60:96 [0] NCCL INFO Channel 00/32 :    0
+01-04 10:50:01 DEBU eb453a4d79b1:60:96 [0] NCCL INFO Channel 01/32 :    0
+01-04 10:50:01 DEBU eb453a4d79b1:60:96 [0] NCCL INFO Channel 02/32 :    0
+01-04 10:50:01 DEBU eb453a4d79b1:60:96 [0] NCCL INFO Channel 03/32 :    0
+01-04 10:50:01 DEBU eb453a4d79b1:60:96 [0] NCCL INFO Channel 04/32 :    0
+01-04 10:50:01 DEBU eb453a4d79b1:60:96 [0] NCCL INFO Channel 05/32 :    0
+01-04 10:50:01 DEBU eb453a4d79b1:60:96 [0] NCCL INFO Channel 06/32 :    0
+01-04 10:50:01 DEBU eb453a4d79b1:60:96 [0] NCCL INFO Channel 07/32 :    0
+01-04 10:50:01 DEBU eb453a4d79b1:60:96 [0] NCCL INFO Channel 08/32 :    0
+01-04 10:50:01 DEBU eb453a4d79b1:60:96 [0] NCCL INFO Channel 09/32 :    0
+01-04 10:50:01 DEBU eb453a4d79b1:60:96 [0] NCCL INFO Channel 10/32 :    0
+01-04 10:50:01 DEBU eb453a4d79b1:60:96 [0] NCCL INFO Channel 11/32 :    0
+01-04 10:50:01 DEBU eb453a4d79b1:60:96 [0] NCCL INFO Channel 12/32 :    0
+01-04 10:50:01 DEBU eb453a4d79b1:60:96 [0] NCCL INFO Channel 13/32 :    0
+01-04 10:50:01 DEBU eb453a4d79b1:60:96 [0] NCCL INFO Channel 14/32 :    0
+01-04 10:50:01 DEBU eb453a4d79b1:60:96 [0] NCCL INFO Channel 15/32 :    0
+01-04 10:50:01 DEBU eb453a4d79b1:60:96 [0] NCCL INFO Channel 16/32 :    0
+01-04 10:50:01 DEBU eb453a4d79b1:60:96 [0] NCCL INFO Channel 17/32 :    0
+01-04 10:50:01 DEBU eb453a4d79b1:60:96 [0] NCCL INFO Channel 18/32 :    0
+01-04 10:50:01 DEBU eb453a4d79b1:60:96 [0] NCCL INFO Channel 19/32 :    0
+01-04 10:50:01 DEBU eb453a4d79b1:60:96 [0] NCCL INFO Channel 20/32 :    0
+01-04 10:50:01 DEBU eb453a4d79b1:60:96 [0] NCCL INFO Channel 21/32 :    0
+01-04 10:50:01 DEBU eb453a4d79b1:60:96 [0] NCCL INFO Channel 22/32 :    0
+01-04 10:50:01 DEBU eb453a4d79b1:60:96 [0] NCCL INFO Channel 23/32 :    0
+01-04 10:50:01 DEBU eb453a4d79b1:60:96 [0] NCCL INFO Channel 24/32 :    0
+01-04 10:50:01 DEBU eb453a4d79b1:60:96 [0] NCCL INFO Channel 25/32 :    0
+01-04 10:50:01 DEBU eb453a4d79b1:60:96 [0] NCCL INFO Channel 26/32 :    0
+01-04 10:50:01 DEBU eb453a4d79b1:60:96 [0] NCCL INFO Channel 27/32 :    0
+01-04 10:50:01 DEBU eb453a4d79b1:60:96 [0] NCCL INFO Channel 28/32 :    0
+01-04 10:50:01 DEBU eb453a4d79b1:60:96 [0] NCCL INFO Channel 29/32 :    0
+01-04 10:50:01 DEBU eb453a4d79b1:60:96 [0] NCCL INFO Channel 30/32 :    0
+01-04 10:50:01 DEBU eb453a4d79b1:60:96 [0] NCCL INFO Channel 31/32 :    0
+01-04 10:50:01 DEBU eb453a4d79b1:60:96 [0] NCCL INFO Trees [0] -1/-1/-1->0->-1|-1->0->-1/-1/-1 [1] -1/-1/-1->0->-1|-1->0->-1/-1/-1 [2] -1/-1/-1->0->-1|-1->0->-1/-1/-1 [3] -1/-1/-1->0->-1|-1->0->-1/-1/-1 [4] -1/-1/-1->0->-1|-1->0->-1/-1/-1 [5] -1/-1/-1->0->-1|-1->0->-1/-1/-1 [6] -1/-1/-1->0->-1|-1->0->-1/-1/-1 [7] -1/-1/-1->0->-1|-1->0->-1/-1/-1 [8] -1/-1/-1->0->-1|-1->0->-1/-1/-1 [9] -1/-1/-1->0->-1|-1->0->-1/-1/-1 [10] -1/-1/-1->0->-1|-1->0->-1/-1/-1 [11] -1/-1/-1->0->-1|-1->0->-1/-1/-1 [12] -1/-1/-1->0->-1|-1->0->-1/-1/-1 [13] -1/-1/-1->0->-1|-1->0->-1/-1/-1 [14] -1/-1/-1->0->-1|-1->0->-1/-1/-1 [15] -1/-1/-1->0->-1|-1->0->-1/-1/-1 [16] -1/-1/-1->0->-1|-1->0->-1/-1/-1 [17] -1/-1/-1->0->-1|-1->0->-1/-1/-1 [18] -1/-1/-1->0->-1|-1->0->-1/-1/-1 [19] -1/-1/-1->0->-1|-1->0->-1/-1/-1 [20] -1/-1/-1->0->-1|-1->0->-1/-1/-1 [21] -1/-1/-1->0->-1|-1->0->-1/-1/-1 [22] -1/-1/-1->0->-1|-1->0->-1/-1/-1 [23] -1/-1/-1->0->-1|-1->0->-1/-1/-1 [24] -1/-1/-1->0->-1|-1->0->-1/-1/-1 [25] -1/-1/-1->0->-1|-1->0->-1/-1/-1 [26] -1/-1/-1->0->-1|-1->0->-1/-
+01-04 10:50:01 DEBU eb453a4d79b1:60:96 [0] NCCL INFO Setting affinity for GPU 0 to ffff
+01-04 10:50:01 DEBU eb453a4d79b1:60:96 [0] NCCL INFO 32 coll channels, 32 p2p channels, 32 p2p channels per peer
+01-04 10:50:01 DEBU eb453a4d79b1:60:96 [0] NCCL INFO comm 0x7f7806f95a70 rank 0 nranks 1 cudaDev 0 busId 17000 - Init COMPLETE
+01-04 10:50:02 DEBU Epoch 2/50
+01-04 10:52:03 DEBU   1/188 [..............................] - ETA: 12:44 - loss: 0.8314  2/188 [..............................] - ETA: 6:34 - loss: 0.9307   3/188 [..............................] - ETA: 4:29 - loss: 0.9955  4/188 [..............................] - ETA: 3:26 - loss: 0.9707  5/188 [..............................] - ETA: 2:49 - loss: 0.9402  6/188 [..............................] - ETA: 2:25 - loss: 0.9575  7/188 [>.............................] - ETA: 2:08 - loss: 1.0024  8/188 [>.............................] - ETA: 2:23 - loss: 1.0396  9/188 [>.............................] - ETA: 2:09 - loss: 1.0250 10/188 [>.............................] - ETA: 1:58 - loss: 1.0220 11/188 [>.............................] - ETA: 1:49 - loss: 0.9974 12/188 [>.............................] - ETA: 1:41 - loss: 0.9821 13/188 [=>............................] - ETA: 1:35 - loss: 0.9713 14/188 [=>............................] - ETA: 1:29 - loss: 0.9802 15/188 [=>............................] - ETA: 1:24 - loss: 0.9861 16/188 [=>............................] - ETA: 2:16 - loss: 1.0019 17/188 [=>............................] - ETA: 2:09 - loss: 1.0000 18/188 [=>............................] - ETA: 2:02 - loss: 1.0073 19/188 [==>...........................] - ETA: 1:56 - loss: 1.0038 20/188 [==>...........................] - ETA: 1:51 - loss: 1.0050 21/188 [==>...........................] - ETA: 1:46 - loss: 0.9966 22/188 [==>...........................] - ETA: 1:42 - loss: 0.9927 23/188 [==>...........................] - ETA: 1:41 - loss: 0.9897 24/188 [==>...........................] - ETA: 1:46 - loss: 0.9868 25/188 [==>...........................] - ETA: 1:43 - loss: 0.9870 26/188 [===>..........................] - ETA: 1:39 - loss: 0.9830 27/188 [===>..........................] - ETA: 1:35 - loss: 0.9797 28/188 [===>..........................] - ETA: 1:37 - loss: 0.9841 29/188 [===>..........................] - ETA: 1:34 - loss: 0.9865 30/188 [===>..........................] - ETA: 1:31 - loss: 0.9892 31/188 [===>..........................] - ETA: 1:41 - loss: 0.9888 32/188 [====>.........................] - ETA: 1:39 - loss: 0.9839 33/188 [====>.........................] - ETA: 1:46 - loss: 0.9812 34/188 [====>.........................] - ETA: 1:43 - loss: 0.9756 35/188 [====>.........................] - ETA: 1:40 - loss: 0.9765 36/188 [====>.........................] - ETA: 1:37 - loss: 0.9702 37/188 [====>.........................] - ETA: 1:37 - loss: 0.9690 38/188 [=====>........................] - ETA: 1:34 - loss: 0.9711 39/188 [=====>........................] - ETA: 1:32 - loss: 0.9718 40/188 [=====>........................] - ETA: 1:30 - loss: 0.9747 41/188 [=====>........................] - ETA: 1:28 - loss: 0.9708 42/188 [=====>........................] - ETA: 1:29 - loss: 0.9668 43/188 [=====>........................] - ETA: 1:31 - loss: 0.9663 44/188 [======>.......................] - ETA: 1:33 - loss: 0.9643 45/188 [======>.......................] - ETA: 1:38 - loss: 0.9660 46/188 [======>.......................] - ETA: 1:36 - loss: 0.9661 47/188 [======>.......................] - ETA: 1:34 - loss: 0.9678 48/188 [======>.......................] - ETA: 1:31 - loss: 0.9653 49/188 [======>.......................] - ETA: 1:29 - loss: 0.9651 50/188 [======>.......................] - ETA: 1:29 - loss: 0.9692 51/188 [=======>......................] - ETA: 1:27 - loss: 0.9664 52/188 [=======>......................] - ETA: 1:28 - loss: 0.9665 53/188 [=======>......................] - ETA: 1:26 - loss: 0.9648 54/188 [=======>......................] - ETA: 1:25 - loss: 0.9664 55/188 [=======>......................] - ETA: 1:23 - loss: 0.9668 56/188 [=======>......................] - ETA: 1:23 - loss: 0.9672 57/188 [========>.....................] - ETA: 1:21 - loss: 0.9656 58/188 [========>.....................] - ETA: 1:22 - loss: 0.9627 59/188 [========>.....................] - ETA: 1:25 - loss: 0.9610 60/188 [========>.....................] - ETA: 1:30 - loss: 0.9615 61/188 [========>.....................] - ETA: 1:28 - loss: 0.9603 62/188 [========>.....................] - ETA: 1:27 - loss: 0.9574 63/188 [=========>....................] - ETA: 1:25 - loss: 0.9539 64/188 [=========>....................] - ETA: 1:23 - loss: 0.9536 65/188 [=========>....................] - ETA: 1:22 - loss: 0.9590 66/188 [=========>....................] - ETA: 1:20 - loss: 0.9567 67/188 [=========>....................] - ETA: 1:19 - loss: 0.9531 68/188 [=========>....................] - ETA: 1:21 - loss: 0.9542 69/188 [==========>...................] - ETA: 1:20 - loss: 0.9551 70/188 [==========>...................] - ETA: 1:18 - loss: 0.9530 71/188 [==========>...................] - ETA: 1:17 - loss: 0.9509 72/188 [==========>...................] - ETA: 1:16 - loss: 0.9497 73/188 [==========>...................] - ETA: 1:15 - loss: 0.9504 74/188 [==========>...................] - ETA: 1:14 - loss: 0.9506 75/188 [==========>...................] - ETA: 1:14 - loss: 0.9496 76/188 [===========>..................] - ETA: 1:13 - loss: 0.9511 77/188 [===========>..................] - ETA: 1:13 - loss: 0.9503 78/188 [===========>..................] - ETA: 1:16 - loss: 0.9487 79/188 [===========>..................] - ETA: 1:14 - loss: 0.9474 80/188 [===========>..................] - ETA: 1:13 - loss: 0.9483 81/188 [===========>..................] - ETA: 1:11 - loss: 0.9470 82/188 [============>.................] - ETA: 1:10 - loss: 0.9488 83/188 [============>.................] - ETA: 1:09 - loss: 0.9474 84/188 [============>.................] - ETA: 1:07 - loss: 0.9439 85/188 [============>.................] - ETA: 1:06 - loss: 0.9419 86/188 [============>.................] - ETA: 1:07 - loss: 0.9415 87/188 [============>.................] - ETA: 1:06 - loss: 0.9414 88/188 [=============>................] - ETA: 1:05 - loss: 0.9387 89/188 [=============>................] - ETA: 1:06 - loss: 0.9362 90/188 [=============>................] - ETA: 1:05 - loss: 0.9363 91/188 [=============>................] - ETA: 1:04 - loss: 0.9347 92/188 [=============>................] - ETA: 1:04 - loss: 0.9346 93/188 [=============>................] - ETA: 1:03 - loss: 0.9336 94/188 [==============>...............] - ETA: 1:02 - loss: 0.9335 95/188 [==============>...............] - ETA: 1:01 - loss: 0.9325 96/188 [==============>...............] - ETA: 1:00 - loss: 0.9340 97/188 [==============>...............] - ETA: 59s - loss: 0.9341  98/188 [==============>...............] - ETA: 1:00 - loss: 0.9348 99/188 [==============>...............] - ETA: 59s - loss: 0.9341 100/188 [==============>...............] - ETA: 58s - loss: 0.9340101/188 [===============>..............] - ETA: 57s - loss: 0.9327102/188 [===============>..............] - ETA: 59s - loss: 0.9336103/188 [===============>..............] - ETA: 58s - loss: 0.9322104/188 [===============>..............] - ETA: 57s - loss: 0.9313105/188 [===============>..............] - ETA: 56s - loss: 0.9297106/188 [===============>..............] - ETA: 55s - loss: 0.9291107/188 [================>.............] - ETA: 54s - loss: 0.9286108/188 [================>.............] - ETA: 53s - loss: 0.9277109/188 [================>.............] - ETA: 52s - loss: 0.9281110/188 [================>.............] - ETA: 51s - loss: 0.9291111/188 [================>.............] - ETA: 50s - loss: 0.9300112/188 [================>.............] - ETA: 50s - loss: 0.9300113/188 [=================>............] - ETA: 49s - loss: 0.9299114/188 [=================>............] - ETA: 48s - loss: 0.9278115/188 [=================>............] - ETA: 47s - loss: 0.9280116/188 [=================>............] - ETA: 47s - loss: 0.9269117/188 [=================>............] - ETA: 48s - loss: 0.9273118/188 [=================>............] - ETA: 47s - loss: 0.9246119/188 [=================>............] - ETA: 46s - loss: 0.9237120/188 [==================>...........] - ETA: 45s - loss: 0.9226121/188 [==================>...........] - ETA: 44s - loss: 0.9213122/188 [==================>...........] - ETA: 44s - loss: 0.9210123/188 [==================>...........] - ETA: 43s - loss: 0.9209124/188 [==================>...........] - ETA: 43s - loss: 0.9197125/188 [==================>...........] - ETA: 42s - loss: 0.9197126/188 [===================>..........] - ETA: 41s - loss: 0.9193127/188 [===================>..........] - ETA: 41s - loss: 0.9187128/188 [===================>..........] - ETA: 40s - loss: 0.9177129/188 [===================>..........] - ETA: 39s - loss: 0.9167130/188 [===================>..........] - ETA: 38s - loss: 0.9154131/188 [===================>..........] - ETA: 37s - loss: 0.9141132/188 [====================>.........] - ETA: 37s - loss: 0.9139133/188 [====================>.........] - ETA: 37s - loss: 0.9139134/188 [====================>.........] - ETA: 36s - loss: 0.9125135/188 [====================>.........] - ETA: 35s - loss: 0.9114136/188 [====================>.........] - ETA: 34s - loss: 0.9101137/188 [====================>.........] - ETA: 33s - loss: 0.9084138/188 [=====================>........] - ETA: 33s - loss: 0.9067139/188 [=====================>........] - ETA: 32s - loss: 0.9073140/188 [=====================>........] - ETA: 31s - loss: 0.9080141/188 [=====================>........] - ETA: 31s - loss: 0.9087142/188 [=====================>........] - ETA: 30s - loss: 0.9073143/188 [=====================>........] - ETA: 29s - loss: 0.9069144/188 [=====================>........] - ETA: 29s - loss: 0.9057145/188 [======================>.......] - ETA: 28s - loss: 0.9046146/188 [======================>.......] - ETA: 27s - loss: 0.9032147/188 [======================>.......] - ETA: 27s - loss: 0.9023148/188 [======================>.......] - ETA: 26s - loss: 0.9013149/188 [======================>.......] - ETA: 25s - loss: 0.9006150/188 [======================>.......] - ETA: 25s - loss: 0.8999151/188 [=======================>......] - ETA: 24s - loss: 0.8998152/188 [=======================>......] - ETA: 23s - loss: 0.8988153/188 [=======================>......] - ETA: 23s - loss: 0.8979154/188 [=======================>......] - ETA: 22s - loss: 0.8973155/188 [=======================>......] - ETA: 21s - loss: 0.8966156/188 [=======================>......] - ETA: 20s - loss: 0.8960157/188 [========================>.....] - ETA: 20s - loss: 0.8969158/188 [========================>.....] - ETA: 19s - loss: 0.8957159/188 [========================>.....] - ETA: 19s - loss: 0.8951S160/188 [========================>.....] - ETA: 18s - loss: 0.8949161/188 [========================>.....] - ETA: 17s - loss: 0.8941162/188 [========================>.....] - ETA: 16s - loss: 0.8938163/188 [=========================>....] - ETA: 16s - loss: 0.8939164/188 [=========================>....] - ETA: 15s - loss: 0.8933165/188 [=========================>....] - ETA: 15s - loss: 0.8927166/188 [=========================>....] - ETA: 14s - loss: 0.8930167/188 [=========================>....] - ETA: 13s - loss: 0.8918168/188 [=========================>....] - ETA: 13s - loss: 0.8922169/188 [=========================>....] - ETA: 12s - loss: 0.8929170/188 [==========================>...] - ETA: 12s - loss: 0.8932171/188 [==========================>...] - ETA: 11s - loss: 0.8922172/188 [==========================>...] - ETA: 10s - loss: 0.8919173/188 [==========================>...] - ETA: 9s - loss: 0.8915 174/188 [==========================>...] - ETA: 9s - loss: 0.8917175/188 [==========================>...] - ETA: 8s - loss: 0.8915176/188 [===========================>..] - ETA: 7s - loss: 0.8916177/188 [===========================>..] - ETA: 7s - loss: 0.8911178/188 [===========================>..] - ETA: 6s - loss: 0.8906179/188 [===========================>..] - ETA: 5s - loss: 0.8900180/188 [===========================>..] - ETA: 5s - loss: 0.8899181/188 [===========================>..] - ETA: 4s - loss: 0.8891182/188 [============================>.] - ETA: 3s - loss: 0.8889183/188 [============================>.] - ETA: 3s - loss: 0.8877184/188 [============================>.] - ETA: 2s - loss: 0.8875185/188 [============================>.] - ETA: 1s - loss: 0.8874186/188 [============================>.] - ETA: 1s - loss: 0.8867187/188 [============================>.] - ETA: 0s - loss: 0.8857188/188 [==============================] - 121s 645ms/step - loss: 0.8861
+01-04 10:52:04 DEBU Epoch 3/50

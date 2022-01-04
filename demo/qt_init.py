@@ -46,6 +46,7 @@ class Init(QtWidgets.QMainWindow):
         if len(sys.argv)>=2 and sys.argv[1].lower()=='debug':
             self.debug = True  
             self.debug_page = int(sys.argv[2]) if sys.argv[2] is not None else 0
+            self.debug_opt = sys.argv[3] if sys.argv[3] is not None else 0
         else:
             self.debug = False 
             
@@ -118,9 +119,14 @@ class Init(QtWidgets.QMainWindow):
                 self.train_spec.mapping('train_dataset_path', '"{}"'.format(os.path.join(trg_folder_path, 'train')))
                 self.train_spec.mapping('val_dataset_path', '"{}"'.format(os.path.join(trg_folder_path, 'val')))
                 self.train_spec.mapping('eval_dataset_path', '"{}"'.format(os.path.join(trg_folder_path, 'test')))
+                # self.retrain_spec.mapping('train_dataset_path', '"{}"'.format(os.path.join(trg_folder_path, 'train')))
+                # self.retrain_spec.mapping('val_dataset_path', '"{}"'.format(os.path.join(trg_folder_path, 'val')))
+                # self.retrain_spec.mapping('eval_dataset_path', '"{}"'.format(os.path.join(trg_folder_path, 'test')))
             elif 'detection' in self.itao_env.get_env('NGC_TASK'):
                 self.train_spec.mapping('image_directory_path', '"{}"'.format(os.path.join(trg_folder_path, 'images')))
                 self.train_spec.mapping('label_directory_path', '"{}"'.format(os.path.join(trg_folder_path, 'labels')))
+                # self.retrain_spec.mapping('image_directory_path', '"{}"'.format(os.path.join(trg_folder_path, 'images')))
+                # self.retrain_spec.mapping('label_directory_path', '"{}"'.format(os.path.join(trg_folder_path, 'labels')))
                 
             # self.train_conf['dataset_path'] = folder_path
             self.itao_env.update('LOCAL_DATASET', folder_path)
@@ -294,13 +300,6 @@ class Init(QtWidgets.QMainWindow):
         if val>=100:
             self.page_finished_event()
     
-    """ 取得 tao 當前的任務 """
-    # def get_tao_task(self):
-    #     if "classification" in self.itao_env.get_env('NGC_TASK').lower():
-    #         return "classification"
-    #     else:
-    #         return self.itao_env.get_env('MODEL').lower()
-
     """ 檢查並建立資料夾 """
     def check_dir(self, path):
         if not os.path.exists(path): os.makedirs(path)
@@ -308,38 +307,6 @@ class Init(QtWidgets.QMainWindow):
     """ 掛載路徑 """
     def mount_env(self):
         self.logger.info('Update environ of mount file ... ')
-
-        # local_project_dir = os.path.join(os.getcwd(), 'tasks')
-        # tao_task = self.get_tao_task()
-        # tao_task = self.itao_env.get_env('TASK')
-                
-        # local_task_dir = os.path.join(local_project_dir, tao_task)
-        # local_data_dir = os.path.join(local_project_dir, 'data')
-        # local_spec_dir = os.path.join(local_task_dir, 'specs')
-        # local_out_dir = os.path.join(local_task_dir, 'output')
-        
-        # self.itao_env.update('LOCAL_PROJECT_DIR', local_project_dir)
-        # self.itao_env.update('LOCAL_DATA_DIR', local_data_dir)
-        # self.itao_env.update('LOCAL_EXPERIMENT_DIR', local_task_dir)
-        # self.itao_env.update('LOCAL_SPECS_DIR', local_spec_dir)
-
-        # self.itao_env.update('LOCAL_OUTPUT_DIR', local_out_dir)
-        # self.check_dir(local_out_dir)
-
-        ########################################################################################
-        # dest_project_dir = self.itao_env.get_workspace_path()
-        # dest_dir = os.path.join(dest_project_dir, tao_task)
-        # dest_data_dir = os.path.join(dest_project_dir, 'data')
-        # dest_spec_dir = os.path.join(dest_dir, 'specs')
-        # dest_out_dir = os.path.join(dest_dir, 'output')
-        
-        # self.itao_env.update('USER_EXPERIMENT_DIR', dest_dir)
-        # self.itao_env.update('DATA_DOWNLOAD_DIR', dest_data_dir)
-        # self.itao_env.update('SPECS_DIR', dest_spec_dir)
-        # self.itao_env.update('OUTPUT_DIR', dest_out_dir)
-        # self.itao_env.update2('TRAIN', 'OUTPUT_DIR', self.itao_env.replace_docker_root(local_out_dir))
-
-        ########################################################################################
         ret = self.itao_env.create_mount_json()
         self.insert_text("Creating Mount File ... {}".format(
             "Sucessed!" if ret else "Failed!"

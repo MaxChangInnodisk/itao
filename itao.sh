@@ -1,8 +1,8 @@
 #!/bin/bash
 
 MODE=$1
-DEBUG=$2
-DEBUG_PAGE=$3
+DEBUG_PAGE=$2
+DEBUG_OPT=$3
 BASHRC=$(realpath ~/.bashrc)
 WORKON_HOME=$(realpath ~/Envs)
 LS_INFO=("export WORKON_HOME=${WORKON_HOME}","export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3")
@@ -95,5 +95,17 @@ elif [[ ${MODE} == 'run' ]];then
     source `which virtualenvwrapper.sh`
     log "Launch virtualenv ${TRG_ENV}"
     workon ${TRG_ENV}
-    python3 ./demo $DEBUG $DEBUG_PAGE
+    python3 ./demo
+elif [[ ${MODE} == 'debug' ]];then
+    log "Start training AI with iTAO ( debug mode )."
+    source `which virtualenvwrapper.sh`
+    log "Launch virtualenv ${TRG_ENV}"
+    workon ${TRG_ENV}
+    log "Check arguments ... "
+    if [[ -z ${DEBUG_PAGE} || -z ${DEBUG_OPT} ]];then
+        log "DEBUG MODE: $./itao.sh debug <DEBUG_PAGE:1, 2, 3, 4> <DEBUG_OPT:train, eval, prune, retrain, export, infer>"
+        exit 1
+    fi
+    python3 ./demo ${MODE} ${DEBUG_PAGE} ${DEBUG_OPT}
+
 fi
