@@ -8,11 +8,12 @@ import importlib
 """ 自己的函式庫自己撈"""
 sys.path.append("../itao")
 import itao
-from itao.spec_tools import DefineSpec
+from itao.utils.spec_tools_v2 import DefineSpec
 from itao.qtasks.download_model import DownloadModel
 from itao.dataset_format import get_dset_format, DSET_FMT_LS
 from demo.qt_init import Init
-        
+
+
 class Tab1(Init):
     def __init__(self):
         super().__init__()
@@ -48,7 +49,7 @@ class Tab1(Init):
         
         # 取得選擇的任務
         self.logger.info('Update combo box: {}'.format('task'))
-        self.train_conf['task'] = self.ui.t1_combo_task.currentText()
+        # self.train_conf['task'] = self.ui.t1_combo_task.currentText()
 
         # 更新到文件當中方便使用
         ngc_task = self.ui.t1_combo_task.currentText().lower()
@@ -62,23 +63,46 @@ class Tab1(Init):
         # 設定下一個 combo box ( model )
         self.setting_combo_box = True   # 由於設定的時候會造成遞迴，所以要透過 setting_combo_box 來防止遞迴
         self.ui.t1_combo_model.clear()
-        self.ui.t1_combo_model.addItems(list(self.option[self.train_conf['task']].keys()))   # 加入元素的時候會導致 編號改變而跳到下一個 method
+        self.ui.t1_combo_model.addItems(list(self.option[self.ui.t1_combo_task.currentText()].keys()))   # 加入元素的時候會導致 編號改變而跳到下一個 method
         self.ui.t1_combo_model.setCurrentIndex(-1)
         self.ui.t1_combo_model.setEnabled(True)
         self.setting_combo_box = False
 
     def update_env(self):
-        # 如果是圖片分類就取得 task 如果不是就取得　model 的名稱
-        task = self.get_tao_task()  
 
-        # 更新 操作的目錄 tasks/<task>
-        self.itao_env.update('TASK', task )
-        task_path = os.path.join( self.itao_env.get_env('LOCAL_PROJECT_DIR'), task)
-        self.itao_env.update('LOCAL_EXPERIMENT_DIR', task_path )
+        # 取得當前的工作路徑，與工作資料夾
+        local_project_dir = os.path.join(os.getcwd(), 'tasks')
+        self.itao_env.update('LOCAL_PROJECT_DIR', local_project_dir)
 
+        # 取得當前任務的路徑
+        task = self.itao_env.get_env('TASK')
+        local_task_path = os.path.join( local_project_dir, task)
+        self.itao_env.update('LOCAL_EXPERIMENT_DIR', local_task_path )
+        self.itao_env.update('USER_EXPERIMENT_DIR', self.itao_env.replace_docker_root(local_task_path))
+
+        # 取得數據集的資料夾
+        local_data_dir = os.path.join(os.getcwd(), 'data')
+        self.itao_env.update('LOCAL_DATA_DIR', local_data_dir)
+        self.itao_env.update('DATA_DOWNLOAD_DIR', self.itao_env.replace_docker_root(local_task_path))
+
+        # 取得輸出的資料夾
+        local_output_dir = os.path.join(local_task_path, 'output')
+        self.itao_env.update2('TRAIN', 'LOCAL_OUTPUT_DIR', local_output_dir)
+        self.itao_env.update2('TRAIN', 'OUTPUT_DIR', self.itao_env.replace_docker_root(local_output_dir))
+        self.check_dir(local_output_dir)
+
+       # 更新 specs 的目錄
+        local_spec_path = os.path.join(local_task_path, 'specs')
+        self.itao_env.update('LOCAL_SPECS_DIR', local_spec_path)
+        self.itao_env.update('SPECS_DIR', self.itao_env.replace_docker_root(local_spec_path))
+
+        # 定義訓練的 spec
+        self.train_spec = DefineSpec(mode='train')
+        self.retrain_spec = DefineSpec(mode='retrain')
+
+        # 取得特定的API
         self.logger.info('Loading Target Module ... ')
         # sys.path.append("../itao")
-        
         self.module = importlib.import_module(f"itao.qtasks.{self.itao_env.get_env('TASK')}", package='../itao')
         self.train_cmd = self.module.TrainCMD
         self.eval_cmd = self.module.EvalCMD
@@ -91,13 +115,7 @@ class Tab1(Init):
         except:
             self.kmeans = ""
 
-        # 更新 specs 的目錄
-        spec_path = os.path.join(task_path, 'specs')
-        self.itao_env.update('LOCAL_SPECS_DIR', spec_path)
-        self.itao_env.update('SPECS_DIR', self.itao_env.replace_docker_root(spec_path))
-
-        # 定義訓練的 spec
-        self.train_spec = DefineSpec('train')
+ 
             
     """ T1 -> 取得模型 並更新 主幹清單 """
     def get_model(self):
@@ -116,19 +134,18 @@ class Tab1(Init):
             
             # 取得 model
             self.logger.info('Update combo box: {}'.format('model'))
-            self.train_conf['model'] = self.ui.t1_combo_model.currentText()
+            task = self.ui.t1_combo_task.currentText()
+            model = self.ui.t1_combo_model.currentText()
+            self.itao_env.update('TASK', 'classification' if 'classification' == self.itao_env.get_env('NGC_TASK') else model.lower())
 
             # 更新進度條
             self.sel_idx[1]=1
             self.update_progress(self.current_page_id, self.sel_idx.count(1), len(self.t1_objects))
 
-            # 這邊需要更新itao_env.json 環境變數，後面才能夠取得 spec 的檔案
-            self.update_env()
-
             # 更新 元素
             self.setting_combo_box = True
             self.ui.t1_combo_bone.clear()
-            self.ui.t1_combo_bone.addItems(list(self.option[self.train_conf['task']][self.train_conf['model']])   )
+            self.ui.t1_combo_bone.addItems(list(self.option[task][model]))
             self.ui.t1_combo_bone.setCurrentIndex(-1)
             self.ui.t1_combo_bone.setEnabled(True)
             self.setting_combo_box = False
@@ -149,22 +166,24 @@ class Tab1(Init):
             
             # 取得 backbone 的資訊
             self.logger.info('Update combo box: {}'.format('backbone'))
-            self.train_conf['backbone'] = self.ui.t1_combo_bone.currentText()
-            self.itao_env.update('backbone', self.ui.t1_combo_bone.currentText().lower())
+            self.itao_env.update('BACKBONE', self.ui.t1_combo_bone.currentText().lower())
 
             # 更新 進度條
             self.sel_idx[2]=1
             self.update_progress(self.current_page_id, self.sel_idx.count(1), len(self.t1_objects))
 
+            # 這邊需要更新itao_env.json 環境變數，後面才能夠取得 spec 的檔案
+            self.update_env()
+
             # 更新 spec 裡面的 arch
-            self.train_spec.mapping('arch', '"{}"'.format(self.train_conf['backbone'].lower()))
+            self.train_spec.mapping('arch', '"{}"'.format(self.itao_env.get_env('BACKBONE').lower()))
 
             # 加入新的元素
             self.setting_combo_box = True
-            if self.train_conf['backbone'] in self.option_nlayer.keys():
+            if self.ui.t1_combo_bone.currentText() in self.option_nlayer.keys():
                 self.ui.t1_combo_layer.clear()
                 self.ui.t1_combo_layer.setEnabled(True)
-                new_layers = [ layer.replace("_","") for layer in self.option_nlayer[self.train_conf['backbone']]]
+                new_layers = [ layer.replace("_","") for layer in self.option_nlayer[self.ui.t1_combo_bone.currentText()]]
                 self.ui.t1_combo_layer.addItems( new_layers )
                 self.ui.t1_combo_layer.setCurrentIndex(-1)
                 self.ui.t1_combo_layer.setEnabled(True)
@@ -186,8 +205,7 @@ class Tab1(Init):
 
             # 更新 nlayer
             self.logger.info('Update combo box: {}'.format('n_layers'))
-            self.itao_env.update('nlayer', int(self.ui.t1_combo_layer.currentText()))
-            self.train_conf['nlayer'] = self.ui.t1_combo_layer.currentText() 
+            self.itao_env.update('NLAYER', self.ui.t1_combo_layer.currentText())
 
             # 更新進度條
             self.sel_idx[3]=1
@@ -195,9 +213,9 @@ class Tab1(Init):
 
             # 更新 spec 的 n_layers
             if 'classification' in self.itao_env.get_env('NGC_TASK'):
-                self.train_spec.mapping('n_layers', self.train_conf['nlayer'])
+                self.train_spec.mapping('n_layers', self.itao_env.get_env('NLAYER'))
             elif 'detection' in self.itao_env.get_env('NGC_TASK'):
-                self.train_spec.mapping('nlayers', self.train_conf['nlayer'])
+                self.train_spec.mapping('nlayers', self.itao_env.get_env('NLAYER'))
             
             # 延續上一個動作
             self.setting_combo_box = False
@@ -209,8 +227,8 @@ class Tab1(Init):
     def pretrained_download(self):
         
         self.down_model = DownloadModel(
-            model=self.train_conf['backbone'],
-            nlayer=self.train_conf['nlayer']
+            model=self.itao_env.get_env('BACKBONE'),
+            nlayer=self.itao_env.get_env('NLAYER')
         )
         # 下載模型的事件
         self.logger.info('Start to download model ... ')
@@ -225,7 +243,7 @@ class Tab1(Init):
     """ T1 -> 顯示數據級結構 """
     def get_dset_format(self):
         for key, val in DSET_FMT_LS.items():
-            if key.lower() in self.train_conf['task'].lower():
+            if key.lower() in self.itao_env.get_env('NGC_TASK').lower():
                 return val
 
     """ T1 -> 下載模型的事件 """
@@ -236,7 +254,7 @@ class Tab1(Init):
             # 從資料取得模型的路徑，詳情需要去看 download_tools.py
             model_path = data.split(":")[1]
             finish_info  = 'Pre-trained Model is downloaded. ({})'.format(model_path)
-            self.itao_env.update('LOCAL_PRETRAINED_MODEL', model_path)
+            self.itao_env.update2('TRAIN', 'LOCAL_PRETRAINED_MODEL', model_path)
             self.logger.info(finish_info)
             self.insert_text(finish_info)
 

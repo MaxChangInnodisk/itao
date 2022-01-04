@@ -2,9 +2,11 @@
 from glob import glob
 from PyQt5.QtCore import QThread, flush, pyqtSignal
 import subprocess
-import time, os, glob
+import time, os, glob, sys
 from itao.environ import SetupEnv
 from itao.utils.qt_logger import CustomLogger
+from itao.qtasks.tools import parse_arguments
+
 ########################################################################
 
 # !tao classification train -e $SPECS_DIR/classification_retrain_spec.cfg \
@@ -15,22 +17,29 @@ class ReTrainCMD(QThread):
 
     trigger = pyqtSignal(object)
 
-    def __init__(self, task, spec, output_dir, key, num_gpus):
+    def __init__(self, args:dict):
         super(ReTrainCMD, self).__init__()
         
         self.env = SetupEnv()
         self.flag = True        
         self.data = {'epoch':None, 'avg_loss':None, 'val_loss':None}
+        self.logger = CustomLogger().get_logger('dev')
+
+        key_args = ['task', 'spec', 'output_dir', 'key', 'num_gpus']
+        ret, new_args, error_args = parse_arguments(key_args=key_args, in_args=args)
+        if not ret:
+            self.logger.error('Prune: Input arguments is wrong: {}'.format(error_args))
+            sys.exit(1)
+
         self.cmd = [    
             # "tao", f"{ self.env.get_env('TASK') }", "train",
-            "tao", f"{ task }", "train",
-            "-e", f"{ spec }", 
-            "-r", f"{ output_dir }" ,
-            "-k", f"{ key }",
-            "--gpus", f"{ num_gpus }"
+            "tao", f"{ new_args['task'] }", "train",
+            "-e", f"{ new_args['spec'] }", 
+            "-r", f"{ new_args['output_dir'] }" ,
+            "-k", f"{ new_args['key'] }",
+            "--gpus", f"{ new_args['num_gpus'] }"
         ]
 
-        self.logger = CustomLogger().get_logger('dev')
         self.logger.info('----------------')
         self.logger.info(self.cmd)
         self.logger.info('----------------')

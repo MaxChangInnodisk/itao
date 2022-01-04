@@ -57,9 +57,9 @@ class Tab2(Init):
         
         cmd_args = {
             'task': self.itao_env.get_env('TASK'), 
-            'spec': self.itao_env.replace_docker_root(self.train_spec.get_spec_path(), mode='docker'),
-            'output_dir': self.itao_env.get_env('OUTPUT_DIR'), 
-            'key': self.itao_env.get_env('KEY'),
+            'spec': self.itao_env.get_env('TRAIN','SPECS'),
+            'output_dir': self.itao_env.get_env('TRAIN', 'OUTPUT_DIR'), 
+            'key': self.itao_env.get_env('TRAIN', 'KEY'),
             'num_gpus': self.itao_env.get_env('NUM_GPUS')
         }
 
@@ -137,6 +137,10 @@ class Tab2(Init):
             self.train_spec.mapping('small_anchor_shape', f'"[{data[0]}]"' )
             self.train_spec.mapping('mid_anchor_shape', f'"[{data[1]}]"')
             self.train_spec.mapping('big_anchor_shape', f'"[{data[2]}]"')
+
+            self.retrain_spec.mapping('small_anchor_shape', f'"[{data[0]}]"' )
+            self.retrain_spec.mapping('mid_anchor_shape', f'"[{data[1]}]"')
+            self.retrain_spec.mapping('big_anchor_shape', f'"[{data[2]}]"')
             self.worker_kmeans.quit()
         else:
             self.logger.error("kmeans error: {}".format(data))
@@ -148,7 +152,7 @@ class Tab2(Init):
         if bool(data):
 
             if len(data.keys())>1:
-                cur_epoch, avg_loss, val_loss, max_epoch = data['epoch'], data['avg_loss'], data['val_loss'], int(self.train_conf['epoch'])
+                cur_epoch, avg_loss, val_loss, max_epoch = data['epoch'], data['avg_loss'], data['val_loss'], int(self.itao_env.get_env('TRAIN','epoch'))
                 
                 log=""
                 self.t2_var["val_epoch"].append(cur_epoch)
@@ -197,12 +201,12 @@ class Tab2(Init):
 
         args = {
             'task': self.itao_env.get_env('TASK'), 
-            'spec': self.itao_env.replace_docker_root(self.train_spec.get_spec_path(), mode='docker'),
-            'key': self.itao_env.get_env('KEY'),
+            'spec': self.itao_env.get_env('TRAIN', 'SPECS'),
+            'key': self.itao_env.get_env('TRAIN', 'KEY'),
         }
         
         # other case
-        if 'yolo' in self.itao_env.get_env('TASK'): args['model']=self.itao_env.get_env('UNPRUNED_MODEL')
+        if 'yolo' in self.itao_env.get_env('TASK'): args['model']=self.itao_env.get_env('TRAIN', 'OUTPUT_MODEL')
 
         self.worker_eval = self.eval_cmd(args=args)
 
@@ -215,7 +219,7 @@ class Tab2(Init):
     """ 即時更新與 epoch 相關的資訊 """
     def update_epoch_event(self):
         if self.ui.t2_epoch.toPlainText() != "":
-            model_name = f"{self.train_conf['backbone'].lower()}_{int(self.ui.t2_epoch.toPlainText()):03}.tlt"
+            model_name = f"{self.itao_env.get_env('BACKBONE')}_{int(self.ui.t2_epoch.toPlainText()):03}.tlt"
             self.ui.t2_model_name.setPlainText(model_name)
             self.ui.t3_pruned_in_model.setPlainText(model_name)
 
@@ -223,57 +227,58 @@ class Tab2(Init):
     def update_train_conf(self):
         
         self.logger.info("Updating self.train_conf ... ")
-        self.train_conf['key'] = self.ui.t2_key.toPlainText()
-        self.train_conf['epoch'] = self.ui.t2_epoch.toPlainText()
-        self.train_conf['input_shape'] = self.ui.t2_input_shape.toPlainText()
-        self.train_conf['learning_rate'] = self.ui.t2_lr.toPlainText()
-        self.train_conf['batch_size'] = self.ui.t2_batch.toPlainText()
-        # self.train_conf['output_name'] = self.ui.t2_model_name.toPlainText()
-        # self.train_conf['checkpoint'] = self.ui.t2_bt_checkpoint
-        self.train_conf['custom'] = self.ui.t2_c1.toPlainText()
+
+        # Update train spec to itao_env.json
+        self.itao_env.update2('TRAIN', 'KEY', self.ui.t2_key.toPlainText())
+        self.itao_env.update2('TRAIN', 'EPOCH', self.ui.t2_epoch.toPlainText())
+        self.itao_env.update2('TRAIN', 'INPUT_SHAPE', self.ui.t2_input_shape.toPlainText())
+        self.itao_env.update2('TRAIN', 'LR', self.ui.t2_lr.toPlainText())
+        self.itao_env.update2('TRAIN', 'BATCH_SIZE', self.ui.t2_batch.toPlainText())
+        self.itao_env.update2('TRAIN', 'CUSTOM', self.ui.t2_c1.toPlainText())
+
         self.update_epoch_event()
 
         if self.itao_env.get_env('NGC_TASK')=='classification':
             # epoch
-            self.train_spec.mapping('n_epochs' , self.train_conf['epoch'])
+            self.train_spec.mapping('n_epochs' , self.itao_env.get_env('TRAIN','EPOCH'))
             
             # input image size
-            self.train_spec.mapping('input_image_size', '"{}"'.format(self.train_conf['input_shape']))
+            self.train_spec.mapping('input_image_size', '"{}"'.format(self.itao_env.get_env('TRAIN','INPUT_SHAPE')))
 
             # batch size
-            self.train_spec.mapping('batch_size_per_gpu', self.train_conf['batch_size'])
+            self.train_spec.mapping('batch_size_per_gpu', self.itao_env.get_env('TRAIN','BATCH_SIZE'))
 
             # eval model path
             output_model_dir = os.path.join(self.itao_env.get_env('OUTPUT_DIR'), 'weights')
-            output_model_path = os.path.join( output_model_dir, f"{self.train_conf['backbone'].lower()}_{int(self.train_conf['epoch']):03}.tlt")
-            self.itao_env.update('LOCAL_UNPRUNED_MODEL', self.itao_env.replace_docker_root(output_model_path, mode='root'))
-            self.itao_env.update('UNPRUNED_MODEL', output_model_path)
+            output_model_path = os.path.join( output_model_dir, f"{self.itao_env.get_env('BACKBONE')}_{int(self.itao_env.get_env('TRAIN','EPOCH')):03}.tlt")
+            self.itao_env.update2('TRAIN', 'LOCAL_UNPRUNED_MODEL', self.itao_env.replace_docker_root(output_model_path, mode='root'))
+            self.itao_env.update2('TRAIN', 'UNPRUNED_MODEL', output_model_path)
             self.train_spec.mapping('model_path', f'"{output_model_path}"')
         
         elif self.itao_env.get_env('TASK')=='yolo_v4':
             # epoch
-            self.train_spec.mapping('num_epochs', self.train_conf['epoch'])
+            self.train_spec.mapping('num_epochs', self.itao_env.get_env('TRAIN','EPOCH'))
 
             # data augmentation's shape
-            c, w, h = [ int(x) for x in self.train_conf['input_shape'].split(',')]
+            c, w, h = [ int(x) for x in self.itao_env.get_env('TRAIN','INPUT_SHAPE').split(',')]
             self.logger.debug('Get shape: {}, {}, {}'.format(c, w, h))
             self.train_spec.mapping('output_width', w)
             self.train_spec.mapping('output_height', h)
             self.train_spec.mapping('output_channel', c)
             
             # batch size
-            self.train_spec.mapping('batch_size_per_gpu', self.train_conf['batch_size'])
+            self.train_spec.mapping('batch_size_per_gpu', self.itao_env.get_env('TRAIN','BATCH_SIZE'))
         
             # eval model path
-            output_model_dir = os.path.join(self.itao_env.get_env('OUTPUT_DIR'), 'weights')
+            output_model_dir = os.path.join(self.itao_env.get_env('TRAIN', 'OUTPUT_DIR'), 'weights')
             output_model_path = os.path.join( output_model_dir, "{task}_{backbone}{nlayers}_epoch_{epoch:03}.tlt".format(
                 task = self.itao_env.get_env('TASK').lower().replace('_', ''),
-                backbone = self.train_conf['backbone'].lower(),
-                nlayers = self.itao_env.get_env('nlayer'),
-                epoch = int(self.train_conf['epoch'])
+                backbone = self.itao_env.get_env('BACKBONE'),
+                nlayers = self.itao_env.get_env('NLAYER'),
+                epoch = int(self.itao_env.get_env('TRAIN','EPOCH'))
             ))
-            self.itao_env.update('LOCAL_UNPRUNED_MODEL', self.itao_env.replace_docker_root(output_model_path, mode='root'))
-            self.itao_env.update('UNPRUNED_MODEL', output_model_path)
+            self.itao_env.update2('TRAIN', 'LOCAL_OUTPUT_MODEL', self.itao_env.replace_docker_root(output_model_path, mode='root'))
+            self.itao_env.update2('TRAIN', 'OUTPUT_MODEL', output_model_path)
 
             # to-do
             # 區隔 data_source and validation_data_source，目前都是用一樣的

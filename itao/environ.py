@@ -33,11 +33,9 @@ class SetupEnv:
                     "LOCAL_PROJECT_DIR": f"{local_project_dir}",
                     "LOCAL_DATA_DIR": f"{local_data_dir}",
                     "LOCAL_EXPERIMENT_DIR": "",
-                    "LOCAL_SPECS_DIR": "",
                     "PROJECT_DIR": "/workspace/tao-experiments",
                     "USER_EXPERIMENT_DIR": "",
                     "DATA_DOWNLOAD_DIR": "",
-                    "SPECS_DIR": "",
                     "CLI": "ngccli_cat_linux.zip" }
 
         if not os.path.exists(os.path.dirname(self.env_cfg)):
@@ -54,12 +52,28 @@ class SetupEnv:
         self.env[key]=val
         with open(self.json_file_path, 'w') as file:
             json.dump(self.env, file, indent=2)
-        if log: self.logger.info(f'Updating Env: "{key}" -> {val}')
+        if log: self.logger.info(f'Upd env: "{key}" -> {val}')
+
+
+    """ update environ file ( itao_env.json ) """
+    def update2(self,prim_key , key, val, log=True):
+        self.get_newest_env()
+        
+        if prim_key not in self.env.keys():
+            self.env[prim_key] = dict()
+
+        self.env[prim_key][key] = val
+        # self.env[key]=val
+        with open(self.json_file_path, 'w') as file:
+            json.dump(self.env, file, indent=2)
+
+        if log: self.logger.info(f'Upd env: [{prim_key}][{key}]={val}')
+
 
     """ get environ from environ file """
-    def get_env(self, key):
+    def get_env(self, key, key2=None):
         self.get_newest_env()
-        return self.env[str(key)]
+        return self.env[str(key)] if key2 == None else self.env[str(key)][str(key2)]
 
     """ just get path of workspace """
     def get_workspace_path(self):

@@ -81,22 +81,23 @@ class Tab3(Init):
 
         cmd_args = {
             'task': self.itao_env.get_env('TASK'), 
-            'input_model': self.itao_env.get_env('UNPRUNED_MODEL'),
-            'output_model': self.itao_env.get_env('PRUNED_MODEL'),
-            'key': self.itao_env.get_env('KEY'),
-            'pth' : self.itao_env.get_env('PRUNED_THRES'), 
-            'eq' : self.itao_env.get_env('PRUNED_EQ')
+            'input_model': self.itao_env.get_env('PRUNE', 'INPUT_MODEL'),
+            'output_model': self.itao_env.get_env('PRUNE', 'OUTPUT_MODEL'),
+            'key': self.itao_env.get_env('PRUNE', 'KEY'),
+            'pth' : self.itao_env.get_env('PRUNE', 'THRES'), 
+            'eq' : self.itao_env.get_env('PRUNE', 'EQ')
         }
 
-        cmd_args['spec'] = self.itao_env.replace_docker_root(self.train_spec.get_spec_path(), mode='docker')
+        cmd_args['spec'] = self.itao_env.get_env('TRAIN', 'SPECS')
 
         self.worker_prune = self.prune_cmd( args = cmd_args )
    
-        if not self.t3_debug:
-            self.worker_prune.start()
-            self.worker_prune.trigger.connect(self.update_prune_log)
-        else:
-            self.pruned_compare()
+        # if not self.t3_debug:
+        #     self.worker_prune.start()
+        #     self.worker_prune.trigger.connect(self.update_prune_log)
+        # else:
+        
+        self.pruned_compare()
 
     """ 更新 Prune 的資訊 """
     def update_prune_log(self, data):
@@ -129,8 +130,8 @@ class Tab3(Init):
         self.logger.info("Comparing Model ... ")
         
         # Get each name of input and output model
-        input_model = self.itao_env.replace_docker_root(self.prune_conf['input_model'], mode='root')
-        output_model = self.itao_env.replace_docker_root(self.prune_conf['output_model'], mode='root')        
+        input_model = self.itao_env.replace_docker_root(self.itao_env.get_env('PRUNE', 'INPUT_MODEL') , mode='root')
+        output_model = self.itao_env.replace_docker_root(self.itao_env.get_env('PRUNE', 'OUTPUT_MODEL'), mode='root')        
         
         # Get each size
         org_size = float(os.path.getsize( input_model ))/1024/1024 if not self.t3_debug else 243
@@ -152,9 +153,14 @@ class Tab3(Init):
 
     def update_t3_epoch_event(self):
         # output_model = self.ui.t3_retrain_out_model.toPlainText()
-        self.retrain_conf['epoch'] = self.ui.t3_retrain_epoch.toPlainText()
-        output_model = "{}{}_{:03}.tlt".format(self.train_conf['backbone'].lower(), int(self.retrain_conf['epoch']))
+        # self.retrain_conf['epoch'] = self.ui.t3_retrain_epoch.toPlainText()
+        epoch = self.ui.t3_retrain_epoch.toPlainText()
+        self.itao_env.update2('PRUNE', 'EPOCH', epoch)
+        backbone = self.itao_env.get_env('BACKBONE')
+        # epoch = self.itao_env.get_env('TRAIN', 'EPOCH')
+        output_model = "{}_{:03}.tlt".format(backbone, int(epoch))
         self.ui.t3_retrain_out_model.setPlainText(output_model)
+        return output_model
 
     """ add retrain variable into env """
     def update_retrain_info(self):
@@ -179,16 +185,16 @@ class Tab3(Init):
         
         self.worker_retrain = self.retrain_cmd(
             task= self.itao_env.get_env('TASK'), 
-            spec= self.itao_env.replace_docker_root(self.retrain_spec.get_spec_path()), 
-            output_dir= self.itao_env.get_env('RETRAIN_OUTPUT_DIR'), 
+            spec= self.itao_env.get_env('TRAIN', 'SPECS'), 
+            output_dir= self.itao_env.get_env('RETRAIN', 'OUTPUT_DIR'), 
             key= self.itao_env.get_env('KEY'),
             num_gpus= self.itao_env.get_env('NUM_GPUS')
         )
 
-        if self.retrain_conf['epoch'].isdigit:
-            self.update_progress(self.current_page_id, 0, self.retrain_conf['epoch'])
+        if self.itao_env.get_env('RETRAIN', 'EPOCH').isdigit:
+            self.update_progress(self.current_page_id, 0, int(self.itao_env.get_env('RETRAIN', 'EPOCH')))
         else:
-            self.logger.error('Value Error: retrain_conf["epoch"] -> {}'.format(self.retrain_conf['epoch']))
+            self.logger.error('Value Error: retrain_conf["epoch"] -> {}'.format(self.itao_env.get_env('RETRAIN', 'EPOCH')))
 
         
         if not self.t3_debug:
@@ -200,7 +206,7 @@ class Tab3(Init):
     """ 更新 Retrain 的相關資訊 """
     def update_retrain_log(self, data):
         if bool(data):
-            cur_epoch, avg_loss, val_loss, max_epoch = data['epoch'], data['avg_loss'], data['val_loss'], int(self.retrain_conf['epoch'])
+            cur_epoch, avg_loss, val_loss, max_epoch = data['epoch'], data['avg_loss'], data['val_loss'], int(self.itao_env.get_env('RETRAIN', 'EPOCH'))
             log = "{} {} {}\n".format(  f'[{cur_epoch:03}/{max_epoch:03}]',
                                         f'AVG_LOSS: {avg_loss:06.3f}',
                                         f'VAL_LOSS: {val_loss:06.3f}' if val_loss is not None else ' ')
@@ -240,10 +246,9 @@ class Tab3(Init):
         self.logger.info("Updating PRUNE_CONF ... ")
 
         # create prune folder
-        backbone = self.itao_env.get_env('backbone')
-        nlayer = self.itao_env.get_env('nlayer')
-
-        local_prune_dir = os.path.join(self.itao_env.get_env('LOCAL_OUTPUT_DIR'), f"{backbone}{nlayer}_pruned")
+        backbone = self.itao_env.get_env('BACKBONE')
+        nlayer = self.itao_env.get_env('NLAYER')
+        local_prune_dir = os.path.join(self.itao_env.get_env('TRAIN', 'LOCAL_OUTPUT_DIR'), f"{backbone}{nlayer}_pruned")
         if not os.path.exists(local_prune_dir):
             print('Create directory of pruned model {}'.format(local_prune_dir))
             os.mkdir(local_prune_dir)
@@ -251,29 +256,30 @@ class Tab3(Init):
         
         # setup path of prune_model
         prune_dir = self.itao_env.replace_docker_root(local_prune_dir)
-        
-        # check output name is set.
         prune_model_name = f'{backbone}{nlayer}_pruned.tlt' if self.ui.t3_pruned_out_name.toPlainText() == "" else self.ui.t3_pruned_out_name.toPlainText()
         # update information on itao
         self.ui.t3_pruned_out_name.setPlainText(prune_model_name)
         self.ui.t3_retrain_pretrain.setPlainText(prune_model_name)
         
-        # setup path of input model and output_model
+        # setup path of output_model and input model  
         prune_model = os.path.join(prune_dir, prune_model_name )
         self.prune_conf['output_model']=prune_model
-        self.itao_env.update('PRUNED_MODEL', prune_model)
-        self.itao_env.update('LOCAL_PRUNED_MODEL', self.itao_env.replace_docker_root(prune_model, mode='root'))
+        self.itao_env.update2('PRUNE', 'OUTPUT_MODEL', prune_model)
+        # self.itao_env.update('PRUNED_MODEL', prune_model)
+        self.itao_env.update2('PRUNE', 'LOCAL_OUTPUT_MODEL', self.itao_env.replace_docker_root(prune_model, mode='root'))
         
-        input_model = os.path.join(self.itao_env.get_env('OUTPUT_DIR'), os.path.join('weights', self.ui.t3_pruned_in_model.toPlainText()))
-        self.prune_conf['input_model']=self.itao_env.get_env('UNPRUNED_MODEL')
+        # input_model = os.path.join(self.itao_env.get_env('OUTPUT_DIR'), os.path.join('weights', self.ui.t3_pruned_in_model.toPlainText()))
+        # self.prune_conf['input_model']=
+        self.itao_env.update2('PRUNE', 'INPUT_MODEL', self.itao_env.get_env('TRAIN', 'OUTPUT_MODEL'))
         # = self.itao_env.get_env('UNPRUNED_MODEL')
         
         # setup key, thres, eq
-        self.retrain_conf['key'] = self.prune_conf['key'] = self.train_conf['key']
-        self.ui.t3_pruned_key.setText(self.train_conf['key'])
+        # self.retrain_conf['key'] = self.prune_conf['key'] = self.train_conf['key']
+        self.itao_env.update2('PRUNE', 'KEY', self.itao_env.get_env('TRAIN', 'KEY'))
+        self.ui.t3_pruned_key.setText(self.itao_env.get_env('PRUNE', 'KEY'))
 
-        self.prune_conf['thres'] = round(float(self.ui.t3_pruned_threshold.value()), 2)
-        self.itao_env.update('PRUNED_THRES', round(float(self.ui.t3_pruned_threshold.value()), 2))
+        # self.prune_conf['thres'] = round(float(self.ui.t3_pruned_threshold.value()), 2)
+        self.itao_env.update2('PRUNE', 'THRES', round(float(self.ui.t3_pruned_threshold.value()), 2))
         
         if 'yolo' in self.itao_env.get_env('TASK'):
             eq = 'intersection'   
@@ -281,59 +287,67 @@ class Tab3(Init):
             eq = 'union'
 
         self.prune_conf['eq'] = eq
-        self.itao_env.update('PRUNED_EQ', eq)
+        self.itao_env.update2('PRUNE','EQ', eq)
 
         # show conf
-        self.insert_text("Show pruned config", config=self.prune_conf)
+        self.insert_text("Show pruned config", config=self.itao_env.get_env('PRUNE'))
 
     """ 將QT中的RETRAIN配置內容映射到RETRAIN_CONF """
     def update_retrain_conf(self):
 
         self.logger.info('Updating self.retrain_conf ... ')
 
-        self.ui.t3_retrain_key.setText(self.train_conf['key'])
-        self.retrain_conf['backbone'] = self.train_conf['backbone']
-        self.retrain_conf['pretrain'] = self.prune_conf['output_model']
-        self.retrain_conf['epoch'] = self.ui.t3_retrain_epoch.toPlainText()
-        self.retrain_conf['batch_size'] = self.ui.t3_retrain_bsize.toPlainText()
-        self.retrain_conf['learning_rate'] = self.ui.t3_retrain_lr.toPlainText()
+        input_model = self.itao_env.get_env('PRUNE', 'OUTPUT_MODEL')
+        backbone = self.itao_env.get_env('BACKBONE').lower()
+        nlayer = self.itao_env.get_env('NLAYER')
+        epoch = self.ui.t3_retrain_epoch.toPlainText()
+        batch_size = self.ui.t3_retrain_bsize.toPlainText()
+        lr = self.ui.t3_retrain_lr.toPlainText()
 
-        self.retrain_spec.mapping('n_epochs', self.retrain_conf['epoch'])
+        self.ui.t3_retrain_key.setText(self.itao_env.get_env('KEY'))
+        self.itao_env.update2('RETRAIN', 'INPUT_MODEL', input_model)
+        self.itao_env.update2('RETRAIN', 'EPOCH', epoch)
+        self.itao_env.update2('RETRAIN', 'BATCH_SIZE', batch_size)
+        self.itao_env.update2('RETRAIN', 'LR', lr)
+        self.itao_env.update2('RETRAIN', 'OUTPUT_MODEL', None)
+
+        self.retrain_spec.mapping('n_epochs', epoch)
         self.retrain_spec.mapping('input_image_size', '"{}"'.format(self.train_spec.find_key('input_image_size')))
-        # self.retrain_spec.mapping('input_image_size', '"3,224,224"')
-        self.retrain_spec.mapping('arch', '"{}"'.format(self.train_conf['backbone'].lower()))
-        self.retrain_spec.mapping('n_layer', self.train_conf['nlayer'])
+        self.retrain_spec.mapping('arch', '"{}"'.format(backbone))
+        self.retrain_spec.mapping('n_layer', nlayer)
         
         self.retrain_spec.mapping('train_dataset_path', '"{}"'.format(self.train_spec.find_key('train_dataset_path')))
         self.retrain_spec.mapping('val_dataset_path', '"{}"'.format( self.train_spec.find_key('val_dataset_path')))
         
-        self.retrain_spec.mapping('batch_size_per_gpu', int(self.ui.t3_retrain_bsize.toPlainText()))
-        self.retrain_spec.mapping('pretrained_model_path', '"{}"'.format(self.retrain_conf['pretrain']))
+        self.retrain_spec.mapping('batch_size_per_gpu', int(batch_size))
+        self.retrain_spec.mapping('pretrained_model_path', '"{}"'.format(input_model))
         self.retrain_spec.mapping('eval_dataset_path', '"{}"'.format( self.train_spec.find_key('eval_dataset_path')))
+
+        output_model = self.update_t3_epoch_event()
         
-        self.update_t3_epoch_event()
+        output_model_dir = os.path.join(self.itao_env.get_env('USER_EXPERIMENT_DIR'), 'output_retrain')
+        _output_model_dir = os.path.join(output_model_dir, 'weights')
+        output_model_path = os.path.join(_output_model_dir, output_model )
+        self.itao_env.update2('RETRAIN', 'OUTPUT_DIR', output_model_dir)
+        self.itao_env.update2('RETRAIN', 'OUTPUT_MODEL', output_model_path)
         
         if 'classification' in self.itao_env.get_env('TASK'):
 
-            output_model = self.ui.t3_retrain_out_model.toPlainText()
-            output_model = "{}_{:03}.tlt".format(self.retrain_spec.find_key('arch').replace('"', "").replace(" ", ""), int(self.retrain_spec.find_key('n_epochs').rstrip()))
+            # output_model = self.ui.t3_retrain_out_model.toPlainText()
+            # output_model = "{}_{:03}.tlt".format(self.retrain_spec.find_key('arch').replace('"', "").replace(" ", ""), int(self.retrain_spec.find_key('n_epochs').rstrip()))
 
-            self.retrain_conf['output_model'] = output_model
-            self.ui.t3_retrain_out_model.setPlainText(self.retrain_conf['output_model'])
+            # self.retrain_conf['output_model'] = output_model
+            # self.ui.t3_retrain_out_model.setPlainText(self.retrain_conf['output_model'])
             
-            retrain_model_dir = os.path.join(self.itao_env.get_env('USER_EXPERIMENT_DIR'), 'output_retrain')
-            self.itao_env.update('RETRAIN_OUTPUT_DIR', retrain_model_dir)
+            self.retrain_spec.mapping('model_path', f'"{output_model_path}"')
+            self.retrain_spec.mapping('pretrained_model_path', '"{}"'.format(input_model))
 
-            _retrain_model_path = os.path.join(retrain_model_dir, 'weights')
-            retrain_model_path = os.path.join(_retrain_model_path, self.retrain_conf['output_model'] )
-            self.retrain_spec.mapping('model_path', f'"{retrain_model_path}"')
-
-            self.retrain_spec.mapping('pretrained_model_path', '"{}"'.format(self.retrain_conf['pretrain']))
         elif 'yolo' in self.itao_env.get_env('TASK'):
-            
+            # self.retrain_spec.mapping('model_path', f'"{retrain_model_path}"')
+            self.retrain_spec.mapping('pruned_model_path', '"{}"'.format(input_model))
             pass
 
 
-        self.insert_text("Show Retrain Conifg", config=self.retrain_conf)
+        self.insert_text("Show Retrain Conifg", config=self.itao_env.get_env('RETRAIN'))
 
             

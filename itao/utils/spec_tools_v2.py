@@ -4,36 +4,25 @@ from itao.utils.qt_logger import CustomLogger
 
 if __name__ == '__main__':
     import environ
-    import configs
 else:
     from itao import environ
 
-# MAP_KEY = {
-#     "train":[
-#         "arch",
-#         "n_layer",
-#         "input_image_size",
-#         "train_dataset_path",
-#         "val_dataset_path",
-#         "pretrained_model_path",
-#         "batch_size_per_gpu",
-#         "n_epochs",
-#         "eval_dataset_path",
-#         "model_path",
-#     ],
-#     "retrain":[
-#         "arch",
-#         "n_layer",
-#         "input_image_size",
-#         "train_dataset_path",
-#         "val_dataset_path",
-#         "pretrained_model_path",
-#         "batch_size_per_gpu",
-#         "n_epochs",
-#         "eval_dataset_path",
-#         "model_path",
-#     ]
-# }
+"""
+Version 0.2:
+
+Provide fixed specs
+
+./classification/
+└── specs
+    ├── classification_retrain_spec.cfg
+    └── classification_spec.cfg
+
+./yolo_v4/
+└── specs
+    ├── yolo_v4_kitti_seq_spec.txt
+    └── yolo_v4_retrain_kitti_seq_spec.txt
+
+"""
 
 class DefineSpec():
     """ initialize """
@@ -46,29 +35,16 @@ class DefineSpec():
         self.spec_cnt, self.new_sepc_cnt = [],[]
         self.write_spec = False
 
-        self.define_include_fmt()
-        self.define_exclude_fmt()
-        # self.keys = MAP_KEY[self.mode]
-        
-        # Get path of spec and backup.
-        # self.spec_path = self.get_spec_path()        
-        
-    def define_include_fmt(self):
-        if 'yolo_v4' in self.env.get_env('TASK'):
-            self.include_fmt = ['seq']
-        
-    def define_exclude_fmt(self):
-        if self.mode=='train':
-            self.logger.info('Create train spec')
-            self.exclude_fmt = ['retrain', 'backup', 'old']
-        else:
-            self.logger.info('Create retrain spec')
-            self.exclude_fmt = ['backup', 'old']
+        if self.spec_path == None:
+            self.spec_path = self.get_spec_path()
                     
     """ backup target spec file """
     def backup_spec(self):
         print("Backup Spec ... ", end="")
-        self.spec_path = self.get_spec_path()
+
+        if self.spec_path == None: 
+            self.spec_path = self.get_spec_path()
+
         cur_time = datetime.datetime.now()            
         backup_spec_path = '{}_backup_{}{}'.format(
             os.path.splitext(self.spec_path)[0],
@@ -84,7 +60,9 @@ class DefineSpec():
 
     """ convert spec's content to python dict """
     def spec_to_dict(self):
-        self.spec_path = self.get_spec_path()
+        if self.spec_path == None: 
+            self.spec_path = self.get_spec_path()
+            
         if self.spec_path != None:
             cnt = []
             with open(self.spec_path, 'r') as spec:
@@ -95,43 +73,43 @@ class DefineSpec():
 
     """ write `new_cnt` into spec file """    
     def dict_to_spec(self, new_cnt):
-        self.spec_path = self.get_spec_path()
+        if self.spec_path == None: 
+            self.spec_path = self.get_spec_path()
+
         with open(self.spec_path, 'w') as spec:
             for c in new_cnt:
                 spec.write(c)    
 
     """ check is include format in path and exclude not in path """
     def check_fmt(self, spec_path):
-        
         parts = os.path.splitext(spec_path)[0].split('_')
         for part in parts:
-            if part not in self.exclude_fmt:
-                if self.include_fmt == []:
-                    return 1
-                else:
-                    if part in self.include_fmt:
-                        return 1
+            if part.lower() == self.mode.lower():
+                return 1
         return 0 
 
     """ get train or retrain spec """
-    def get_spec_path(self):        
+    def get_spec_path(self):     
+        self.logger.info('Get specification ... ')   
         for spec in os.listdir(self.env.get_env('LOCAL_SPECS_DIR')):
             if self.check_fmt(spec):
                 spec_path = os.path.join( self.env.get_env('LOCAL_SPECS_DIR'), spec ) 
                 if self.mode=='train':   
-                    self.env.update('LOCAL_SPECS', spec_path, log=0)
-                    self.env.update('SPECS', self.env.replace_docker_root(spec_path), log=0)
+                    self.env.update2('TRAIN', 'LOCAL_SPECS', spec_path)
+                    self.env.update2('TRAIN', 'SPECS', self.env.replace_docker_root(spec_path))
                 elif self.mode=='retrain':   
-                    self.env.update('LOCAL_RETRAIN_SPECS', spec_path)
-                    self.env.update('RETRAIN_SPECS', self.env.replace_docker_root(spec_path))
-
+                    self.env.update2('RETRAIN', 'LOCAL_SPECS', spec_path)
+                    self.env.update2('RETRAIN', 'SPECS', self.env.replace_docker_root(spec_path))
                 return spec_path
-
         self.logger.error('Can not find spec file!!!', spec)
+        return None
 
     """ find value of `key` in spec """
     def find_key(self, key):
-        self.spec_path = self.get_spec_path()
+
+        if self.spec_path == None: 
+            self.spec_path = self.get_spec_path()
+            
         with open(self.spec_path, 'r') as spec:
             for line in spec.readlines():
                 if key in line: 

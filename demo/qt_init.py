@@ -10,7 +10,7 @@ import subprocess
 """ 自己的函式庫自己撈"""
 sys.path.append("../itao")
 from itao.environ import SetupEnv
-from itao.spec_tools import DefineSpec
+from itao.utils.spec_tools_v2 import DefineSpec
 from itao.qtasks.install_ngc import InstallNGC
 from itao.qtasks.stop_tao import StopTAO
 from itao.utils.qt_logger import CustomLogger
@@ -122,7 +122,7 @@ class Init(QtWidgets.QMainWindow):
                 self.train_spec.mapping('image_directory_path', '"{}"'.format(os.path.join(trg_folder_path, 'images')))
                 self.train_spec.mapping('label_directory_path', '"{}"'.format(os.path.join(trg_folder_path, 'labels')))
                 
-            self.train_conf['dataset_path'] = folder_path
+            # self.train_conf['dataset_path'] = folder_path
             self.itao_env.update('LOCAL_DATASET', folder_path)
             self.itao_env.update('DATASET', trg_folder_path)
             
@@ -201,7 +201,6 @@ class Init(QtWidgets.QMainWindow):
             # setup retrain spec
             self.logger.info('First time loading tab 3 ... ')
             self.logger.info('Define retrain specification ... ')
-            self.retrain_spec = DefineSpec(mode='retrain')
 
             self.first_line=True
             BASIC = {
@@ -271,10 +270,10 @@ class Init(QtWidgets.QMainWindow):
         
         if idx==1:
             [val.clear() for _, val in self.t2_var.items() ]
-            epoch = int( self.train_conf['epoch'] )
+            epoch = int( self.itao_env.get_env('TRAIN', 'EPOCH') )
         elif idx==2:
             [val.clear() for _, val in self.t3_var.items() ]
-            epoch = int( RETRAIN_CONF['epoch'] ) if ylabel!="MB" else 5
+            epoch = int( self.itao_env.get_env('RETRAIN', 'EPOCH') ) if ylabel!="MB" else 5
 
         self.pws[idx].setXRange(1, epoch)
         self.pws[idx].showGrid(x=True, y=True)          # 顯示圖表
@@ -296,11 +295,11 @@ class Init(QtWidgets.QMainWindow):
             self.page_finished_event()
     
     """ 取得 tao 當前的任務 """
-    def get_tao_task(self):
-        if "classification" in self.train_conf['task'].lower():
-            return "classification"
-        else:
-            return self.train_conf['model'].lower()
+    # def get_tao_task(self):
+    #     if "classification" in self.itao_env.get_env('NGC_TASK').lower():
+    #         return "classification"
+    #     else:
+    #         return self.itao_env.get_env('MODEL').lower()
 
     """ 檢查並建立資料夾 """
     def check_dir(self, path):
@@ -310,34 +309,35 @@ class Init(QtWidgets.QMainWindow):
     def mount_env(self):
         self.logger.info('Update environ of mount file ... ')
 
-        local_project_dir = os.path.join(os.getcwd(), 'tasks')
-        tao_task = self.get_tao_task()
+        # local_project_dir = os.path.join(os.getcwd(), 'tasks')
+        # tao_task = self.get_tao_task()
+        # tao_task = self.itao_env.get_env('TASK')
+                
+        # local_task_dir = os.path.join(local_project_dir, tao_task)
+        # local_data_dir = os.path.join(local_project_dir, 'data')
+        # local_spec_dir = os.path.join(local_task_dir, 'specs')
+        # local_out_dir = os.path.join(local_task_dir, 'output')
         
-        local_task_dir = os.path.join(local_project_dir, tao_task)
-        local_data_dir = os.path.join(local_project_dir, 'data')
-        local_spec_dir = os.path.join(local_task_dir, 'specs')
-        local_out_dir = os.path.join(local_task_dir, 'output')
+        # self.itao_env.update('LOCAL_PROJECT_DIR', local_project_dir)
+        # self.itao_env.update('LOCAL_DATA_DIR', local_data_dir)
+        # self.itao_env.update('LOCAL_EXPERIMENT_DIR', local_task_dir)
+        # self.itao_env.update('LOCAL_SPECS_DIR', local_spec_dir)
 
-        self.itao_env.update('LOCAL_PROJECT_DIR', local_project_dir)
-        self.itao_env.update('TASK', tao_task)
-        self.itao_env.update('LOCAL_DATA_DIR', local_data_dir)
-        self.itao_env.update('LOCAL_EXPERIMENT_DIR', local_task_dir)
-        self.itao_env.update('LOCAL_SPECS_DIR', local_spec_dir)
-
-        self.itao_env.update('LOCAL_OUTPUT_DIR', local_out_dir)
-        self.check_dir(local_out_dir)
+        # self.itao_env.update('LOCAL_OUTPUT_DIR', local_out_dir)
+        # self.check_dir(local_out_dir)
 
         ########################################################################################
-        dest_project_dir = self.itao_env.get_workspace_path()
-        dest_dir = os.path.join(dest_project_dir, tao_task)
-        dest_data_dir = os.path.join(dest_project_dir, 'data')
-        dest_spec_dir = os.path.join(dest_dir, 'specs')
-        dest_out_dir = os.path.join(dest_dir, 'output')
+        # dest_project_dir = self.itao_env.get_workspace_path()
+        # dest_dir = os.path.join(dest_project_dir, tao_task)
+        # dest_data_dir = os.path.join(dest_project_dir, 'data')
+        # dest_spec_dir = os.path.join(dest_dir, 'specs')
+        # dest_out_dir = os.path.join(dest_dir, 'output')
         
-        self.itao_env.update('USER_EXPERIMENT_DIR', dest_dir)
-        self.itao_env.update('DATA_DOWNLOAD_DIR', dest_data_dir)
-        self.itao_env.update('SPECS_DIR', dest_spec_dir)
-        self.itao_env.update('OUTPUT_DIR', dest_out_dir)
+        # self.itao_env.update('USER_EXPERIMENT_DIR', dest_dir)
+        # self.itao_env.update('DATA_DOWNLOAD_DIR', dest_data_dir)
+        # self.itao_env.update('SPECS_DIR', dest_spec_dir)
+        # self.itao_env.update('OUTPUT_DIR', dest_out_dir)
+        # self.itao_env.update2('TRAIN', 'OUTPUT_DIR', self.itao_env.replace_docker_root(local_out_dir))
 
         ########################################################################################
         ret = self.itao_env.create_mount_json()
@@ -349,7 +349,7 @@ class Init(QtWidgets.QMainWindow):
     def page_finished_event(self):
         if self.current_page_id==0:
             self.mount_env()
-            self.insert_text("Show config", config=self.train_conf)
+            self.insert_text("Show config", config=self.itao_env.get_env('TRAIN'))
             self.swith_page_button(previous=0, next=1)
 
             self.train_spec.set_label_for_detection(key='target_class_mapping')

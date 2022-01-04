@@ -58,7 +58,8 @@ class PruneCMD(QThread):
             else:
                 for line in proc.stdout:                
                     line = line.decode("utf-8").rstrip('\n').replace('\x08', '')
-                    if line.rstrip(): self.logger.debug(line)
+                    if bool(line.rstrip()): self.logger.debug(line)
+                    
                     if 'WARNING' not in line:
                         if 'INFO' in line:
                             self.trigger.emit(line.split('[INFO]')[1])
