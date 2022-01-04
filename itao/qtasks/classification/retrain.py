@@ -107,7 +107,7 @@ class ReTrainCMD(QThread):
 
             for line in proc.stdout:
                 
-                line = line.decode('utf-8', 'ignore').rstrip('\n')
+                line = line.decode('utf-8', 'ignore').rstrip('\n').replace('\x08', '')
                 
                 if 'loss' in line and 'val_loss' not in line:
                     continue
@@ -121,7 +121,6 @@ class ReTrainCMD(QThread):
                 # return info
                 if self.symbol in line: 
                     self.trigger.emit({'INFO':f"{self.symbol} {line.split(self.symbol)[1]}"})
-
 
                 # return loss
                 if self.check_loss_in_line_new(line):

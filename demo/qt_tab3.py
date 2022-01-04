@@ -38,7 +38,6 @@ class Tab3(Init):
             'retrain':True,
             'eval':True
         }
-        print(self.run_t3_option)
         if self.debug:
             for key in self.run_t3_option.keys():
                 self.run_t3_option[key]=True if int(self.debug_page)==3 and key==self.debug_opt else False
@@ -93,7 +92,9 @@ class Tab3(Init):
             'output_model': self.itao_env.get_env('PRUNE', 'OUTPUT_MODEL'),
             'key': self.itao_env.get_env('PRUNE', 'KEY'),
             'pth' : self.itao_env.get_env('PRUNE', 'THRES'), 
-            'eq' : self.itao_env.get_env('PRUNE', 'EQ')
+            'eq' : self.itao_env.get_env('PRUNE', 'EQ'),
+            'num_gpus': self.itao_env.get_env('NUM_GPUS'),
+            'gpu_index':self.gpu_idx
         }
 
         cmd_args['spec'] = self.itao_env.get_env('TRAIN', 'SPECS')
@@ -165,9 +166,13 @@ class Tab3(Init):
         # self.retrain_conf['epoch'] = self.ui.t3_retrain_epoch.toPlainText()
         epoch = self.ui.t3_retrain_epoch.toPlainText()
         self.itao_env.update2('PRUNE', 'EPOCH', epoch)
-        backbone = self.itao_env.get_env('BACKBONE')
-        # epoch = self.itao_env.get_env('TRAIN', 'EPOCH')
-        output_model = "{}_{:03}.tlt".format(backbone, int(epoch))
+        
+        output_model = "{}_{}{}_epoch_{:03}.tlt".format(
+            self.itao_env.get_env('TASK').replace('_',""),
+            self.itao_env.get_env('BACKBONE'), 
+            self.itao_env.get_env('NLAYER'),
+            int(epoch)
+        )
         self.ui.t3_retrain_out_model.setPlainText(output_model)
         return output_model
 
@@ -197,18 +202,11 @@ class Tab3(Init):
             'key': self.itao_env.get_env('KEY'),
             'spec': self.itao_env.get_env('RETRAIN','SPECS'),
             'output_dir': self.itao_env.get_env('RETRAIN', 'OUTPUT_DIR'), 
-            'num_gpus': self.itao_env.get_env('NUM_GPUS')
+            'num_gpus': self.itao_env.get_env('NUM_GPUS'),
+            'gpu_index':self.gpu_idx
         }
 
         self.worker_retrain = self.retrain_cmd( args = cmd_args )
-
-        # self.worker_retrain = self.retrain_cmd(
-        #     task= self.itao_env.get_env('TASK'), 
-        #     spec= self.itao_env.get_env('TRAIN', 'SPECS'), 
-        #     output_dir= self.itao_env.get_env('RETRAIN', 'OUTPUT_DIR'), 
-        #     key= self.itao_env.get_env('KEY'),
-        #     num_gpus= self.itao_env.get_env('NUM_GPUS')
-        # )
 
         if self.itao_env.get_env('RETRAIN', 'EPOCH').isdigit:
             self.update_progress(self.current_page_id, 0, int(self.itao_env.get_env('RETRAIN', 'EPOCH')))
@@ -225,25 +223,30 @@ class Tab3(Init):
     """ 更新 Retrain 的相關資訊 """
     def update_retrain_log(self, data):
         if bool(data):
-            cur_epoch, avg_loss, val_loss, max_epoch = data['epoch'], data['avg_loss'], data['val_loss'], int(self.itao_env.get_env('RETRAIN', 'EPOCH'))
-            log = "{} {} {}\n".format(  f'[{cur_epoch:03}/{max_epoch:03}]',
-                                        f'AVG_LOSS: {avg_loss:06.3f}',
-                                        f'VAL_LOSS: {val_loss:06.3f}' if val_loss is not None else ' ')
 
-            self.t3_var["val_epoch"].append(cur_epoch)
-            self.t3_var["val_loss"].append(val_loss)        
-            self.t3_var["avg_epoch"].append(cur_epoch)
-            self.t3_var["avg_loss"].append(avg_loss)
-            self.consoles[self.current_page_id].insertPlainText(log)                                # 插入內容
-            self.mv_cursor()
+            if len(data.keys())>1:
+                cur_epoch, avg_loss, val_loss, max_epoch = data['epoch'], data['avg_loss'], data['val_loss'], int(self.itao_env.get_env('RETRAIN', 'EPOCH'))
+                log = "{} {} {}\n".format(  f'[{cur_epoch:03}/{max_epoch:03}]',
+                                            f'AVG_LOSS: {avg_loss:06.3f}',
+                                            f'VAL_LOSS: {val_loss:06.3f}' if val_loss is not None else ' ')
 
-            self.pws[self.current_page_id].clear()                                                  # 清除 Plot
-            self.pws[self.current_page_id].plot(self.t3_var["avg_epoch"], self.t3_var["avg_loss"], pen=pg.mkPen('r', width=2), name="average loss")
-            if val_loss is not None: 
-                self.pws[self.current_page_id].plot(self.t3_var["val_epoch"], self.t3_var["val_loss"], pen=pg.mkPen('b', width=2), name="validation loss")
-                
-            self.update_progress(self.current_page_id, cur_epoch, max_epoch)            
+                self.t3_var["val_epoch"].append(cur_epoch)
+                self.t3_var["val_loss"].append(val_loss)        
+                self.t3_var["avg_epoch"].append(cur_epoch)
+                self.t3_var["avg_loss"].append(avg_loss)
 
+                self.logger.info(log)
+                self.insert_text(log, t_fmt=False)
+                self.mv_cursor()
+
+                self.pws[self.current_page_id].clear()                                                  # 清除 Plot
+                self.pws[self.current_page_id].plot(self.t3_var["avg_epoch"], self.t3_var["avg_loss"], pen=pg.mkPen('r', width=2), name="average loss")
+                if val_loss is not None: 
+                    self.pws[self.current_page_id].plot(self.t3_var["val_epoch"], self.t3_var["val_loss"], pen=pg.mkPen('b', width=2), name="validation loss")
+                    
+                self.update_progress(self.current_page_id, cur_epoch, max_epoch)            
+            else:
+                self.insert_text(data['INFO'], t_fmt=False)
         else:
             self.retrain_finish()
             self.worker_retrain.quit()
@@ -269,10 +272,10 @@ class Tab3(Init):
         backbone = self.itao_env.get_env('BACKBONE')
         nlayer = self.itao_env.get_env('NLAYER')
         local_prune_dir = os.path.join(self.itao_env.get_env('TRAIN', 'LOCAL_OUTPUT_DIR'), f"{backbone}{nlayer}_pruned")
+
         if not os.path.exists(local_prune_dir):
             print('Create directory of pruned model {}'.format(local_prune_dir))
             os.mkdir(local_prune_dir)
-        # self.prune_conf['local_prune_dir']=local_prune_dir
         
         # setup path of prune_model
         prune_dir = self.itao_env.replace_docker_root(local_prune_dir)
@@ -285,20 +288,12 @@ class Tab3(Init):
         prune_model = os.path.join(prune_dir, prune_model_name )
         self.prune_conf['output_model']=prune_model
         self.itao_env.update2('PRUNE', 'OUTPUT_MODEL', prune_model)
-        # self.itao_env.update('PRUNED_MODEL', prune_model)
         self.itao_env.update2('PRUNE', 'LOCAL_OUTPUT_MODEL', self.itao_env.replace_docker_root(prune_model, mode='root'))
-        
-        # input_model = os.path.join(self.itao_env.get_env('OUTPUT_DIR'), os.path.join('weights', self.ui.t3_pruned_in_model.toPlainText()))
-        # self.prune_conf['input_model']=
         self.itao_env.update2('PRUNE', 'INPUT_MODEL', self.itao_env.get_env('TRAIN', 'OUTPUT_MODEL'))
-        # = self.itao_env.get_env('UNPRUNED_MODEL')
         
         # setup key, thres, eq
-        # self.retrain_conf['key'] = self.prune_conf['key'] = self.train_conf['key']
         self.itao_env.update2('PRUNE', 'KEY', self.itao_env.get_env('TRAIN', 'KEY'))
         self.ui.t3_pruned_key.setText(self.itao_env.get_env('PRUNE', 'KEY'))
-
-        # self.prune_conf['thres'] = round(float(self.ui.t3_pruned_threshold.value()), 2)
         self.itao_env.update2('PRUNE', 'THRES', round(float(self.ui.t3_pruned_threshold.value()), 2))
         
         if 'yolo' in self.itao_env.get_env('TASK'):

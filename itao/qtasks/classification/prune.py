@@ -54,13 +54,18 @@ class PruneCMD(QThread):
                 break
             else:
                 for line in proc.stdout:                
-                    line = line.decode("utf-8").rstrip('\n')
-                    if line.rstrip(): self.logger.debug(line)
-                    if 'WARNING' not in line:
-                        if 'INFO' in line:
-                            self.trigger.emit(line.split('[INFO]')[1])
-                        else:
-                            self.trigger.emit(line)
+                    
+                    line = line.decode("utf-8", 'ignore').rstrip('\n').replace('\x08', '')
+                    
+                    if line.isspace() or 'WARNING' in line:
+                        continue
+                    else:
+                        self.logger.debug(line)
+                    
+                    if 'INFO' in line:
+                        self.trigger.emit(line.split('[INFO]')[1])
+                    else:
+                        self.trigger.emit(line)
 
         self.trigger.emit("end")
         

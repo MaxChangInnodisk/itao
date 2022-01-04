@@ -103,6 +103,9 @@ class Init(QtWidgets.QMainWindow):
         self.update_page()  # 更新頁面資訊
         self.ui.main_tab.currentChanged.connect(self.update_page)
 
+        """ 設定 GPU 編號 (--gpu_index) """
+        self.gpu_idx = 0
+
     """ 檢查 tao 的狀況 """
     def check_tao(self):
         proc = subprocess.run( ['tao','-h'], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, encoding="utf-8", timeout=1)      
@@ -138,6 +141,8 @@ class Init(QtWidgets.QMainWindow):
             root = "./tasks/data"
             folder_path = QFileDialog.getExistingDirectory(self, "Open folder", root, options=QFileDialog.DontUseNativeDialog)
             self.infer_folder = folder_path
+            self.itao_env.update2('INFER', 'LOCAL_INPUT_DATA', folder_path)
+            self.itao_env.update2('INFER', 'INPUT_DATA', self.itao_env.replace_docker_root(folder_path))
         else:
             folder_path = QFileDialog.getExistingDirectory(self, "Open folder", "./", options=QFileDialog.DontUseNativeDialog)
 

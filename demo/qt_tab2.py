@@ -36,8 +36,6 @@ class Tab2(Init):
         if self.debug:
             for key in self.run_t2_option.keys():
                 self.run_t2_option[key]=True if int(self.debug_page)==2 and key==self.debug_opt else False
-                                
-            
 
     """ 當按下 train 按鈕的時候進行的事件 """
     def train_event(self):
@@ -66,7 +64,8 @@ class Tab2(Init):
             'spec': self.itao_env.get_env('TRAIN','SPECS'),
             'output_dir': self.itao_env.get_env('TRAIN', 'OUTPUT_DIR'), 
             'key': self.itao_env.get_env('TRAIN', 'KEY'),
-            'num_gpus': self.itao_env.get_env('NUM_GPUS')
+            'num_gpus': self.itao_env.get_env('NUM_GPUS'),
+            'gpu_index':self.gpu_idx
         }
 
         self.worker = self.train_cmd( args = cmd_args )
@@ -154,7 +153,7 @@ class Tab2(Init):
         if bool(data):
 
             if len(data.keys())>1:
-                cur_epoch, avg_loss, val_loss, max_epoch = data['epoch'], data['avg_loss'], data['val_loss'], int(self.itao_env.get_env('TRAIN','epoch'))
+                cur_epoch, avg_loss, val_loss, max_epoch = data['epoch'], data['avg_loss'], data['val_loss'], int(self.itao_env.get_env('TRAIN','EPOCH'))
                 
                 log=""
                 self.t2_var["val_epoch"].append(cur_epoch)
@@ -167,9 +166,8 @@ class Tab2(Init):
                                             f',  ' if val_loss is not None else ' ',
                                             f'Val Loss: {val_loss:06.3f}' if val_loss is not None else ' ')
                 # 一些 資訊輸出
-                info = f"[INFO] {log}"
-                self.logger.info(info)
-                self.insert_text(info, t_fmt=False)
+                self.logger.info(log)
+                self.insert_text(log, t_fmt=False)
                 self.mv_cursor()
 
                 # 更新 圖表
@@ -205,6 +203,8 @@ class Tab2(Init):
             'task': self.itao_env.get_env('TASK'), 
             'spec': self.itao_env.get_env('TRAIN', 'SPECS'),
             'key': self.itao_env.get_env('TRAIN', 'KEY'),
+            'num_gpus': self.itao_env.get_env('NUM_GPUS'),
+            'gpu_index':self.gpu_idx
         }
         
         # other case
@@ -212,7 +212,7 @@ class Tab2(Init):
 
         self.worker_eval = self.eval_cmd(args=args)
 
-        if self.worker is not None and self.run_t2_option['eval']:    
+        if self.run_t2_option['eval']:    
             self.worker_eval.start()
             self.worker_eval.trigger.connect(self.update_eval_log)
         else:

@@ -17,8 +17,19 @@ class EvalCMD(QThread):
     def __init__(self, args:dict ):
         super(EvalCMD, self).__init__()
         
+        # init
         self.env = SetupEnv() 
+        self.logger = CustomLogger().get_logger('dev')
+
+        # variable
         self.data = {'epoch':None, 'avg_loss':None, 'val_loss':None}
+
+        # symbol
+        self.symbol = '[INFO]'
+        self.record_symbol = 'Processing dataset'
+        self.record = False
+
+        # parsing arguments
         key_args = [ 'task', 'spec', 'key' ]
         ret, new_args, error_args = parse_arguments(key_args=key_args, in_args=args)
 
@@ -31,37 +42,41 @@ class EvalCMD(QThread):
             "-e", f"{ new_args['spec'] }",
             "-k", f"{ new_args['key'] }"
         ]
-        self.logger = CustomLogger().get_logger('dev')
+        
         self.logger.info('----------------')
         self.logger.info(self.cmd)
         self.logger.info('----------------')
 
-        self.symbols=['[INFO]', 'Processing dataset']
-        self.record = False
-
+    """ 檢查是否有需要回傳的訊息 """
+    def check_info_in_line(self, line:str) -> None:
+        if self.symbol in line:
+            self.trigger.emit( f"{self.record_symbol} {line.split(self.record_symbol)[1]}")
+    
+    """ 判斷是否要保持回傳並回傳資料 """
+    def check_to_record_line(self, line:str) -> None:
         
+        if self.record_symbol in line:
+            self.record = True
+        
+        if self.record:
+            self.trigger.emit(line)
 
     def run(self):
         proc = subprocess.Popen(self.cmd, stdout=subprocess.PIPE)
         while(True):
-            if proc.poll() is not None:
-                break
+            
+            if proc.poll() is not None: break
+
             for line in proc.stdout:
                 
-                line = line.decode('utf-8', 'ignore').rstrip('\n')
+                line = line.decode("utf-8", 'ignore').rstrip('\n').replace('\x08', '')
                 
-                if line.rstrip(): self.logger.debug(line)
-
-                if 'WARNING' in line or line.isspace(): 
+                if line.isspace():
                     continue
+                else:
+                    self.logger.debug(line)
 
-                for symbol in self.symbols:
-                    if symbol in line:
-                        if symbol=='[INFO]':
-                            self.trigger.emit( f"{symbol} {line.split(symbol)[1]}" )
-                        else:
-                            self.record = True
-                if self.record:
-                    self.trigger.emit(line)
+                self.check_info_in_line(line)
+                self.check_to_record_line(line)
 
         self.trigger.emit("end")

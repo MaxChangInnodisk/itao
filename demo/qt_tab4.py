@@ -18,30 +18,30 @@ class Tab4(Init):
     def __init__(self):
         super().__init__()
 
+        # basic variable
         self.precision_radio = {"INT8":self.ui.t4_int8, "FP16":self.ui.t4_fp16, "FP32":self.ui.t4_fp32}
-        
         self.worker_infer, self.export_name, self.precision = None, None, None
         self.infer_files = None
-        self.infer_folder = None
-
-        self.ui.t4_bt_upload.clicked.connect(self.get_folder)
-        self.ui.t4_bt_infer.clicked.connect(self.infer_event)
-        self.ui.t4_bt_export.clicked.connect(self.export_event)
-
-        self.export_log_key = [  "Registry: ['nvcr.io']",
-                                "keras_exporter",
-                                "keras2onnx",
-                                "Stopping container" ]
-
-        self.ui.t4_bt_pre_infer.clicked.connect(self.ctrl_result_event)
-        self.ui.t4_bt_next_infer.clicked.connect(self.ctrl_result_event)
         self.ls_infer_name, self.ls_infer_label = [], []
         self.cur_pixmap = 0
 
+        # connect event to button
+        self.ui.t4_bt_upload.clicked.connect(self.get_folder)
+        self.ui.t4_bt_infer.clicked.connect(self.infer_event)
+        self.ui.t4_bt_export.clicked.connect(self.export_event)
+        self.ui.t4_bt_pre_infer.clicked.connect(self.ctrl_result_event)
+        self.ui.t4_bt_next_infer.clicked.connect(self.ctrl_result_event)
+
+        # define key of scheduler
+        self.export_log_key = [ "Registry: ['nvcr.io']",
+                                "keras_exporter",
+                                "keras2onnx",
+                                "Stopping container" ]
+        # for debug
+        self.run_t4_option = { 'infer':True, 'export':True }
         if self.debug:
-            self.t4_debug = True
-            if int(self.debug_page)==4:
-                self.t4_debug = False
+            for key in self.run_t4_option.keys():
+                self.run_t4_option[key]=True if int(self.debug_page)==4 and key==self.debug_opt else False
 
     """ 檢查 radio 按了哪個 """
     def check_radio(self):
@@ -49,7 +49,7 @@ class Tab4(Init):
             if radio.isChecked(): return precision
         return ''
 
-    
+    """ 當 export 完成的時候 """
     def export_finish(self):
         info = "Export ... Done ! \n"
         self.logger.info(info)
@@ -89,18 +89,48 @@ class Tab4(Init):
         self.consoles[self.current_page_id].insertPlainText(info) 
 
         # self.worker_export = TAO_EXPORT()
-        self.worker_export = ExportCMD(
+        self.worker_export = self.export_cmd(
             task = self.itao_env.get_env('TASK'),
             key = self.itao_env.get_env('KEY'),
             retrain_model = self.retrain_spec.find_key('model_path'),
             output_model= self.export_path
         )
 
-        if not self.t4_debug:
+        if self.run_t4_option['export']:
             self.worker_export.start()
             self.worker_export.trigger.connect(self.update_export_log)
         else:
             self.export_finish()
+
+    """ 更新 infer 用的參數 """
+    def update_infer_conf(self):
+        self.itao_env.update2('INFER', 'SPECS', self.itao_env.get_env('RETRAIN', 'SPECS'))
+        self.itao_env.update2('INFER', 'INPUT_MODEL', self.itao_env.get_env('RETRAIN', 'OUTPUT_MODEL'))
+        self.itao_env.update2('INFER', 'BATCH_SIZE', self.itao_env.get_env('RETRAIN', 'BATCH_SIZE'))
+
+        # create inference folder
+        local_results_dir = os.path.join(self.itao_env.get_env('LOCAL_PROJECT_DIR'), 'results')
+        if not os.path.exists(local_results_dir):
+            self.logger.info('Create folder to saving results of inference.')
+            os.makedirs(local_results_dir)
+        self.itao_env.update2('INFER', 'LOCAL_RESULTS_DIR', local_results_dir)
+
+        # setup path of images and labels which is generated after inference
+        infer_image_folder = os.path.join(local_results_dir, f'{self.itao_env.get_env("TASK")}/images')
+        infer_label_folder = os.path.join(local_results_dir, f'{self.itao_env.get_env("TASK")}/labels')
+        self.itao_env.update2('INFER', 'LOCAL_RES_IMG_DIR', infer_image_folder)
+        self.itao_env.update2('INFER', 'LOCAL_RES_LBL_DIR', infer_label_folder)
+        self.itao_env.update2('INFER', 'RES_IMG_DIR', self.itao_env.replace_docker_root(infer_image_folder))
+        self.itao_env.update2('INFER', 'RES_LBL_DIR', self.itao_env.replace_docker_root(infer_label_folder))
+        if not os.path.exists(infer_image_folder): os.makedirs(infer_image_folder)
+        if not os.path.exists(infer_label_folder): os.makedirs(infer_label_folder)
+
+        if 'classification' in self.itao_env.get_env('TASK'):
+            self.itao_env.update2('INFER', 'CLASS_MAP', os.path.join( self.itao_env.get_env('RETRAIN','OUTPUT_DIR'), 'classmap.json'))
+
+        # self.itao_env.update2('INFER', 'INPUT_MODEL', self.itao_env.get_env('RETRAIN', 'OUTPUT_MODEL'))
+
+        pass
 
     """ 按下 Inference 按鈕之事件 """
     def infer_event(self):
@@ -108,34 +138,53 @@ class Tab4(Init):
         info = "Do Inference ... "
         self.logger.info(info)
         self.insert_text(info, div=True)
+        self.update_infer_conf()
 
+        # define arguments of command line
+        #-----------------------------------------------------------------------------------
+        cmd_args = {
+            'task' : self.itao_env.get_env('TASK'),
+            'key' : self.itao_env.get_env('KEY'),
+            'spec' : self.itao_env.get_env('INFER', 'SPECS')
+        }
 
-        # self.worker_infer = TAO_INFER()
-        self.worker_infer = InferCMD(
-            task = self.itao_env.get_env('TASK'),
-            key = self.itao_env.get_env('KEY'),
-            spec = self.itao_env.replace_docker_root(self.retrain_spec.get_spec_path(), mode='docker'),
-            retrain_model = self.retrain_spec.find_key('model_path'),
-            batch_size=16,
-            data = self.itao_env.replace_docker_root(self.infer_folder),
-            classmap = os.path.join( self.itao_env.get_env('RETRAIN_OUTPUT_DIR'), 'classmap.json')
-        )
+        # add option of gpu
+        cmd_args['num_gpus'] = self.itao_env.get_env('NUM_GPUS')
+        cmd_args['gpu_index'] = self.gpu_idx
 
-        if not self.t4_debug:   
-            self.worker_infer.start()
+        if 'classification' in self.itao_env.get_env('TASK'):
+            cmd_args['retrain_model'] = self.itao_env.get_env('INFER', 'OUTPUT_MODEL')
+            cmd_args['batch_size'] = self.itao_env.get_env('INFER', 'BATCH_SIZE')
+            cmd_args['data'] = self.itao_env.get_env('INFER', 'INPUT_DATA')
+            cmd_args['classmap'] = self.itao_env.get_env('INFER', 'CLASS_MAP')
+
+        elif 'yolo' in self.itao_env.get_env('TASK'):
+            #[ 'task', 'spec', 'key', 'model', 'input_dir', 'output_dir', 'output_label' ]
+            cmd_args['model'] = self.itao_env.get_env('RETRAIN', 'OUTPUT_MODEL')
+            cmd_args['input_dir'] = self.itao_env.get_env('INFER', 'INPUT_DATA')
+            cmd_args['output_dir'] = self.itao_env.get_env('INFER', 'RES_IMG_DIR')
+            cmd_args['output_label'] = self.itao_env.get_env('INFER', 'RES_LBL_DIR')
+        #-----------------------------------------------------------------------------------
+
+        # define worker and run
+        self.worker_infer = self.infer_cmd( args=cmd_args )
+
+        if self.run_t4_option['infer']:   
             self.worker_infer.trigger.connect(self.update_infer_log)
             self.worker_infer.info.connect(self.update_infer_log)
+            self.worker_infer.start()
         else:
             self.infer_finish_event()
 
     """ 更新 Inference 的資訊 """
     def update_infer_log(self, data):
         if bool(data):
-            self.consoles[self.current_page_id].insertPlainText(f"{data}\n")
+            self.insert_text(data, t_fmt=False)
         else:
             self.worker_infer.quit()
             self.infer_finish_event()
-            
+    
+    """ 完成 Inference 之後的事件 """
     def infer_finish_event(self):
 
         info = "Inference ... Done ! \n"
@@ -147,11 +196,12 @@ class Tab4(Init):
         self.swith_page_button(True)
 
         if self.itao_env.get_env('TASK') == 'classification':
-            self.new_load_result()
+            self.load_result_classification()
         else:
-            self.load_result()
-        
-    def new_load_result(self):
+            self.load_result_detection()
+    
+    """ classification 用的 load results """
+    def load_result_classification(self):
         # 更新大小，在這裡更新才會是正確的大小
         self.frame_size = self.ui.t4_frame.width() if self.ui.t4_frame.width()<self.ui.t4_frame.height() else self.ui.t4_frame.height()
         
@@ -159,7 +209,7 @@ class Tab4(Init):
         self.cur_pixmap = 0
 
         # get label info from csv
-        csv_path = os.path.join(self.infer_folder, 'result.csv' if not self.t4_debug else 'debug_result.csv')
+        csv_path = os.path.join(self.infer_folder, 'result.csv')
         results = csv_to_list(csv_path)
 
         for res in results:
@@ -167,6 +217,36 @@ class Tab4(Init):
             file_path = self.itao_env.replace_docker_root(file_path, mode='root')
             self.ls_infer_name.append(file_path)
             self.ls_infer_label.append([det_class, det_prob])
+
+        self.show_result()
+
+    """ object detection 用的 load results """
+    def load_result_detection(self):
+        # 更新大小，在這裡更新才會是正確的大小
+        self.frame_size = self.ui.t4_frame.width() if self.ui.t4_frame.width()<self.ui.t4_frame.height() else self.ui.t4_frame.height()
+        
+        infer_img_dir = self.itao_env.get_env('INFER', 'LOCAL_RES_IMG_DIR')
+        infer_lbl_dir = self.itao_env.get_env('INFER', 'LOCAL_RES_LBL_DIR')
+
+        # 把所有的檔案給 Load 進 ls_infer_name
+        self.cur_pixmap = 0
+        for file in os.listdir(infer_img_dir):
+            base_name = os.path.basename(file)
+            # 儲存名稱的相對路徑
+            self.ls_infer_name.append(os.path.join( infer_img_dir, base_name ))
+            # 儲存標籤檔的相對路徑
+            label_name = os.path.splitext(os.path.join( infer_lbl_dir, base_name ))[0]+'.txt'
+            
+            with open(label_name, 'r') as lbl:
+                result = []
+                content = lbl.readlines()
+                for cnt in content:
+                    cnts = cnt.split(' ')
+                    label, bbox, prob = cnts[0], tuple([ int(float(c)) for c in cnts[4:8] ]), float(cnts[-1])
+                    if prob > self.ui.t4_thres.value():
+                        result.append('{}, {:03}, {}'.format(label, prob, bbox))
+
+                self.ls_infer_label.append(result)
 
         self.show_result()
 
@@ -190,35 +270,17 @@ class Tab4(Init):
         # get file name and update information
         img_name = os.path.basename(self.ls_infer_name[self.cur_pixmap])
         self.ui.t4_infer_name.setText(img_name )
-        self.insert_text(self.ls_infer_name[self.cur_pixmap].replace(self.itao_env.get_env('LOCAL_PROJECT_DIR'),""), t_fmt=False)
-        
+        self.insert_text('\n', t_fmt=False)
+        self.insert_text(self.ls_infer_name[self.cur_pixmap].replace(self.itao_env.get_env('LOCAL_PROJECT_DIR'),""), t_fmt=False, div=True)
+        # update postion of cursor
+        self.mv_cursor()
+
         # show result of target file
         if self.itao_env.get_env('TASK') == 'classification':
             self.insert_text(self.ls_infer_label[self.cur_pixmap], t_fmt=False)
         else:
-            [ self.consoles[self.current_page_id].insertPlainText(f"{idx}: {cnt}") for idx,cnt in enumerate(self.ls_infer_label[self.cur_pixmap]) ]
+            [ self.insert_text(f"{idx}: {cnt}", t_fmt=False) for idx,cnt in enumerate(self.ls_infer_label[self.cur_pixmap]) ]
         
-        # update postion of cursor
-        self.mv_cursor()
+        
 
-    """ 將名字與標籤檔儲存下來，方便後續調用 """
-    def load_result(self):
-        # 更新大小，在這裡更新才會是正確的大小
-        self.frame_size = self.ui.t4_frame.width() if self.ui.t4_frame.width()<self.ui.t4_frame.height() else self.ui.t4_frame.height()
-        
-        # 把所有的檔案給 Load 進 ls_infer_name
-        self.cur_pixmap = 0
-        for file in self.infer_files:
-            base_name = os.path.basename(file)
-            # 儲存名稱的相對路徑
-            self.ls_infer_name.append(os.path.join( INFER_IMG_ROOT, base_name ))
-            # 儲存標籤檔的相對路徑
-            label_name = os.path.splitext(os.path.join( INFER_LBL_ROOT, base_name ))[0]+'.txt'
-            
-            with open(label_name, 'r') as lbl:
-                result = []
-                content = lbl.readlines()
-                [ result.append(cnt) for cnt in content if float(cnt.split(' ')[-1]) > self.ui.t4_thres.value() ]
-                self.ls_infer_label.append(result)
-        self.cur_pixmap = 0
-        self.show_result()
+

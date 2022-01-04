@@ -30,11 +30,12 @@ class PruneCMD(QThread):
         # parse arguments
         key_args = [ 'task', 'input_model', 'spec', 'output_model', 'pth', 'eq', 'key']
         ret, new_args, error_args = parse_arguments(key_args=key_args, in_args=args)
+
         if not ret:
             self.logger.error('Prune: Input arguments is wrong: {}'.format(error_args))
             sys.exit(1)
         
-        # define commmand line
+        # combine commmand line
         self.cmd = [    
             "tao", f"{ new_args['task'] }", "prune",
             "-m", f"{ new_args['input_model'] }",
@@ -45,7 +46,15 @@ class PruneCMD(QThread):
             "-k", f"{ new_args['key'] }",
         ]
 
-        
+        if 'nums_gpu' in args.keys():
+            self.cmd.append("--gpus")
+            self.cmd.append(f"{ args['num_gpus'] }")
+            
+        # add gpu index if needed
+        if 'gpu_index' in args.keys():
+            self.cmd.append("--gpu_index")
+            self.cmd.append(f"{args['gpu_index']}")
+
         self.logger.info('----------------')
         self.logger.info(self.cmd)
         self.logger.info('----------------')
@@ -53,18 +62,22 @@ class PruneCMD(QThread):
     def run(self):
         proc = subprocess.Popen(self.cmd, stdout=subprocess.PIPE)
         while(True):
-            if proc.poll() is not None:
-                break
-            else:
-                for line in proc.stdout:                
-                    line = line.decode("utf-8").rstrip('\n').replace('\x08', '')
-                    if bool(line.rstrip()): self.logger.debug(line)
-                    
-                    if 'WARNING' not in line:
-                        if 'INFO' in line:
-                            self.trigger.emit(line.split('[INFO]')[1])
-                        else:
-                            self.trigger.emit(line)
+
+            if proc.poll() is not None: break
+
+            for line in proc.stdout:                
+                
+                line = line.decode("utf-8").rstrip('\n').replace('\x08', '')
+
+                if line.isspace() or 'WARNING' in line: 
+                    continue
+                else:
+                    self.logger.debug(line)
+                
+                if 'INFO' in line:
+                    self.trigger.emit(line.split('[INFO]')[1])
+                else:
+                    self.trigger.emit(line)
 
         self.trigger.emit("end")
         

@@ -1,8 +1,8 @@
 random_seed: 42
 yolov4_config {
-  big_anchor_shape: "[(25.82,41.14),(32.90,34.83),(29.87,38.73)]"
-  mid_anchor_shape: "[(35.44,22.22),(22.02,42.04),(34.93,29.13)]"
-  small_anchor_shape: "[(13.67,41.14),(34.93,16.51),(17.72,42.04)]"
+  big_anchor_shape: "[(34.68,30.03),(28.35,39.94),(32.14,36.03)]"
+  mid_anchor_shape: "[(18.98,42.04),(35.44,23.12),(23.79,41.74)]"
+  small_anchor_shape: "[(12.91,40.84),(34.93,16.82),(15.44,41.74)]"
   box_matching_iou: 0.25
   matching_neutral_box_iou: 0.5
   arch: "resnet"
@@ -21,7 +21,7 @@ yolov4_config {
 }
 training_config {
   batch_size_per_gpu: 16
-  num_epochs: 50
+  num_epochs: 20
   enable_qat: false
   checkpoint_interval: 10
   learning_rate {
