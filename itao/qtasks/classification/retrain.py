@@ -1,36 +1,51 @@
 
-from glob import glob
 from PyQt5.QtCore import QThread, flush, pyqtSignal
 import subprocess
-import time, os, glob
+import time, os, sys
 from itao.environ import SetupEnv
 from itao.utils.qt_logger import CustomLogger
+from itao.qtasks.tools import parse_arguments
 ########################################################################
 
-# !tao classification train -e $SPECS_DIR/classification_retrain_spec.cfg \
-#                       -r $USER_EXPERIMENT_DIR/output_retrain \
-#                       -k $KEY
+# !tao classification train -e $SPECS_DIR/classification_spec.cfg \
+#                       -r $USER_EXPERIMENT_DIR/output \
+#                       -k $KEY --gpus 2
+
+########################################################################
+
+# !tao classification train -e $SPECS_DIR/classification_spec.cfg \
+#                        -r $USER_EXPERIMENT_DIR/output \
+#                        -k $KEY --gpus 2 \
+#                        --init_epoch N
 
 class ReTrainCMD(QThread):
 
     trigger = pyqtSignal(object)
+    info = pyqtSignal(str)
 
-    def __init__(self, task, spec, output_dir, key, num_gpus):
+    def __init__(self, args:dict ):
         super(ReTrainCMD, self).__init__()
         
+        self.logger = CustomLogger().get_logger('dev')
         self.env = SetupEnv()
         self.flag = True        
         self.data = {'epoch':None, 'avg_loss':None, 'val_loss':None}
-        self.cmd = [    
-            # "tao", f"{ self.env.get_env('TASK') }", "train",
-            "tao", f"{ task }", "train",
-            "-e", f"{ spec }", 
-            "-r", f"{ output_dir }" ,
-            "-k", f"{ key }",
-            "--gpus", f"{ num_gpus }"
-        ]
 
-        self.logger = CustomLogger().get_logger('dev')
+        # parse arguments
+        key_args = [ 'task', 'spec', 'output_dir', 'key', 'num_gpus' ]
+        ret, new_args, error_args = parse_arguments(key_args=key_args, in_args=args)
+        if not ret:
+            self.logger.error('Train: Input arguments is wrong: {}'.format(error_args))
+            sys.exit(1)
+
+        self.cmd = [    
+            "tao", f"{ new_args['task'] }", "train",
+            "-e", f"{ new_args['spec'] }", 
+            "-r", f"{ new_args['output_dir'] }",
+            "-k", f"{ new_args['key'] }",
+            "--gpus", f"{ new_args['num_gpus'] }"
+        ]
+        
         self.logger.info('----------------')
         self.logger.info(self.cmd)
         self.logger.info('----------------')
@@ -86,20 +101,29 @@ class ReTrainCMD(QThread):
         while(self.flag):
 
             if proc.poll() is not None:
+                # print('end')
                 self.flag = False
                 break
 
             for line in proc.stdout:
                 
                 line = line.decode('utf-8', 'ignore').rstrip('\n')
-                if line.rstrip(): self.logger.debug(line)
-
-                if self.check_epoch_in_line(line):
+                
+                if 'loss' in line and 'val_loss' not in line:
                     continue
                 
-                if self.symbol in line:
+                if self.check_epoch_in_line(line):
+                    continue
+
+                # log all content
+                if line.rstrip(): self.logger.debug(line)
+                
+                # return info
+                if self.symbol in line: 
                     self.trigger.emit({'INFO':f"{self.symbol} {line.split(self.symbol)[1]}"})
 
+
+                # return loss
                 if self.check_loss_in_line_new(line):
                     self.trigger.emit(self.data)
                     time.sleep(0.001)

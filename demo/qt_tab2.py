@@ -281,12 +281,3 @@ class Tab2(Init):
             ))
             self.itao_env.update2('TRAIN', 'LOCAL_OUTPUT_MODEL', self.itao_env.replace_docker_root(output_model_path, mode='root'))
             self.itao_env.update2('TRAIN', 'OUTPUT_MODEL', output_model_path)
-
-            # to-do
-            # 區隔 data_source and validation_data_source，目前都是用一樣的
-            # 如果不需要 n_layer 則刪除
-            # target_class_mapping
-
-        # pretrained_model_path = self.train_spec.find_key('pretrained_model_path').replace(" ","")    # model_path 的時候會動到所以先備份後續再修改
-        # self.train_spec.mapping('pretrained_model_path', f'"{pretrained_model_path}"')
-

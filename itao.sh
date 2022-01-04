@@ -16,6 +16,7 @@ function log() {
 
 function help(){
     echo "---------------------------------------"
+    echo ""
     echo "$ ./itao.sh [OPT]"
     echo ""
     echo "[OPT]"
@@ -23,9 +24,13 @@ function help(){
     echo "run       run itao with QT window."
     echo "debug     run debug mode for target feature."
     echo ""
+    echo "----------------------------------------"
+    echo ""
     echo "$ ./itao.sh debug [DEBUG_PAGE] [DEBUG_OPT]"
-    echo "DEBUG_PAGE    which page you want to debug (from 1 to 4)"
-    echo "DEBUG_OPT     which option you want to debug (e.g. train, eval, kmeans, etc.)"
+    echo ""
+    echo "[DEBUG_PAGE] which page you want to debug (from 1 to 4)"
+    echo "[DEBUG_OPT]  which option you want to debug (e.g. train, eval, kmeans, etc.)"
+    echo ""
     echo "---------------------------------------"
 }
 

@@ -49,6 +49,10 @@ class ReTrainCMD(QThread):
         self.old_val = None
         self.temp = {}
         self.symbol = '[INFO]'
+        self.loss_symbol = 'ms/step - loss: '
+        self.val_start = 'Start to calculate AP for each class'
+        self.val_end = 'Validation loss'
+        self.is_valid = False
 
     def check_epoch_in_line(self, line):
         if 'Epoch ' in line:
@@ -100,23 +104,30 @@ class ReTrainCMD(QThread):
                 # line = line.decode('utf-8', 'ignore').rstrip('\n').rstrip('\r').replace('\x08', '')
                 line = line.decode('utf-8', 'ignore').rstrip('\n').replace('\x08', '')
                 
-                self.logger.debug(line)
+                # if not empty then return 
+                if line.rstrip(): self.logger.debug(line)
 
                 # check epoch and put current epoch into self.data['epoch']
                 self.check_epoch_in_line(line)
-                    
-                # check loss -> only get the last time with symbol ('ms/step - loss: ')
-                symbol = 'ms/step - loss: '
-                if ('INFO' in line or symbol in line) and line.rstrip():
-                    
+                
+                # return validate information
+                if self.val_start in line: 
+                    self.is_valid = True
+                if self.is_valid: 
+                    self.trigger.emit({'INFO':f"{line}"})
+                if self.val_end in line: 
+                    self.is_valid = False
 
+                # check loss -> only get the last time with symbol ('ms/step - loss: ')
+                if ('INFO' in line or self.loss_symbol in line) and line.rstrip():
                     # get loss and send data
-                    if symbol in line:
-                        cap_loss = line.split(symbol)[1]
+                    if self.loss_symbol in line:
+                        cap_loss = line.split(self.loss_symbol)[1]
                         
                         if (cap_loss.replace('.', '').rstrip()).isdigit():
                             # print('\n\nIts digit!!!!!! Send data ... ', flush=True)
                             self.data['avg_loss'] = round( float(cap_loss.rstrip()), 3)
                             self.trigger.emit(self.data)
+
 
         self.trigger.emit({})  

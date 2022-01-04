@@ -234,13 +234,14 @@ class Tab3(Init):
             self.t3_var["val_loss"].append(val_loss)        
             self.t3_var["avg_epoch"].append(cur_epoch)
             self.t3_var["avg_loss"].append(avg_loss)
-
-            self.pws[self.current_page_id].clear()                                                  # 清除 Plot
             self.consoles[self.current_page_id].insertPlainText(log)                                # 插入內容
             self.mv_cursor()
 
+            self.pws[self.current_page_id].clear()                                                  # 清除 Plot
             self.pws[self.current_page_id].plot(self.t3_var["avg_epoch"], self.t3_var["avg_loss"], pen=pg.mkPen('r', width=2), name="average loss")
-            self.pws[self.current_page_id].plot(self.t3_var["val_epoch"], self.t3_var["val_loss"], pen=pg.mkPen('b', width=2), name="validation loss")
+            if val_loss is not None: 
+                self.pws[self.current_page_id].plot(self.t3_var["val_epoch"], self.t3_var["val_loss"], pen=pg.mkPen('b', width=2), name="validation loss")
+                
             self.update_progress(self.current_page_id, cur_epoch, max_epoch)            
 
         else:
