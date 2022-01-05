@@ -1,9 +1,9 @@
-from PyQt5 import QtWidgets
-from PyQt5 import QtGui, uic
-from PyQt5.QtWidgets import QFileDialog, QVBoxLayout
+from PyQt5 import QtGui, uic, QtCore, QtWidgets
+from PyQt5.QtWidgets import QFileDialog, QVBoxLayout, QMessageBox
 import datetime
 import sys, os
 from typing import *
+# from PyQt5.uic.uiparser import QtCore
 import pyqtgraph as pg
 import subprocess
 
@@ -105,6 +105,32 @@ class Init(QtWidgets.QMainWindow):
 
         """ 設定 GPU 編號 (--gpu_index) """
         self.gpu_idx = 0
+
+    def show_warning_msg(self):
+        title = 'Warning Message ( Key Event )'
+        msg = "F12: enter/exit full screen mode. \n\nEscape: quit the app."
+        msgBox = QMessageBox()
+        msgBox.setIcon(QMessageBox.Information)
+        msgBox.setWindowTitle(title)
+        msgBox.setText(msg)
+        msgBox.setStandardButtons(QMessageBox.Ok | QMessageBox.Cancel)
+        # msgBox.buttonClicked.connect(msgButtonClick)
+        returnValue = msgBox.exec()
+        if returnValue == QMessageBox.Ok:
+            self.logger.info('Press OK with the warning message.')
+        elif returnValue == QMessageBox.Cancel:
+            self.logger.info('Press Cancel with the warning message, quit the app.')
+            sys.exit(0)
+
+    def keyPressEvent(self, event):
+        
+        if event.key() == QtCore.Qt.Key_Escape:
+            sys.exit(0)
+        if event.key() == QtCore.Qt.Key_F12:
+            if self.isFullScreen():
+                self.showNormal()
+            else:
+                self.showFullScreen()
 
     """ 檢查 tao 的狀況 """
     def check_tao(self):

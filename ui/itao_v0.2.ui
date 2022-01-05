@@ -54,7 +54,7 @@
     <item>
      <widget class="QLabel" name="logo">
       <property name="sizePolicy">
-       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+       <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
         <horstretch>0</horstretch>
         <verstretch>0</verstretch>
        </sizepolicy>
@@ -88,7 +88,7 @@
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>2</number>
       </property>
       <property name="elideMode">
        <enum>Qt::ElideNone</enum>
@@ -1329,7 +1329,7 @@ p, li { white-space: pre-wrap; }
                    <height>68</height>
                   </rect>
                  </property>
-                 <layout class="QGridLayout" name="gridLayout_7" columnstretch="3,5,3,5" columnminimumwidth="2,3,2,3">
+                 <layout class="QGridLayout" name="gridLayout_7" rowstretch="0,0,0,0" columnstretch="3,5,3,5" columnminimumwidth="0,0,0,0">
                   <property name="topMargin">
                    <number>0</number>
                   </property>
