@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 import sys, os
 from typing import *
+from xml.etree.ElementTree import iterparse
 from PyQt5 import QtGui
 
 """ 自己的函式庫自己撈"""
@@ -20,10 +21,11 @@ class Tab4(Init):
 
         # basic variable
         self.precision_radio = {"INT8":self.ui.t4_int8, "FP16":self.ui.t4_fp16, "FP32":self.ui.t4_fp32}
-        self.worker_infer, self.export_name, self.precision = None, None, None
+        self.worker_infer = None
         self.infer_files = None
         self.ls_infer_name, self.ls_infer_label = [], []
         self.cur_pixmap = 0
+        self.small_frame_size, self.big_frame_size = 0, 0
 
         # connect event to button
         self.ui.t4_bt_upload.clicked.connect(self.get_folder)
@@ -67,34 +69,49 @@ class Tab4(Init):
         else:
             self.export_finish()
 
+    def update_export_conf(self):
+        # get precision
+        precision = self.check_radio()
+        self.itao_env.update2('EXPORT', 'PRECISION', precision)
+
+        # setup export path
+        export_name = self.ui.t4_etlt_name.text()
+        export_dir = os.path.join( self.itao_env.get_env('USER_EXPERIMENT_DIR'), 'export')
+        
+        local_export_dir = self.itao_env.replace_docker_root(export_dir, mode='root')
+        if not os.path.exists(local_export_dir):
+            os.makedirs(local_export_dir)
+
+        export_model_path = os.path.join( export_dir, export_name)
+        self.itao_env.update2('EXPORT', 'OUTPUT_MODEL', export_model_path)
+
+        # setup input model
+        self.itao_env.update2('EXPORT', 'INPUT_MODEL', self.itao_env.get_env('RETRAIN', 'OUTPUT_MODEL'))
+
+        # show information
+        info = f"Export Path : {export_dir}\n"
+
     """ 匯出的事件 """
     def export_event(self):
 
-        info = 'Export Model ... '
         self.init_console()
+        self.update_export_conf()
+
+        info = 'Export Model ... '
+        self.logger.info(info)
         self.insert_text(info)
-        self.logger.info(info)
+
         
-        _export_name = self.ui.t4_etlt_name.text()
-        _export_path = os.path.join( self.itao_env.get_env('USER_EXPERIMENT_DIR'), 'export')
-        self.export_path = os.path.join( _export_path, _export_name)
-        self.precision = self.check_radio()
+        cmd_args = {
+            'task':self.itao_env.get_env('TASK'), 
+            'key':self.itao_env.get_env('KEY'), 
+            'spec': self.itao_env.get_env('RETRAIN','SPECS'), 
+            'intput_model': self.itao_env.get_env('RETRAIN', 'INPUT_MODEL'), 
+            'output_model': self.itao_env.get_env('EXPORT', 'OUTPUT_MODEL'), 
+            'dtype': self.itao_env.get_env('EXPORT', 'PRECISION') 
+        }
 
-        info = f"Export Path : {self.export_path}\n"
-        self.logger.info(info)
-        self.consoles[self.current_page_id].insertPlainText(info) 
-
-        info = f"Precision : {self.precision}\n"
-        self.logger.info(info)
-        self.consoles[self.current_page_id].insertPlainText(info) 
-
-        # self.worker_export = TAO_EXPORT()
-        self.worker_export = self.export_cmd(
-            task = self.itao_env.get_env('TASK'),
-            key = self.itao_env.get_env('KEY'),
-            retrain_model = self.retrain_spec.find_key('model_path'),
-            output_model= self.export_path
-        )
+        self.worker_export = self.export_cmd( args=cmd_args )
 
         if self.run_t4_option['export']:
             self.worker_export.start()
@@ -113,6 +130,7 @@ class Tab4(Init):
         if not os.path.exists(local_results_dir):
             self.logger.info('Create folder to saving results of inference.')
             os.makedirs(local_results_dir)
+
         self.itao_env.update2('INFER', 'LOCAL_RESULTS_DIR', local_results_dir)
 
         # setup path of images and labels which is generated after inference
@@ -255,9 +273,11 @@ class Tab4(Init):
         who = self.sender().text()
         if who=="<":
             if self.cur_pixmap > 0: self.cur_pixmap = self.cur_pixmap - 1
+            self.show_result()
         else: # who==">":
             if self.cur_pixmap < len(self.ls_infer_name)-1: self.cur_pixmap = self.cur_pixmap + 1
-        self.show_result()
+            self.show_result()
+        
     
     """ 將 pixmap、title、log 顯示出來， """
     def show_result(self):
@@ -265,6 +285,7 @@ class Tab4(Init):
         # setup pixmap
         # self.logger.info('Showing results ... ')
         pixmap = QtGui.QPixmap(self.ls_infer_name[self.cur_pixmap])
+            
         self.ui.t4_frame.setPixmap(pixmap.scaled(self.frame_size-10, self.frame_size-10))
 
         # get file name and update information

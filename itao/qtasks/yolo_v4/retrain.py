@@ -40,7 +40,6 @@ class ReTrainCMD(QThread):
         self.loss_symbol = 'ms/step - loss: '   # for average loss
         self.val_start = 'Start to calculate AP for each class' # for validate
         self.val_end = 'Validation loss'
-        
 
         # parse arguments
         key_args = [ 'task', 'spec', 'output_dir', 'key', 'num_gpus' ]
