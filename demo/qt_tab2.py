@@ -83,8 +83,8 @@ class Tab2(Init):
         self.logger.info(info)
         self.insert_text(info, endsym='')
 
-        self.ui.t2_bt_train.setEnabled(False)
-        self.ui.t2_bt_stop.setEnabled(False) 
+        self.ui.t2_bt_train.setEnabled(True)
+        self.ui.t2_bt_stop.setEnabled(True) 
         
         self.stop_tao.trigger.connect(self.tao_stop_event)
         self.stop_tao.start()
@@ -162,9 +162,9 @@ class Tab2(Init):
                 self.t2_var["avg_loss"].append(avg_loss)
                 
                 log = "{}  {} {} {}".format(  f'Epoch: {cur_epoch:03}/{max_epoch:03}',
-                                            f'Loss: {avg_loss:06.3f}',
+                                            f'Loss: {avg_loss:7.3f}',
                                             f',  ' if val_loss is not None else ' ',
-                                            f'Val Loss: {val_loss:06.3f}' if val_loss is not None else ' ')
+                                            f'Val Loss: {val_loss:7.3f}' if val_loss is not None else ' ')
                 # 一些 資訊輸出
                 self.logger.info(log)
                 self.insert_text(log, t_fmt=False)
@@ -251,10 +251,10 @@ class Tab2(Init):
             self.train_spec.mapping('batch_size_per_gpu', self.itao_env.get_env('TRAIN','BATCH_SIZE'))
 
             # eval model path
-            output_model_dir = os.path.join(self.itao_env.get_env('OUTPUT_DIR'), 'weights')
+            output_model_dir = os.path.join(self.itao_env.get_env('TRAIN','OUTPUT_DIR'), 'weights')
             output_model_path = os.path.join( output_model_dir, f"{self.itao_env.get_env('BACKBONE')}_{int(self.itao_env.get_env('TRAIN','EPOCH')):03}.tlt")
-            self.itao_env.update2('TRAIN', 'LOCAL_UNPRUNED_MODEL', self.itao_env.replace_docker_root(output_model_path, mode='root'))
-            self.itao_env.update2('TRAIN', 'UNPRUNED_MODEL', output_model_path)
+            self.itao_env.update2('TRAIN', 'LOCAL_OUTPUT_MODEL', self.itao_env.replace_docker_root(output_model_path, mode='root'))
+            self.itao_env.update2('TRAIN', 'OUTPUT_MODEL', output_model_path)
             self.train_spec.mapping('model_path', f'"{output_model_path}"')
         
         elif self.itao_env.get_env('TASK')=='yolo_v4':

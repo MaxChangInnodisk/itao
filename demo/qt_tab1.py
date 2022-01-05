@@ -213,9 +213,17 @@ class Tab1(Init):
 
             # 更新 spec 的 n_layers
             if 'classification' in self.itao_env.get_env('NGC_TASK'):
-                self.train_spec.mapping('n_layers', self.itao_env.get_env('NLAYER'))
+                key_nlayer = 'n_layers'
             elif 'detection' in self.itao_env.get_env('NGC_TASK'):
-                self.train_spec.mapping('nlayers', self.itao_env.get_env('NLAYER'))
+                key_nlayer = 'nlayers'
+
+            if 'default' in self.itao_env.get_env('NLAYER').lower():
+                self.train_spec.del_spec_item(scope='model_config', key=key_nlayer)
+            else:
+                if self.train_spec.find_key(key_nlayer):
+                    self.train_spec.mapping(key_nlayer, self.itao_env.get_env('NLAYER'))
+                else:
+                    self.train_spec.add_spec_item(scope='model_config', key=key_nlayer, val=self.itao_env.get_env('NLAYER'), level=2)
             
             # 延續上一個動作
             self.setting_combo_box = False

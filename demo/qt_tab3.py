@@ -167,12 +167,19 @@ class Tab3(Init):
         epoch = self.ui.t3_retrain_epoch.text()
         self.itao_env.update2('PRUNE', 'EPOCH', epoch)
         
-        output_model = "{}_{}{}_epoch_{:03}.tlt".format(
-            self.itao_env.get_env('TASK').replace('_',""),
-            self.itao_env.get_env('BACKBONE'), 
-            self.itao_env.get_env('NLAYER'),
-            int(epoch)
-        )
+        if 'yolo' in self.itao_env.get_env('TASK'):
+
+            output_model = "{}_{}{}_epoch_{:03}.tlt".format(
+                self.itao_env.get_env('TASK').replace('_',""),
+                self.itao_env.get_env('BACKBONE'), 
+                self.itao_env.get_env('NLAYER'),
+                int(epoch)
+            )
+        elif 'classi' in self.itao_env.get_env('TASK'):
+            output_model = "{}_{:03}.tlt".format(
+                self.itao_env.get_env('BACKBONE'), 
+                int(epoch)
+            )
         self.ui.t3_retrain_out_model.setText(output_model)
         return output_model
 
@@ -227,8 +234,8 @@ class Tab3(Init):
             if len(data.keys())>1:
                 cur_epoch, avg_loss, val_loss, max_epoch = data['epoch'], data['avg_loss'], data['val_loss'], int(self.itao_env.get_env('RETRAIN', 'EPOCH'))
                 log = "{} {} {}\n".format(  f'[{cur_epoch:03}/{max_epoch:03}]',
-                                            f'AVG_LOSS: {avg_loss:06.3f}',
-                                            f'VAL_LOSS: {val_loss:06.3f}' if val_loss is not None else ' ')
+                                            f'AVG_LOSS: {avg_loss:7.3f}',
+                                            f'VAL_LOSS: {val_loss:7.3f}' if val_loss is not None else ' ')
 
                 self.t3_var["val_epoch"].append(cur_epoch)
                 self.t3_var["val_loss"].append(val_loss)        

@@ -45,6 +45,8 @@ class Tab4(Init):
             for key in self.run_t4_option.keys():
                 self.run_t4_option[key]=True if int(self.debug_page)==4 and key==self.debug_opt else False
 
+        self.infer_key = ['root: Registry', 'Loading experiment spec','Processing', 'Inference complete', 'Stopping container']
+
     """ 檢查 radio 按了哪個 """
     def check_radio(self):
         for precision, radio in self.precision_radio.items():
@@ -55,7 +57,8 @@ class Tab4(Init):
     def export_finish(self):
         info = "Export ... Done ! \n"
         self.logger.info(info)
-        self.consoles[self.current_page_id].insertPlainText(info)
+        self.insert_text(info)
+        
         self.update_progress(self.current_page_id, len(self.export_log_key), len(self.export_log_key))
         if self.worker_export is not None: self.worker_export.quit()
         self.swith_page_button(True)
@@ -63,7 +66,7 @@ class Tab4(Init):
     """ 更新輸出的LOG """
     def update_export_log(self, data):
         if data != "end":
-            self.consoles[self.current_page_id].insertPlainText(f"{data}\n")
+            self.insert_text(data, t_fmt=False)
             self.mv_cursor()
             [ self.update_progress(self.current_page_id, self.export_log_key.index(key)+1, len(self.export_log_key))  for key in self.export_log_key if key in data ]  
         else:
@@ -163,7 +166,9 @@ class Tab4(Init):
         cmd_args = {
             'task' : self.itao_env.get_env('TASK'),
             'key' : self.itao_env.get_env('KEY'),
-            'spec' : self.itao_env.get_env('INFER', 'SPECS')
+            'spec' : self.itao_env.get_env('INFER', 'SPECS'),
+            'model': self.itao_env.get_env('RETRAIN', 'OUTPUT_MODEL'),
+            'input_dir': self.itao_env.get_env('INFER', 'INPUT_DATA')
         }
 
         # add option of gpu
@@ -171,15 +176,12 @@ class Tab4(Init):
         cmd_args['gpu_index'] = self.gpu_idx
 
         if 'classification' in self.itao_env.get_env('TASK'):
-            cmd_args['retrain_model'] = self.itao_env.get_env('INFER', 'OUTPUT_MODEL')
+            # [ 'task', 'spec', 'key', 'model', 'input_dir', 'batch_size', 'class_map' ]
             cmd_args['batch_size'] = self.itao_env.get_env('INFER', 'BATCH_SIZE')
-            cmd_args['data'] = self.itao_env.get_env('INFER', 'INPUT_DATA')
-            cmd_args['classmap'] = self.itao_env.get_env('INFER', 'CLASS_MAP')
+            cmd_args['class_map'] = self.itao_env.get_env('INFER', 'CLASS_MAP')
 
         elif 'yolo' in self.itao_env.get_env('TASK'):
-            #[ 'task', 'spec', 'key', 'model', 'input_dir', 'output_dir', 'output_label' ]
-            cmd_args['model'] = self.itao_env.get_env('RETRAIN', 'OUTPUT_MODEL')
-            cmd_args['input_dir'] = self.itao_env.get_env('INFER', 'INPUT_DATA')
+            # [ 'task', 'spec', 'key', 'model', 'input_dir', 'output_dir', 'output_label' ]
             cmd_args['output_dir'] = self.itao_env.get_env('INFER', 'RES_IMG_DIR')
             cmd_args['output_label'] = self.itao_env.get_env('INFER', 'RES_LBL_DIR')
         #-----------------------------------------------------------------------------------
@@ -196,18 +198,27 @@ class Tab4(Init):
 
     """ 更新 Inference 的資訊 """
     def update_infer_log(self, data):
-        if bool(data):
+        if type(data)==str:
+
             self.insert_text(data, t_fmt=False)
-        else:
-            self.worker_infer.quit()
-            self.infer_finish_event()
-    
+            self.mv_cursor()
+            [ self.update_progress(self.current_page_id, self.infer_key.index(key)+1, len(self.infer_key))  for key in self.infer_key if key in data ]
+        
+        elif type(data)==dict:
+            
+            if bool(data):
+                self.insert_text(data, t_fmt=False)
+                self.mv_cursor()
+            else:
+                self.worker_infer.quit()
+                self.infer_finish_event()
+        
     """ 完成 Inference 之後的事件 """
     def infer_finish_event(self):
 
         info = "Inference ... Done ! \n"
         self.logger.info(info)
-        self.consoles[self.current_page_id].insertPlainText(info)
+        self.insert_text(info)
 
         self.ui.t4_bt_next_infer.setEnabled(True)
         self.ui.t4_bt_pre_infer.setEnabled(True)

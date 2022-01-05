@@ -74,10 +74,9 @@ class InferCMD(QThread):
     def run(self):
 
         proc = subprocess.Popen(self.cmd , stdout=subprocess.PIPE)
-        while(self.flag):
-            if proc.poll() is not None:
-                self.flag = False
-                break
+        while(True):
+            if proc.poll() is not None: break
+
             for line in proc.stdout:
                 
                 line = line.decode('utf-8', 'ignore').rstrip('\n').replace('\x08', '')
@@ -85,7 +84,7 @@ class InferCMD(QThread):
                 if not line.isspace(): self.logger.debug(line)
 
                 if "[INFO]" in line:
-                    self.info.emit(line)
+                    self.info.emit(line.split('[INFO]')[1])
 
                 if ":{" in line:
                     self.cur_name = line.replace('"','').replace(':','').replace('{','')

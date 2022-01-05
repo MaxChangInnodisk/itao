@@ -16,7 +16,7 @@ from itao.qtasks.install_ngc import InstallNGC
 from itao.qtasks.stop_tao import StopTAO
 from itao.utils.qt_logger import CustomLogger
 
-from demo.configs import OPT, ARCH_LAYER, TRAIN_CONF, RETRAIN_CONF, PRUNE_CONF, INFER_CONF, EXPORT_CONF
+from demo.configs import OPT, ARCH_LAYER
 
 class Init(QtWidgets.QMainWindow):
 
@@ -41,8 +41,6 @@ class Init(QtWidgets.QMainWindow):
         self.div_symbol = "----------------------------------------------------\n"
 
         self.option, self.option_nlayer = OPT, ARCH_LAYER
-        self.train_conf, self.retrain_conf, self.prune_conf = TRAIN_CONF, RETRAIN_CONF, PRUNE_CONF
-        self.infer_conf, self.export_conf = INFER_CONF, EXPORT_CONF
 
         if len(sys.argv)>=2 and sys.argv[1].lower()=='debug':
             self.debug = True  
@@ -173,18 +171,12 @@ class Init(QtWidgets.QMainWindow):
             
             if 'classification' == self.itao_env.get_env('NGC_TASK'):
                 self.train_spec.mapping('train_dataset_path', '"{}"'.format(os.path.join(trg_folder_path, 'train')))
-                self.train_spec.mapping('val_dataset_path', '"{}"'.format(os.path.join(trg_folder_path, 'val')))
                 self.train_spec.mapping('eval_dataset_path', '"{}"'.format(os.path.join(trg_folder_path, 'test')))
-                # self.retrain_spec.mapping('train_dataset_path', '"{}"'.format(os.path.join(trg_folder_path, 'train')))
-                # self.retrain_spec.mapping('val_dataset_path', '"{}"'.format(os.path.join(trg_folder_path, 'val')))
-                # self.retrain_spec.mapping('eval_dataset_path', '"{}"'.format(os.path.join(trg_folder_path, 'test')))
+
             elif 'detection' in self.itao_env.get_env('NGC_TASK'):
                 self.train_spec.mapping('image_directory_path', '"{}"'.format(os.path.join(trg_folder_path, 'images')))
                 self.train_spec.mapping('label_directory_path', '"{}"'.format(os.path.join(trg_folder_path, 'labels')))
-                # self.retrain_spec.mapping('image_directory_path', '"{}"'.format(os.path.join(trg_folder_path, 'images')))
-                # self.retrain_spec.mapping('label_directory_path', '"{}"'.format(os.path.join(trg_folder_path, 'labels')))
-                
-            # self.train_conf['dataset_path'] = folder_path
+
             self.itao_env.update('LOCAL_DATASET', folder_path)
             self.itao_env.update('DATASET', trg_folder_path)
             
@@ -376,8 +368,9 @@ class Init(QtWidgets.QMainWindow):
             self.mount_env()
             self.insert_text("Show config", config=self.itao_env.get_env('TRAIN'))
             self.swith_page_button(previous=0, next=1)
-
-            self.train_spec.set_label_for_detection(key='target_class_mapping')
+            
+            if 'detection' in self.itao_env.get_env('TASK'):
+                self.train_spec.set_label_for_detection(key='target_class_mapping')
 
         elif self.current_page_id==1:
             pass

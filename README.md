@@ -31,17 +31,16 @@ please check `README-DEV.md` ...
 
 ## Future Work
 * feature
-  - [x] tab1 - init
-  - [x] tab2 - train % eval
-  - [x] tab3 - prune & retrain
-  - [x] tab4 - infer & export
-  - [x] generate log file
-  - [x] document for developer ( README-DEV.md )
-  - [ ] make "evaluation" as optional item.
+  - [x] Generate log file
+  - [x] Document for developer ( README-DEV.md )
+  - [x] Full screen mode
+  - [ ] Make "evaluation" as optional item.
+  - [ ] Checkpoint
+  - [ ] Select GPU
 
 * tasks
-  - [x] classification
-  - [ ] objected detection ( YoloV4 )
+  - [x] classification:resnet
+  - [x] objected detection ( YoloV4 ):resnet
   - [ ] instance segmentation ( UNet ? not sure )
 
 

@@ -50,7 +50,7 @@ class EvalCMD(QThread):
     """ 檢查是否有需要回傳的訊息 """
     def check_info_in_line(self, line:str) -> None:
         if self.symbol in line:
-            self.trigger.emit( f"{self.record_symbol} {line.split(self.record_symbol)[1]}")
+            self.trigger.emit( f"{self.symbol} {line.split(self.symbol)[1]}")
     
     """ 判斷是否要保持回傳並回傳資料 """
     def check_to_record_line(self, line:str) -> None:

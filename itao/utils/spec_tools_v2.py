@@ -59,7 +59,7 @@ class DefineSpec():
             print("Failed! Spec is not setup.")
 
     """ convert spec's content to python dict """
-    def spec_to_dict(self):
+    def spec_to_list(self):
         if self.spec_path == None: 
             self.spec_path = self.get_spec_path()
             
@@ -72,7 +72,7 @@ class DefineSpec():
             return None
 
     """ write `new_cnt` into spec file """    
-    def dict_to_spec(self, new_cnt):
+    def list_to_spec(self, new_cnt):
         if self.spec_path == None: 
             self.spec_path = self.get_spec_path()
 
@@ -105,7 +105,7 @@ class DefineSpec():
         return None
 
     """ find value of `key` in spec """
-    def find_key(self, key):
+    def find_key(self, key, rm_space=True):
 
         if self.spec_path == None: 
             self.spec_path = self.get_spec_path()
@@ -115,13 +115,15 @@ class DefineSpec():
                 if key in line: 
                     if key=='model_path' and 'pretrained_model_path' in line:
                         continue
-                    trg = line.split(':')[1].rstrip("\n").replace('"','').replace(" ", "")
-                    # print(line, trg)
+                    trg = line.split(':')[1].rstrip("\n").replace('"','')
+                    if rm_space:
+                        trg = trg.replace(" ", "")
                     return trg
+        return None
 
     """ mapping val of key """
     def mapping(self, key, val=""):
-        self.spec_cnt = self.spec_to_dict()
+        self.spec_cnt = self.spec_to_list()
         for idx, cnt in enumerate(self.spec_cnt):
             if key in cnt:
                 org_key, org_val = self.spec_cnt[idx].split(":")
@@ -131,10 +133,11 @@ class DefineSpec():
                     self.spec_cnt[idx] = f"{org_key}: {val}\n"
                 else:
                     print('Mapping Error')
+                    print('Original key: {}, Mapping key: {}'.format(org_key, key))
             else:
                 continue
 
-        self.dict_to_spec(self.spec_cnt)
+        self.list_to_spec(self.spec_cnt)
 
     """ return list of label """
     def get_label_list(self, label_dir:str) -> list:
@@ -202,7 +205,7 @@ class DefineSpec():
     def set_label_for_detection(self, key):
         
         # load spec
-        self.spec_cnt = self.spec_to_dict()
+        self.spec_cnt = self.spec_to_list()
         
         # get labels and seting format (args)
         labels = self.get_label_list(label_dir=os.path.join(self.env.get_env('LOCAL_DATASET'), 'labels'))
@@ -262,6 +265,42 @@ class DefineSpec():
         self.logger.debug('Done')
         
         # overwrite spec
-        self.dict_to_spec(self.spec_cnt)
+        self.list_to_spec(self.spec_cnt)
         
         return 1
+    
+    def del_spec_item(self,scope=None, key=None):
+        
+        self.logger.info('Del key: [{}][{}]'.format(scope, key))
+        
+        self.spec_cnt = self.spec_to_list()
+        
+        # find first scope
+        idx_start, idx_end = tuple([int(x) for x in self.get_scope(self.spec_cnt, scope)[0].split(':')]) if scope != None else (0, len(self.spec_cnt)-1)
+            
+        # delete spec item and update
+        for idx, cnt in enumerate(self.spec_cnt):
+
+            if ':' in cnt:
+                org_key = cnt.split(':')[0].replace(" ", "")
+                if key == org_key and idx in [i for i in range(idx_start, idx_end+1)]:
+                    self.spec_cnt.pop( idx )
+        # overwrite
+        self.list_to_spec(self.spec_cnt)
+
+    def add_spec_item(self, scope, key, val, level=1):
+        self.logger.info('Add key: [{}][{}]={}'.format(scope, key, val))
+        # load spec
+        self.spec_cnt = self.spec_to_list()
+
+        # find first scope
+        idx_start, idx_end = tuple([int(x) for x in self.get_scope(self.spec_cnt, scope)[0].split(':')]) if scope != None else (0, len(self.spec_cnt)-1)
+        
+        # add spec item
+        space = ' '*2*(level-1)
+        self.spec_cnt.insert(idx_end, '{}{}: {}\n'.format(space, key, val))
+
+        self.list_to_spec(self.spec_cnt)
+
+
+        
