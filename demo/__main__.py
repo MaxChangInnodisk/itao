@@ -12,7 +12,7 @@ class UI(Tab1, Tab2, Tab3, Tab4):
 if __name__ == '__main__':
     app = QtWidgets.QApplication([])
     itao = UI()
-    itao.showFullScreen()
+    # itao.showFullScreen()
     itao.show()
     itao.show_warning_msg()
     sys.exit(app.exec_())

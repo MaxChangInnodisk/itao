@@ -75,7 +75,7 @@ class Tab4(Init):
         self.insert_text(info)
         self.logger.info(info)
         
-        _export_name = self.ui.t4_etlt_name.toPlainText()
+        _export_name = self.ui.t4_etlt_name.text()
         _export_path = os.path.join( self.itao_env.get_env('USER_EXPERIMENT_DIR'), 'export')
         self.export_path = os.path.join( _export_path, _export_name)
         self.precision = self.check_radio()

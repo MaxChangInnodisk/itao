@@ -1,5 +1,6 @@
 from PyQt5 import QtGui, uic, QtCore, QtWidgets
 from PyQt5.QtWidgets import QFileDialog, QVBoxLayout, QMessageBox
+from PyQt5.QtGui import QFont
 import datetime
 import sys, os
 from typing import *
@@ -106,6 +107,10 @@ class Init(QtWidgets.QMainWindow):
         """ 設定 GPU 編號 (--gpu_index) """
         self.gpu_idx = 0
 
+        """ 設定全螢幕 """
+        self.change_font_event('Arial', 14)
+        self.showFullScreen()
+
     def show_warning_msg(self):
         title = 'Warning Message ( Key Event )'
         msg = "F12: enter/exit full screen mode. \n\nEscape: quit the app."
@@ -113,14 +118,15 @@ class Init(QtWidgets.QMainWindow):
         msgBox.setIcon(QMessageBox.Information)
         msgBox.setWindowTitle(title)
         msgBox.setText(msg)
-        msgBox.setStandardButtons(QMessageBox.Ok | QMessageBox.Cancel)
+        msgBox.setStandardButtons(QMessageBox.Ok)
+        # msgBox.setStandardButtons(QMessageBox.Ok | QMessageBox.Cancel)
         # msgBox.buttonClicked.connect(msgButtonClick)
         returnValue = msgBox.exec()
         if returnValue == QMessageBox.Ok:
             self.logger.info('Press OK with the warning message.')
-        elif returnValue == QMessageBox.Cancel:
-            self.logger.info('Press Cancel with the warning message, quit the app.')
-            sys.exit(0)
+        # elif returnValue == QMessageBox.Cancel:
+        #     self.logger.info('Press Cancel with the warning message, quit the app.')
+        #     sys.exit(0)
 
     def keyPressEvent(self, event):
         
@@ -128,9 +134,30 @@ class Init(QtWidgets.QMainWindow):
             sys.exit(0)
         if event.key() == QtCore.Qt.Key_F12:
             if self.isFullScreen():
+                self.change_font_event('Arial', 11)
+                
                 self.showNormal()
             else:
+                self.change_font_event('Arial', 14)
                 self.showFullScreen()
+    
+    def change_font_event(self, style='Arial', size=11):
+        # setFont(QFont(style, size))
+        self.ui.setFont(QFont(style, size)) # not work in all widgets
+
+        from PyQt5.QtWidgets import QLabel, QDoubleSpinBox, QComboBox, QLineEdit, QTextBrowser, QPlainTextEdit, QPushButton
+
+        [ item.setFont(QFont(style, size)) for item in self.findChildren(QLabel) ]
+        [ item.setFont(QFont(style, size)) for item in self.findChildren(QDoubleSpinBox) ]
+        [ item.setFont(QFont(style, size)) for item in self.findChildren(QComboBox) ]
+        [ item.setFont(QFont(style, size)) for item in self.findChildren(QLineEdit) ]
+        [ item.setFont(QFont(style, size)) for item in self.findChildren(QTextBrowser) ]
+        [ item.setFont(QFont(style, size)) for item in self.findChildren(QPlainTextEdit) ]
+        [ item.setFont(QFont(style, size-2)) for item in self.findChildren(QPushButton) ]
+        
+        # other
+        self.ui.t1_option.setFont(QFont(style, size))
+        
 
     """ 檢查 tao 的狀況 """
     def check_tao(self):

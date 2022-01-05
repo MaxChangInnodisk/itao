@@ -162,9 +162,9 @@ class Tab3(Init):
         self.prune_finish()  
 
     def update_t3_epoch_event(self):
-        # output_model = self.ui.t3_retrain_out_model.toPlainText()
-        # self.retrain_conf['epoch'] = self.ui.t3_retrain_epoch.toPlainText()
-        epoch = self.ui.t3_retrain_epoch.toPlainText()
+        # output_model = self.ui.t3_retrain_out_model.text()
+        # self.retrain_conf['epoch'] = self.ui.t3_retrain_epoch.text()
+        epoch = self.ui.t3_retrain_epoch.text()
         self.itao_env.update2('PRUNE', 'EPOCH', epoch)
         
         output_model = "{}_{}{}_epoch_{:03}.tlt".format(
@@ -173,7 +173,7 @@ class Tab3(Init):
             self.itao_env.get_env('NLAYER'),
             int(epoch)
         )
-        self.ui.t3_retrain_out_model.setPlainText(output_model)
+        self.ui.t3_retrain_out_model.setText(output_model)
         return output_model
 
     """ add retrain variable into env """
@@ -279,10 +279,10 @@ class Tab3(Init):
         
         # setup path of prune_model
         prune_dir = self.itao_env.replace_docker_root(local_prune_dir)
-        prune_model_name = f'{backbone}{nlayer}_pruned.tlt' if self.ui.t3_pruned_out_name.toPlainText() == "" else self.ui.t3_pruned_out_name.toPlainText()
+        prune_model_name = f'{backbone}{nlayer}_pruned.tlt' # if self.ui.t3_pruned_out_name.text() == "" else self.ui.t3_pruned_out_name.text()
         # update information on itao
-        self.ui.t3_pruned_out_name.setPlainText(prune_model_name)
-        self.ui.t3_retrain_pretrain.setPlainText(prune_model_name)
+        # self.ui.t3_pruned_out_name.setText(prune_model_name)
+        self.ui.t3_retrain_pretrain.setText(prune_model_name)
         
         # setup path of output_model and input model  
         prune_model = os.path.join(prune_dir, prune_model_name )
@@ -293,7 +293,7 @@ class Tab3(Init):
         
         # setup key, thres, eq
         self.itao_env.update2('PRUNE', 'KEY', self.itao_env.get_env('TRAIN', 'KEY'))
-        self.ui.t3_pruned_key.setText(self.itao_env.get_env('PRUNE', 'KEY'))
+        # self.ui.t3_pruned_key.setText(self.itao_env.get_env('PRUNE', 'KEY'))
         self.itao_env.update2('PRUNE', 'THRES', round(float(self.ui.t3_pruned_threshold.value()), 2))
         
         if 'yolo' in self.itao_env.get_env('TASK'):
@@ -316,9 +316,9 @@ class Tab3(Init):
         input_model = self.itao_env.get_env('PRUNE', 'OUTPUT_MODEL')
         backbone = self.itao_env.get_env('BACKBONE').lower()
         nlayer = self.itao_env.get_env('NLAYER')
-        epoch = self.ui.t3_retrain_epoch.toPlainText()
-        batch_size = self.ui.t3_retrain_bsize.toPlainText()
-        lr = self.ui.t3_retrain_lr.toPlainText()
+        epoch = self.ui.t3_retrain_epoch.text()
+        batch_size = self.ui.t3_retrain_bsize.text()
+        lr = self.ui.t3_retrain_lr.text()
 
         # 更新到 env 方便 debug以及取用
         self.ui.t3_retrain_key.setText(self.itao_env.get_env('KEY'))

@@ -220,10 +220,10 @@ class Tab2(Init):
 
     """ 即時更新與 epoch 相關的資訊 """
     def update_epoch_event(self):
-        if self.ui.t2_epoch.toPlainText() != "":
-            model_name = f"{self.itao_env.get_env('BACKBONE')}_{int(self.ui.t2_epoch.toPlainText()):03}.tlt"
-            self.ui.t2_model_name.setPlainText(model_name)
-            self.ui.t3_pruned_in_model.setPlainText(model_name)
+        if self.ui.t2_epoch.text() != "":
+            model_name = f"{self.itao_env.get_env('BACKBONE')}_{int(self.ui.t2_epoch.text()):03}.tlt"
+            self.ui.t2_model_name.setText(model_name)
+            self.ui.t3_pruned_in_model.setText(model_name)
 
     """ 將 t2 的資訊映射到 self.train_conf 上 """
     def update_train_conf(self):
@@ -231,12 +231,12 @@ class Tab2(Init):
         self.logger.info("Updating self.train_conf ... ")
 
         # Update train spec to itao_env.json
-        self.itao_env.update2('TRAIN', 'KEY', self.ui.t2_key.toPlainText())
-        self.itao_env.update2('TRAIN', 'EPOCH', self.ui.t2_epoch.toPlainText())
-        self.itao_env.update2('TRAIN', 'INPUT_SHAPE', self.ui.t2_input_shape.toPlainText())
-        self.itao_env.update2('TRAIN', 'LR', self.ui.t2_lr.toPlainText())
-        self.itao_env.update2('TRAIN', 'BATCH_SIZE', self.ui.t2_batch.toPlainText())
-        self.itao_env.update2('TRAIN', 'CUSTOM', self.ui.t2_c1.toPlainText())
+        self.itao_env.update2('TRAIN', 'KEY', self.ui.t2_key.text())
+        self.itao_env.update2('TRAIN', 'EPOCH', self.ui.t2_epoch.text())
+        self.itao_env.update2('TRAIN', 'INPUT_SHAPE', self.ui.t2_input_shape.text())
+        self.itao_env.update2('TRAIN', 'LR', self.ui.t2_lr.text())
+        self.itao_env.update2('TRAIN', 'BATCH_SIZE', self.ui.t2_batch.text())
+        self.itao_env.update2('TRAIN', 'CUSTOM', self.ui.t2_c1.text())
 
         self.update_epoch_event()
 
