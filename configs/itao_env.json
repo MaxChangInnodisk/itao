@@ -16,24 +16,35 @@
     "OUTPUT_DIR": "/workspace/tao-experiments/classification/output",
     "LOCAL_SPECS": "/home/max/Workspace/itao/tasks/classification/specs/classification_train_spec.cfg",
     "SPECS": "/workspace/tao-experiments/classification/specs/classification_train_spec.cfg",
-    "LOCAL_PRETRAINED_MODEL": "/home/max/Workspace/itao/tasks/classification/pretrained_resnet10/pretrained_classification_vresnet10/resnet_10.hdf5",
-    "EPOCH": "10",
+    "LOCAL_PRETRAINED_MODEL": [],
+    "EPOCH": "50",
     "INPUT_SHAPE": "3,224,224",
     "LR": "0.006",
     "BATCH_SIZE": "16",
     "CUSTOM": "",
-    "OUTPUT_MODEL": "/workspace/tao-experiments/classification/output/weights/resnet_010.tlt"
+    "OUTPUT_MODEL": "/workspace/tao-experiments/classification/output/weights/resnet_050.tlt"
   },
   "LOCAL_SPECS_DIR": "/home/max/Workspace/itao/tasks/classification/specs",
   "SPECS_DIR": "/workspace/tao-experiments/classification/specs",
   "RETRAIN": {
     "LOCAL_SPECS": "/home/max/Workspace/itao/tasks/classification/specs/classification_retrain_spec.cfg",
-    "SPECS": "/workspace/tao-experiments/classification/specs/classification_retrain_spec.cfg"
+    "SPECS": "/workspace/tao-experiments/classification/specs/classification_retrain_spec.cfg",
+    "INPUT_MODEL": "/workspace/tao-experiments/classification/output/resnet10_pruned/resnet10_pruned.tlt",
+    "EPOCH": "50",
+    "BATCH_SIZE": "16",
+    "LR": "0.006",
+    "OUTPUT_DIR": "/workspace/tao-experiments/classification/output_retrain",
+    "LOCAL_OUTPUT_DIR": "/home/max/Workspace/itao/tasks/classification/output_retrain",
+    "OUTPUT_MODEL": "/workspace/tao-experiments/classification/output_retrain/weights/resnet_050.tlt"
   },
   "NLAYER": "10",
   "LOCAL_DATASET": "/home/max/Workspace/itao/tasks/data/mask",
   "DATASET": "/workspace/tao-experiments/data/mask",
   "PRUNE": {
-    "INPUT_MODEL": "/workspace/tao-experiments/classification/output/weights/resnet_010.tlt"
+    "OUTPUT_MODEL": "/workspace/tao-experiments/classification/output/resnet10_pruned/resnet10_pruned.tlt",
+    "LOCAL_OUTPUT_MODEL": "/home/max/Workspace/itao/tasks/classification/output/resnet10_pruned/resnet10_pruned.tlt",
+    "INPUT_MODEL": "/workspace/tao-experiments/classification/output/weights/resnet_050.tlt",
+    "THRES": 0.3,
+    "EQ": "union"
   }
 }

@@ -54,7 +54,6 @@ class Init(QtWidgets.QMainWindow):
 
         self.t1_first_time, self.t2_firt_time, self.t3_first_time, self.t4_first_time = True, True, True, True   # 初次進入頁面
         self.first_line = True  # 第一行
-        
 
         """ 環境相關 """
         self.train_cmd, self.eval_cmd, self.retrain_cmd, self.prune_cmd, self.infer_cmd, self.export_cmd = None, None, None, None, None, None
@@ -73,8 +72,6 @@ class Init(QtWidgets.QMainWindow):
 
 
         """ 將元件統一 """
-        # font = QtGui.QFont("Arial", 12)   # 設定字體
-        # self.setFont(font)
         self.page_buttons_status={0:[0,0], 1:[1,0], 2:[1,0], 3:[1,1]}
         self.tabs = [ self.ui.tab_1, self.ui.tab_2, self.ui.tab_3, self.ui.tab_4 ]
         self.progress = [ self.ui.t1_progress, self.ui.t2_progress, self.ui.t3_progress, self.ui.t4_progress]
@@ -110,25 +107,24 @@ class Init(QtWidgets.QMainWindow):
         self.showFullScreen()
 
     def show_warning_msg(self):
+        # set default
         title = 'Warning Message ( Key Event )'
         msg = "F12: enter/exit full screen mode. \n\nEscape: quit the app."
+        # create msg box
         msgBox = QMessageBox()
         msgBox.setIcon(QMessageBox.Information)
         msgBox.setWindowTitle(title)
         msgBox.setText(msg)
         msgBox.setStandardButtons(QMessageBox.Ok)
-        # msgBox.setStandardButtons(QMessageBox.Ok | QMessageBox.Cancel)
-        # msgBox.buttonClicked.connect(msgButtonClick)
         returnValue = msgBox.exec()
         if returnValue == QMessageBox.Ok:
             self.logger.info('Press OK with the warning message.')
-        # elif returnValue == QMessageBox.Cancel:
-        #     self.logger.info('Press Cancel with the warning message, quit the app.')
-        #     sys.exit(0)
+
 
     def keyPressEvent(self, event):
         
         if event.key() == QtCore.Qt.Key_Escape:
+            self.stop_tao.start()
             sys.exit(0)
         if event.key() == QtCore.Qt.Key_F12:
             if self.isFullScreen():
@@ -151,7 +147,7 @@ class Init(QtWidgets.QMainWindow):
         [ item.setFont(QFont(style, size)) for item in self.findChildren(QLineEdit) ]
         [ item.setFont(QFont(style, size)) for item in self.findChildren(QTextBrowser) ]
         [ item.setFont(QFont(style, size)) for item in self.findChildren(QPlainTextEdit) ]
-        [ item.setFont(QFont(style, size-2)) for item in self.findChildren(QPushButton) ]
+        [ item.setFont(QFont(style, size-1)) for item in self.findChildren(QPushButton) ]
         
         # other
         self.ui.t1_option.setFont(QFont(style, size))
@@ -182,6 +178,9 @@ class Init(QtWidgets.QMainWindow):
             
             self.sel_idx[5]=1 
             self.update_progress(self.current_page_id, self.sel_idx.count(1), len(self.t1_objects))
+
+            self.ui.t1_combo_gpus.setEnabled(True)
+            
         elif self.current_page_id==3:
             root = "./tasks/data"
             folder_path = QFileDialog.getExistingDirectory(self, "Open folder", root, options=QFileDialog.DontUseNativeDialog)
@@ -341,9 +340,6 @@ class Init(QtWidgets.QMainWindow):
     def init_console(self):
         self.consoles[self.current_page_id].clear()    
         self.first_line=True
-        # if self.current_page_id in [1,2]:
-        #     if self.current_page_id==1: [val.clear() for _, val in self.t2_var.items() ]
-        #     if self.current_page_id==2: [val.clear() for _, val in self.t3_var.items() ]
 
     """ 更新進度條，如果進度條滿了也會有對應對動作 """
     def update_progress(self, idx, cur, limit):
@@ -446,9 +442,9 @@ class Init(QtWidgets.QMainWindow):
             self.swith_page_button(True)
 
     """ 取得最新訓練的模型 """
-    def get_trained_model(self) -> list:
+    def get_trained_model(self, mode='TRAIN') -> list:
         
-        output_dir = self.itao_env.get_env('TRAIN', 'LOCAL_OUTPUT_DIR')
+        output_dir = self.itao_env.get_env(mode, 'LOCAL_OUTPUT_DIR')
         trained_model_list = os.listdir( os.path.join(output_dir, 'weights'))
         trained_model_list.sort()
         new_trained_model_list =[ model for model in trained_model_list if self.train_spec.find_key('arch') in model ]
@@ -458,14 +454,11 @@ class Init(QtWidgets.QMainWindow):
             cur_epoch = os.path.splitext(model)[0].split('_')[-1]
             if cur_epoch.isdigit(): 
                 cur_epoch = int(cur_epoch)
-                if cur_epoch == int(self.itao_env.get_env('TRAIN', 'EPOCH')):
+                if cur_epoch == int(self.itao_env.get_env(mode, 'EPOCH')):
                     max_idx = cur_idx
                     if max_idx>5:
                         min_idx = max_idx-5
 
         cut_trained_model = new_trained_model_list[min_idx:max_idx+1]
         cut_trained_model.reverse()
-        self.ui.t3_pruned_in_model.clear()
-        self.ui.t3_pruned_in_model.addItems(cut_trained_model)
-        self.ui.t3_pruned_in_model.setCurrentIndex(0)
         return [ os.path.join( os.path.join(output_dir, 'weights'), model ) for model in cut_trained_model ] 

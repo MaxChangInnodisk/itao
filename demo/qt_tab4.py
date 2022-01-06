@@ -4,18 +4,15 @@ import sys, os
 from typing import *
 from xml.etree.ElementTree import iterparse
 from PyQt5 import QtGui
+from PyQt5.QtWidgets import QMessageBox
 
 """ 自己的函式庫自己撈"""
 sys.path.append("../itao")
 from itao.csv_tools import csv_to_list
 from demo.qt_init import Init
-
-INFER_IMG_ROOT = './infer_images'
-INFER_LBL_ROOT = './infer_labels'
-# DEBUG_MODE=True if len(sys.argv)>=2 and sys.argv[1].lower()=='debug' else False
-DIV = "----------------------------------------------------\n"
         
 class Tab4(Init):
+    
     def __init__(self):
         super().__init__()
 
@@ -33,6 +30,8 @@ class Tab4(Init):
         self.ui.t4_bt_export.clicked.connect(self.export_event)
         self.ui.t4_bt_pre_infer.clicked.connect(self.ctrl_result_event)
         self.ui.t4_bt_next_infer.clicked.connect(self.ctrl_result_event)
+        self.ui.t4_combo_infer_model.currentIndexChanged.connect(self.update_infer_model)
+        self.ui.t4_combo_export_model.currentIndexChanged.connect(self.update_export_model)
 
         # define key of scheduler
         self.export_log_key = [ "Registry: ['nvcr.io']",
@@ -47,11 +46,20 @@ class Tab4(Init):
 
         self.infer_key = ['root: Registry', 'Loading experiment spec','Processing', 'Inference complete', 'Stopping container']
 
+    # Export -------------------------------------------------------------------------------
+
     """ 檢查 radio 按了哪個 """
     def check_radio(self):
         for precision, radio in self.precision_radio.items():
             if radio.isChecked(): return precision
         return ''
+
+    """ 更新最新選擇要匯出的模型 """
+    def update_export_model(self):
+        sel_model = self.ui.t4_combo_export_model.currentText()
+        root = os.path.dirname(self.itao_env.get_env('RETRAIN', 'OUTPUT_MODEL'))
+        intput_model = os.path.join( root, sel_model) 
+        self.itao_env.update2('EXPORT', 'INPUT_MODEL', intput_model)
 
     """ 當 export 完成的時候 """
     def export_finish(self):
@@ -72,6 +80,27 @@ class Tab4(Init):
         else:
             self.export_finish()
 
+    """ """
+    def show_delete_exist_model_msg(self):
+        # set default
+        title = 'Warning Message ( Delete Event )'
+        msg = 'Do you want to delete the existed model ? \n( OK to continue, Cancel to backup and export again)'
+        # create msg box
+        msgBox = QMessageBox()
+        msgBox.setIcon(QMessageBox.Information)
+        msgBox.setWindowTitle(title)
+        msgBox.setText(msg)
+        
+        msgBox.setStandardButtons(QMessageBox.Ok | QMessageBox.Cancel)
+        returnValue = msgBox.exec()
+        if returnValue == QMessageBox.Ok:
+            self.logger.warning('User agree with delete export model')
+            return 1
+        elif returnValue == QMessageBox.Cancel:
+            self.logger.warning('User cancel the action of delete')
+            return 0 
+        
+    """ 更新 輸出用的參數 """
     def update_export_conf(self):
         # get precision
         precision = self.check_radio()
@@ -82,14 +111,25 @@ class Tab4(Init):
         export_dir = os.path.join( self.itao_env.get_env('USER_EXPERIMENT_DIR'), 'export')
         
         local_export_dir = self.itao_env.replace_docker_root(export_dir, mode='root')
-        if not os.path.exists(local_export_dir):
-            os.makedirs(local_export_dir)
+        
+        if os.path.exists(local_export_dir):
+            import shutil
+            self.logger.warning('Clean export directory.')
+            ret = self.run_t4_option['export'] = self.show_delete_exist_model_msg()
+            if ret:
+                shutil.rmtree( local_export_dir )
+            else:
+                self.logger.warning('break from `update export conf`')
+                return
+
+        os.makedirs(local_export_dir)
 
         export_model_path = os.path.join( export_dir, export_name)
         self.itao_env.update2('EXPORT', 'OUTPUT_MODEL', export_model_path)
 
         # setup input model
-        self.itao_env.update2('EXPORT', 'INPUT_MODEL', self.itao_env.get_env('RETRAIN', 'OUTPUT_MODEL'))
+        self.update_export_model()
+        # self.itao_env.update2('EXPORT', 'INPUT_MODEL', self.itao_env.get_env('RETRAIN', 'OUTPUT_MODEL'))
 
         # show information
         info = f"Export Path : {export_dir}\n"
@@ -122,18 +162,29 @@ class Tab4(Init):
         else:
             self.export_finish()
 
+    # Infer -------------------------------------------------------------------------------
+
+    """ 更新最新選擇要推論的模型 """
+    def update_infer_model(self):
+        sel_model = self.ui.t4_combo_infer_model.currentText()
+        root = os.path.dirname(self.itao_env.get_env('RETRAIN', 'OUTPUT_MODEL'))
+        intput_model = os.path.join( root, sel_model) 
+        self.itao_env.update2('INFER', 'INPUT_MODEL', intput_model)
+          
     """ 更新 infer 用的參數 """
     def update_infer_conf(self):
         self.itao_env.update2('INFER', 'SPECS', self.itao_env.get_env('RETRAIN', 'SPECS'))
         self.itao_env.update2('INFER', 'INPUT_MODEL', self.itao_env.get_env('RETRAIN', 'OUTPUT_MODEL'))
         self.itao_env.update2('INFER', 'BATCH_SIZE', self.itao_env.get_env('RETRAIN', 'BATCH_SIZE'))
 
+        # updating inference model -> INFER, INPUT_MODEL
+        self.update_infer_model()
+
         # create inference folder
         local_results_dir = os.path.join(self.itao_env.get_env('LOCAL_PROJECT_DIR'), 'results')
         if not os.path.exists(local_results_dir):
             self.logger.info('Create folder to saving results of inference.')
             os.makedirs(local_results_dir)
-
         self.itao_env.update2('INFER', 'LOCAL_RESULTS_DIR', local_results_dir)
 
         # setup path of images and labels which is generated after inference
@@ -147,6 +198,7 @@ class Tab4(Init):
         if not os.path.exists(infer_label_folder): os.makedirs(infer_label_folder)
 
         if 'classification' in self.itao_env.get_env('TASK'):
+            
             self.itao_env.update2('INFER', 'CLASS_MAP', os.path.join( self.itao_env.get_env('RETRAIN','OUTPUT_DIR'), 'classmap.json'))
 
         # self.itao_env.update2('INFER', 'INPUT_MODEL', self.itao_env.get_env('RETRAIN', 'OUTPUT_MODEL'))
@@ -229,6 +281,8 @@ class Tab4(Init):
         else:
             self.load_result_detection()
     
+    # Show Results -------------------------------------------------------------------------------
+
     """ classification 用的 load results """
     def load_result_classification(self):
         # 更新大小，在這裡更新才會是正確的大小
@@ -289,7 +343,6 @@ class Tab4(Init):
             if self.cur_pixmap < len(self.ls_infer_name)-1: self.cur_pixmap = self.cur_pixmap + 1
             self.show_result()
         
-    
     """ 將 pixmap、title、log 顯示出來， """
     def show_result(self):
         

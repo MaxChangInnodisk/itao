@@ -4,6 +4,7 @@ import sys, os
 from typing import *
 import pyqtgraph as pg
 import importlib
+from PyQt5.QtWidgets import QFileDialog
 
 """ 自己的函式庫自己撈"""
 sys.path.append("../itao")
@@ -25,8 +26,10 @@ class Tab2(Init):
         self.ui.t2_bt_train.clicked.connect(self.train_event)
         self.ui.t2_bt_stop.clicked.connect(self.stop_event)
         self.ui.t2_epoch.textChanged.connect(self.update_epoch_event)
+        self.ui.t2_bt_checkpoint.clicked.connect(self.ckpt_to_pretrained)
         self.backup = False
         self.kmeans_enable = False
+        self.use_pretrained = False
 
         self.run_t2_option = {
             'kmeans':True,
@@ -36,45 +39,6 @@ class Tab2(Init):
         if self.debug:
             for key in self.run_t2_option.keys():
                 self.run_t2_option[key]=True if int(self.debug_page)==2 and key==self.debug_opt else False
-
-    """ 當按下 train 按鈕的時候進行的事件 """
-    def train_event(self):
-
-        self.update_train_conf()
-        self.init_plot()
-        self.init_console()
-
-        if 'yolo' in self.itao_env.get_env('TASK'):
-        
-            info = 'Calculate kmeans for yolo ...'
-            self.logger.info(info)
-            self.insert_text(info)
-
-            if self.run_t2_option['kmeans']: self.get_anchor_event()
-
-        info = "Start training ... "
-        self.logger.info(info)
-        self.insert_text(info, div=True)
-
-        self.ui.t2_bt_train.setEnabled(False)
-        self.ui.t2_bt_stop.setEnabled(True)
-        
-        cmd_args = {
-            'task': self.itao_env.get_env('TASK'), 
-            'spec': self.itao_env.get_env('TRAIN','SPECS'),
-            'output_dir': self.itao_env.get_env('TRAIN', 'OUTPUT_DIR'), 
-            'key': self.itao_env.get_env('KEY'),
-            'num_gpus': self.itao_env.get_env('NUM_GPUS'),
-            'gpu_index':self.gpu_idx
-        }
-
-        self.worker = self.train_cmd( args = cmd_args )
-
-        if self.run_t2_option['train']:
-            self.worker.trigger.connect(self.update_train_log)
-            self.worker.start()
-        else:
-            self.train_finish()
 
     """ 按下 stop 的事件 """
     def stop_event(self):
@@ -97,23 +61,7 @@ class Tab2(Init):
             self.worker_eval.terminate()
             self.worker_eval = None
 
-    """ 完成驗證後的動作 """
-    def eval_finish(self):
-        info = "Evaluating Model ... Done !\n"
-        self.logger.info(info)
-        self.insert_text(info)
-
-        self.swith_page_button(previous=1, next=1)
-
-    """ 更新 eval 的內容 """
-    def update_eval_log(self, data):
-        if data == 'end':
-            self.eval_finish()
-            self.worker_eval.quit()
-            return
-
-        self.consoles[self.current_page_id].insertPlainText(f"{data}\n")                                # 插入內容
-        self.mv_cursor()
+    # Anchor -------------------------------------------------------------------------------
     
     """ YOLO 需要添加 Anchor """
     def get_anchor_event(self):
@@ -146,6 +94,88 @@ class Tab2(Init):
         else:
             self.logger.error("kmeans error: {}".format(data))
             self.worker_kmeans.quit()
+
+    # Train -------------------------------------------------------------------------------
+
+    """ 
+    Do training event when press 'train' button:
+    1. do `train_prep` to prepare 
+    2. define arguments of training command line
+    4. instance the training object
+    5. start training if not setting debug 
+    6. do `train_finish` if setting debug
+    """
+    def train_event(self):
+
+        self.train_prep()
+
+        cmd_args = {
+            'task': self.itao_env.get_env('TASK'), 
+            'spec': self.itao_env.get_env('TRAIN','SPECS'),
+            'output_dir': self.itao_env.get_env('TRAIN', 'OUTPUT_DIR'), 
+            'key': self.itao_env.get_env('KEY'),
+            'num_gpus': self.itao_env.get_env('NUM_GPUS'),
+            'gpu_index':self.gpu_idx
+        }
+
+        self.worker = self.train_cmd( args = cmd_args )
+
+        if self.run_t2_option['train']:
+            self.worker.trigger.connect(self.update_train_log)
+            self.worker.start()
+        else:
+            self.train_finish()
+
+    """ 如果使用的是 checkpoint 的話 """
+    def ckpt_to_pretrained(self):
+        
+        root = self.itao_env.get_env('LOCAL_EXPERIMENT_DIR')
+
+        filename, filetype = QFileDialog.getOpenFileNames(self, "Open file", root,"TLT Model (*.tlt)" ,options =QFileDialog.DontUseNativeDialog)
+
+        if filename != None:
+
+            self.logger.info('Selected Checkpoint: {}'.format(filename))
+
+            pretrained_model = self.itao_env.replace_docker_root(filename)
+            self.itao_env.update2('TRAIN', 'LOCAL_PRETRAINED_MODEL', pretrained_model)
+
+            self.use_pretrained = True
+        else:
+            self.logger.error('Failed to load checkpoint ...')
+
+    """ 將 t2 的資訊映射到 self.itao_env 的 TRAIN 當中 """
+    def update_train_conf(self):
+        
+        self.logger.info("Updating config of training ... ")
+
+        # Update train spec to itao_env.json
+        self.itao_env.update2('TRAIN', 'EPOCH', self.ui.t2_epoch.text())
+        self.itao_env.update2('TRAIN', 'INPUT_SHAPE', self.ui.t2_input_shape.text())
+        self.itao_env.update2('TRAIN', 'LR', self.ui.t2_lr.text())
+        self.itao_env.update2('TRAIN', 'BATCH_SIZE', self.ui.t2_batch.text())
+        self.itao_env.update2('TRAIN', 'CUSTOM', self.ui.t2_c1.text())
+
+        task = self.itao_env.get_env('TASK')
+        if task=='classification':
+            # epoch
+            self.train_spec.mapping('n_epochs' , self.itao_env.get_env('TRAIN','EPOCH'))
+            # input image size
+            self.train_spec.mapping('input_image_size', '"{}"'.format(self.itao_env.get_env('TRAIN','INPUT_SHAPE')))
+            # batch size
+            self.train_spec.mapping('batch_size_per_gpu', self.itao_env.get_env('TRAIN','BATCH_SIZE'))
+
+        elif task=='yolo_v4':
+            # epoch
+            self.train_spec.mapping('num_epochs', self.itao_env.get_env('TRAIN','EPOCH'))
+            # data augmentation's shape
+            c, w, h = [ int(x) for x in self.itao_env.get_env('TRAIN','INPUT_SHAPE').split(',')]
+            self.logger.debug('Get shape: {}, {}, {}'.format(c, w, h))
+            self.train_spec.mapping('output_width', w)
+            self.train_spec.mapping('output_height', h)
+            self.train_spec.mapping('output_channel', c)
+            # batch size
+            self.train_spec.mapping('batch_size_per_gpu', self.itao_env.get_env('TRAIN','BATCH_SIZE'))
 
     """ 更新 console 內容 """
     def update_train_log(self, data):
@@ -181,7 +211,28 @@ class Tab2(Init):
         else:
             self.train_finish()
             self.worker.quit()
-    
+
+    """ 訓練前的動作 """
+    def train_prep(self):
+        self.update_train_conf()
+        self.init_plot()
+        self.init_console()
+
+        if 'yolo' in self.itao_env.get_env('TASK'):
+        
+            info = 'Calculate kmeans for yolo ...'
+            self.logger.info(info)
+            self.insert_text(info)
+
+            if self.run_t2_option['kmeans']: self.get_anchor_event()
+
+        info = "Start training ... "
+        self.logger.info(info)
+        self.insert_text(info, div=True)
+
+        self.ui.t2_bt_train.setEnabled(False)
+        self.ui.t2_bt_stop.setEnabled(True)
+        
     """ 當訓練完成的時候要進行的動作 """
     def train_finish(self):
         info = "Training Model ... Finished !"
@@ -191,8 +242,36 @@ class Tab2(Init):
         self.mapping_trained_model()
         self.eval_event()
         self.ui.t2_bt_train.setEnabled(True)
-        self.swith_page_button(True)
+
+    """ 更新訓練輸出的參數 """
+    def mapping_trained_model(self):
         
+        # 取得所有的　model
+        local_model_list = self.get_trained_model()
+        
+        # 更新清單
+        self.ui.t3_pruned_in_model.clear()
+        self.ui.t3_pruned_in_model.addItems( [ os.path.basename(model) for model in local_model_list ] )
+        self.ui.t3_pruned_in_model.setCurrentIndex(0)
+        
+        # 取得最後一個或是選擇的模型
+        local_target_model = local_model_list[0]  # last model
+        for model in local_model_list:
+            cur_epoch = os.path.splitext(model)[0].split('_')[-1]
+            if cur_epoch.isdigit(): 
+                cur_epoch = int(cur_epoch)
+                if cur_epoch == int(self.itao_env.get_env('TRAIN', 'EPOCH')):
+                    local_target_model = model
+        
+        target_model = self.itao_env.replace_docker_root(local_target_model)
+        self.itao_env.update2('TRAIN', 'OUTPUT_MODEL', target_model)
+
+        # 因為 train 之後馬上接 eval 所以我這邊直接給 spec 最後一個模型
+        if 'classification' in self.itao_env.get_env('TASK'):
+            self.train_spec.mapping('model_path', f'"{target_model}"')
+
+    # Eval -------------------------------------------------------------------------------
+
     """ 驗證的事件 """
     def eval_event(self):
         info = "Start to evaluate model ... "
@@ -219,25 +298,26 @@ class Tab2(Init):
             self.worker_eval.trigger.connect(self.update_eval_log)
         else:
             self.eval_finish()
+
+    """ 更新 eval 的內容 """
+    def update_eval_log(self, data):
+        if data == 'end':
+            self.eval_finish()
+            self.worker_eval.quit()
+            return
+
+        self.consoles[self.current_page_id].insertPlainText(f"{data}\n")                                # 插入內容
+        self.mv_cursor()
+
+    """ 完成驗證後的動作 """
+    def eval_finish(self):
+        info = "Evaluating Model ... Done !\n"
+        self.logger.info(info)
+        self.insert_text(info)
+
+        self.swith_page_button(previous=1, next=1)
     
-    """ 更新 eval 的參數 """
-    def mapping_trained_model(self):
-        local_model_list = self.get_trained_model()
-        local_target_model = local_model_list[0]  # last model
-        for model in local_model_list:
-            cur_epoch = os.path.splitext(model)[0].split('_')[-1]
-            if cur_epoch.isdigit(): 
-                cur_epoch = int(cur_epoch)
-                if cur_epoch == int(self.itao_env.get_env('TRAIN', 'EPOCH')):
-                    local_target_model = model
-        
-        target_model = self.itao_env.replace_docker_root(local_target_model)
-        self.itao_env.update2('TRAIN', 'OUTPUT_MODEL', target_model)
-
-        if 'classification' in self.itao_env.get_env('TASK'):
-            self.train_spec.mapping('model_path', f'"{target_model}"')
-
-    """ 即時更新與 epoch 相關的資訊 """
+    """ 即時更新與 epoch 相關的資訊 (已棄用) """
     def update_epoch_event(self):
         self.logger.warning('unused method -> update_epoch_event')
         pass
@@ -258,43 +338,4 @@ class Tab2(Init):
         #     )
 
         # self.ui.t2_model_name.setText(output_model)
-
-    """ 將 t2 的資訊映射到 self.train_conf 上 """
-    def update_train_conf(self):
-        
-        self.logger.info("Updating self.train_conf ... ")
-
-        # Update train spec to itao_env.json
-        self.itao_env.update2('TRAIN', 'EPOCH', self.ui.t2_epoch.text())
-        self.itao_env.update2('TRAIN', 'INPUT_SHAPE', self.ui.t2_input_shape.text())
-        self.itao_env.update2('TRAIN', 'LR', self.ui.t2_lr.text())
-        self.itao_env.update2('TRAIN', 'BATCH_SIZE', self.ui.t2_batch.text())
-        self.itao_env.update2('TRAIN', 'CUSTOM', self.ui.t2_c1.text())
-
-        # self.update_epoch_event()
-
-        if self.itao_env.get_env('NGC_TASK')=='classification':
-            # epoch
-            self.train_spec.mapping('n_epochs' , self.itao_env.get_env('TRAIN','EPOCH'))
-            
-            # input image size
-            self.train_spec.mapping('input_image_size', '"{}"'.format(self.itao_env.get_env('TRAIN','INPUT_SHAPE')))
-
-            # batch size
-            self.train_spec.mapping('batch_size_per_gpu', self.itao_env.get_env('TRAIN','BATCH_SIZE'))
-
-        
-        elif self.itao_env.get_env('TASK')=='yolo_v4':
-            # epoch
-            self.train_spec.mapping('num_epochs', self.itao_env.get_env('TRAIN','EPOCH'))
-
-            # data augmentation's shape
-            c, w, h = [ int(x) for x in self.itao_env.get_env('TRAIN','INPUT_SHAPE').split(',')]
-            self.logger.debug('Get shape: {}, {}, {}'.format(c, w, h))
-            self.train_spec.mapping('output_width', w)
-            self.train_spec.mapping('output_height', h)
-            self.train_spec.mapping('output_channel', c)
-            
-            # batch size
-            self.train_spec.mapping('batch_size_per_gpu', self.itao_env.get_env('TRAIN','BATCH_SIZE'))
         

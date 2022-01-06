@@ -124,21 +124,24 @@ class DefineSpec():
     """ mapping val of key """
     def mapping(self, key, val=""):
         self.spec_cnt = self.spec_to_list()
+        found_key = False
         for idx, cnt in enumerate(self.spec_cnt):
-            if key in cnt:
-                org_key, org_val = self.spec_cnt[idx].split(":")
-                if key == org_key.replace(" ", ""):
-                    self.spec_cnt[idx] = f"{org_key}: {val}\n"
-                    return
-                else:
-                    self.logger.warning('Original key: {}, Mapping key: {}'.format(org_key, key))
-                    continue
-            else:
-                continue
-        self.logger.error('Mapping Error')
+            if ':' in cnt:
+                if key in cnt:
+                    org_key, org_val = self.spec_cnt[idx].split(":")
+                    if key == org_key.replace(" ", ""):
+                        self.spec_cnt[idx] = f"{org_key}: {val}\n"
+                        found_key=True
+                    else:
+                        self.logger.warning('Original key: {}, Mapping key: {}'.format(org_key, key))
+                        continue
+                
+        if found_key:
+            self.list_to_spec(self.spec_cnt)
+        else:
+            self.logger.warning('Not found any key ({}) in spec ({}).'.format(key, self.mode))
 
-        self.list_to_spec(self.spec_cnt)
-
+    
     """ return list of label """
     def get_label_list(self, label_dir:str) -> list:
         self.logger.info('Calculating number of labels ...')

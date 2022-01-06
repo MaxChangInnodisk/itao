@@ -1,25 +1,29 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
+from logging import log
 import sys, os
 from typing import *
 import pyqtgraph as pg
 import importlib
+from PyQt5.QtWidgets import QFileDialog, QComboBox
 
 """ 自己的函式庫自己撈"""
 sys.path.append("../itao")
 import itao
 from itao.utils.spec_tools_v2 import DefineSpec
 from itao.qtasks.download_model import DownloadModel
-from itao.dataset_format import get_dset_format, DSET_FMT_LS
+from itao.dataset_format import DSET_FMT_LS
 from demo.qt_init import Init
-
+from itao.utils import gpu_tools
 
 class Tab1(Init):
     def __init__(self):
         super().__init__()
         
-        self.t1_objects = [ self.ui.t1_combo_task, self.ui.t1_combo_model , self.ui.t1_combo_bone , self.ui.t1_combo_layer , self.ui.t1_bt_download ,self.ui.t1_bt_dset ]
-        self.sel_idx = [-1,-1,-1,-1,-1,-1]
+        self.t1_objects = [ self.ui.t1_combo_task, self.ui.t1_combo_model , self.ui.t1_combo_bone , self.ui.t1_combo_layer , self.ui.t1_bt_download ,self.ui.t1_bt_dset ,self.ui.t1_combo_gpus]
+        self.sel_idx = [-1,-1,-1,-1,-1,-1,-1]
+
+        self.ui.t1_combo_gpus.currentIndexChanged.connect(self.sel_gpu_event)
 
         # add option of tasks
         self.ui.t1_combo_task.clear()
@@ -31,43 +35,23 @@ class Tab1(Init):
         self.ui.t1_combo_bone.currentIndexChanged.connect(self.get_backbone)
         self.ui.t1_combo_layer.currentIndexChanged.connect(self.get_nlayer)
         self.ui.t1_bt_download.clicked.connect(self.pretrained_download)
-        self.ui.t1_bt_dset.clicked.connect(self.get_folder)
+        self.ui.t1_bt_dset.clicked.connect(self.get_dset)
+
+        self.ui.t1_progress.valueChanged.connect(self.finish_options)
 
         self.debound = [0,0,0,0,0,0]
         self.setting_combo_box = False
 
-    ####################################################################################################
-    #                                                T1                                                #
-    ####################################################################################################
+    """ 取得能使用的 GPU (itao.utils.gpu_tools)  """
+    def get_available_gpu(self) -> list:
+            self.gpus = gpu_tools.get_available_device()
+            gpus_name = [ gpu.name for gpu in self.gpus ]
+            
+            self.ui.t1_combo_gpus.clear()
+            self.ui.t1_combo_gpus.addItems(gpus_name)
+            self.ui.t1_combo_gpus.setCurrentIndex(-1)
 
-    """ T1 -> 取得任務 並更新 模型清單 """
-    def get_task(self):
-        
-        if self.debound[0]==0: # 搭配上一個動作
-            self.insert_text("Done", t_fmt=False)
-            self.debound[0]=1
-        
-        # 取得選擇的任務
-        self.logger.info('Update combo box: {}'.format('task'))
-        # self.train_conf['task'] = self.ui.t1_combo_task.currentText()
-
-        # 更新到文件當中方便使用
-        ngc_task = self.ui.t1_combo_task.currentText().lower()
-        ngc_task = 'classification' if 'classification' in ngc_task else ngc_task.replace(" ", "_")
-        self.itao_env.update('NGC_TASK', ngc_task)
-        
-        # 更新進度條
-        self.sel_idx[0]=1
-        self.update_progress(self.current_page_id, self.sel_idx.count(1), len(self.t1_objects))
-
-        # 設定下一個 combo box ( model )
-        self.setting_combo_box = True   # 由於設定的時候會造成遞迴，所以要透過 setting_combo_box 來防止遞迴
-        self.ui.t1_combo_model.clear()
-        self.ui.t1_combo_model.addItems(list(self.option[self.ui.t1_combo_task.currentText()].keys()))   # 加入元素的時候會導致 編號改變而跳到下一個 method
-        self.ui.t1_combo_model.setCurrentIndex(-1)
-        self.ui.t1_combo_model.setEnabled(True)
-        self.setting_combo_box = False
-
+    """ 更新環境變數 """
     def update_env(self):
 
         # 取得當前的工作路徑，與工作資料夾
@@ -91,7 +75,7 @@ class Tab1(Init):
         self.itao_env.update2('TRAIN', 'OUTPUT_DIR', self.itao_env.replace_docker_root(local_output_dir))
         self.check_dir(local_output_dir)
 
-       # 更新 specs 的目錄
+        # 更新 specs 的目錄
         local_spec_path = os.path.join(local_task_path, 'specs')
         self.itao_env.update('LOCAL_SPECS_DIR', local_spec_path)
         self.itao_env.update('SPECS_DIR', self.itao_env.replace_docker_root(local_spec_path))
@@ -115,9 +99,50 @@ class Tab1(Init):
         except:
             self.kmeans = ""
 
- 
-            
-    """ T1 -> 取得模型 並更新 主幹清單 """
+    def update_options_and_bar(self, idx=0):
+
+        for i in range(len(self.sel_idx)):
+            if i>idx:
+                self.sel_idx[i]=-1
+                comboboxes_name = [ item.objectName() for item in self.findChildren(QComboBox) ]
+                if self.t1_objects[i].objectName() in comboboxes_name: 
+                    self.t1_objects[i].clear()
+            else:
+                self.sel_idx[i]= 1
+
+        self.update_progress(self.current_page_id, self.sel_idx.count(1), len(self.t1_objects)) 
+
+    # -------------------------------------------------------------------------------
+
+    """ 取得任務 並更新 模型 清單 """
+    def get_task(self):
+        
+        if self.debound[0]==0: # 搭配上一個動作
+            self.insert_text("Done", t_fmt=False)
+            self.debound[0]=1
+        
+        # 取得選擇的任務
+        self.logger.info('Update combo box: {}'.format('task'))
+        # self.train_conf['task'] = self.ui.t1_combo_task.currentText()
+
+        # 更新到文件當中方便使用
+        ngc_task = self.ui.t1_combo_task.currentText().lower()
+        ngc_task = 'classification' if 'classification' in ngc_task else ngc_task.replace(" ", "_")
+        self.itao_env.update('NGC_TASK', ngc_task)
+        
+        # 更新進度條
+        idx=0
+        self.update_options_and_bar(idx)
+
+        # 設定下一個 combo box ( model )
+        self.setting_combo_box = True   # 由於設定的時候會造成遞迴，所以要透過 setting_combo_box 來防止遞迴
+        self.ui.t1_combo_model.clear()
+        self.ui.t1_combo_model.addItems(list(self.option[self.ui.t1_combo_task.currentText()].keys()))   # 加入元素的時候會導致 編號改變而跳到下一個 method
+        self.ui.t1_combo_model.setCurrentIndex(-1)
+        self.ui.t1_combo_model.setEnabled(True)
+        self.setting_combo_box = False
+
+    """ 取得模型 並更新 主幹 清單 """
     def get_model(self):
         if self.ui.t1_combo_model.currentIndex()== -1:
             # 延續上一個動作
@@ -139,8 +164,8 @@ class Tab1(Init):
             self.itao_env.update('TASK', 'classification' if 'classification' == self.itao_env.get_env('NGC_TASK') else model.lower())
 
             # 更新進度條
-            self.sel_idx[1]=1
-            self.update_progress(self.current_page_id, self.sel_idx.count(1), len(self.t1_objects))
+            idx = 1
+            self.update_options_and_bar(idx)
 
             # 更新 元素
             self.setting_combo_box = True
@@ -150,7 +175,7 @@ class Tab1(Init):
             self.ui.t1_combo_bone.setEnabled(True)
             self.setting_combo_box = False
 
-    """ T1 -> 取得主幹 並更新 層數清單 """
+    """ 取得主幹 並更新 層數 清單 """
     def get_backbone(self):
         if self.ui.t1_combo_bone.currentIndex()== -1:
             # 延續上一個動作
@@ -169,14 +194,11 @@ class Tab1(Init):
             self.itao_env.update('BACKBONE', self.ui.t1_combo_bone.currentText().lower())
 
             # 更新 進度條
-            self.sel_idx[2]=1
-            self.update_progress(self.current_page_id, self.sel_idx.count(1), len(self.t1_objects))
-
+            idx = 2
+            self.update_options_and_bar(idx)
+            
             # 這邊需要更新itao_env.json 環境變數，後面才能夠取得 spec 的檔案
             self.update_env()
-
-            # 更新 spec 裡面的 arch
-            self.train_spec.mapping('arch', '"{}"'.format(self.itao_env.get_env('BACKBONE').lower()))
 
             # 加入新的元素
             self.setting_combo_box = True
@@ -189,7 +211,7 @@ class Tab1(Init):
                 self.ui.t1_combo_layer.setEnabled(True)
                 self.setting_combo_box = False
 
-    """ T1 -> 取得層數 """
+    """ 取得層數 """
     def get_nlayer(self):
         if self.ui.t1_combo_layer.currentIndex()== -1:
             # 延續上一個動作
@@ -207,26 +229,9 @@ class Tab1(Init):
             self.logger.info('Update combo box: {}'.format('n_layers'))
             self.itao_env.update('NLAYER', self.ui.t1_combo_layer.currentText())
 
-            # 更新進度條
-            self.sel_idx[3]=1
-            self.update_progress(self.current_page_id, self.sel_idx.count(1), len(self.t1_objects)) 
-
-            # 更新 spec 的 n_layers
-            if 'classification' in self.itao_env.get_env('NGC_TASK'):
-                key_nlayer = 'n_layers'
-            elif 'detection' in self.itao_env.get_env('NGC_TASK'):
-                key_nlayer = 'nlayers'
-
-            if not self.itao_env.get_env('NLAYER').isdigit():
-                self.train_spec.del_spec_item(scope='model_config', key=key_nlayer)
-                # 更新 spec 裡面的 arch
-                self.train_spec.mapping('arch', '"{}_{}"'.format(self.itao_env.get_env('BACKBONE').lower(), self.itao_env.get_env('NLAYER')))
-
-            else:
-                if self.train_spec.find_key(key_nlayer):
-                    self.train_spec.mapping(key_nlayer, self.itao_env.get_env('NLAYER'))
-                else:
-                    self.train_spec.add_spec_item(scope='model_config', key=key_nlayer, val=self.itao_env.get_env('NLAYER'), level=2)
+            # 更新 進度條
+            idx = 3
+            self.update_options_and_bar(idx)
             
             # 延續上一個動作
             self.setting_combo_box = False
@@ -234,7 +239,7 @@ class Tab1(Init):
                 self.ui.t1_bt_download.setEnabled(True)
                 self.insert_text("Press button to download model from NVIDIA NGC ... ")
 
-    """ T1 -> 按下 download 開始下載 """
+    """ 按下 download 開始下載 """
     def pretrained_download(self):
         
         self.down_model = DownloadModel(
@@ -251,13 +256,13 @@ class Tab1(Init):
         self.t1_info = self.consoles[self.current_page_id].toPlainText()
         self.final_info=""
 
-    """ T1 -> 顯示數據級結構 """
+    """ 顯示數據級結構 """
     def get_dset_format(self):
         for key, val in DSET_FMT_LS.items():
             if key.lower() in self.itao_env.get_env('NGC_TASK').lower():
                 return val
 
-    """ T1 -> 下載模型的事件 """
+    """ 下載模型的事件 """
     def download_model_event(self, data):
 
         if '[END]' in data or "[EXIST]" in data:
@@ -269,20 +274,15 @@ class Tab1(Init):
             self.logger.info(finish_info)
             self.insert_text(finish_info)
 
-            # 更新 specs 的 pretrained_model_path 的部份
-            if 'classification' in self.itao_env.get_env('NGC_TASK'):
-                self.train_spec.mapping('pretrained_model_path', f'"{self.itao_env.replace_docker_root(model_path)}"')
-            elif 'detection' in self.itao_env.get_env('NGC_TASK'):
-                self.train_spec.mapping('pretrain_model_path', f'"{self.itao_env.replace_docker_root(model_path)}"')
-            
             # 其他
             self.ui.t1_bt_dset.setEnabled(True)
             self.insert_text("Please select a dataset with correct format ... ", div=True)
             self.insert_text(self.get_dset_format(), t_fmt=False)
 
-            # 如果結束，會更新進度條
-            self.sel_idx[4]=1
-            self.update_progress(self.current_page_id, self.sel_idx.count(1), len(self.t1_objects))
+            # 更新 進度條
+            idx = 4
+            self.update_options_and_bar(idx)
+            
         elif '[ERROR]' in data:
             info = data.split(":")[1]
             self.insert_text(info)
@@ -294,3 +294,89 @@ class Tab1(Init):
             else:
                 self.consoles[self.current_page_id].insertPlainText(data)
                 self.mv_cursor(pos='end')
+
+    """ 取得資料夾路徑 """
+    def get_dset(self):
+
+        folder_path = None
+
+        folder_path = QFileDialog.getExistingDirectory(self, "Open folder", "./tasks/data", options=QFileDialog.DontUseNativeDialog)
+        trg_folder_path = self.itao_env.replace_docker_root(folder_path)
+        
+        self.itao_env.update('LOCAL_DATASET', folder_path)
+        self.itao_env.update('DATASET', trg_folder_path)
+        
+        # 更新 進度條
+        idx = 5
+        self.update_options_and_bar(idx)
+
+        self.ui.t1_combo_gpus.setEnabled(True)
+
+        self.logger.info('Selected Folder: {}'.format(folder_path))
+
+        # get gpus
+        self.get_available_gpu()
+        
+    """ 選擇 GPU 的事件 """
+    def sel_gpu_event(self):
+        
+        cur_gpu = self.ui.t1_combo_gpus.currentText()
+        
+        for gpu in self.gpus:
+            if gpu.name==cur_gpu:
+                self.logger.info('Select GPU:{} ({})'.format(gpu.id, gpu.name))
+                self.gpu_idx=gpu.id
+        
+        # 更新 進度條
+        idx = 6
+        self.update_options_and_bar(idx)
+             
+    def finish_options(self):
+
+        if int(self.ui.t1_progress.value())>=100:
+            info = 'Page 1 is finished, mapping varible into spec'
+            self.insert_text(info)
+            self.logger.info(info)
+
+            self.mapping_spec()
+        
+    def mapping_spec(self):
+
+        # 更新 spec 裡面的 arch
+        self.train_spec.mapping('arch', '"{}"'.format(self.itao_env.get_env('BACKBONE').lower()))
+
+        # 更新 spec 的 n_layers
+        if 'classification' in self.itao_env.get_env('TASK'):
+            key_nlayer = 'n_layers'
+        elif 'detection' in self.itao_env.get_env('NGC_TASK'):
+            key_nlayer = 'nlayers'
+
+        if not self.itao_env.get_env('NLAYER').isdigit():
+
+            self.train_spec.del_spec_item(scope='model_config', key=key_nlayer)
+            # 更新 spec 裡面的 arch
+            self.train_spec.mapping('arch', '"{}_{}"'.format(self.itao_env.get_env('BACKBONE').lower(), self.itao_env.get_env('NLAYER')))
+
+        else:
+            if self.train_spec.find_key(key_nlayer):
+                self.train_spec.mapping(key_nlayer, self.itao_env.get_env('NLAYER'))
+            else:
+                self.train_spec.add_spec_item(scope='model_config', key=key_nlayer, val=self.itao_env.get_env('NLAYER'), level=2)
+
+        # 更新 specs 的 pretrained_model_path 的部份
+        model_path = self.itao_env.get_env('TRAIN', 'LOCAL_PRETRAINED_MODEL')
+        if 'classification' in self.itao_env.get_env('NGC_TASK'):
+            self.train_spec.mapping('pretrained_model_path', f'"{self.itao_env.replace_docker_root(model_path)}"')
+        elif 'detection' in self.itao_env.get_env('NGC_TASK'):
+            self.train_spec.mapping('pretrain_model_path', f'"{self.itao_env.replace_docker_root(model_path)}"')
+
+        # 更新dataset
+        trg_folder_path = self.itao_env.get_env('DATASET')
+        if 'classification' in self.itao_env.get_env('NGC_TASK'):        
+            self.train_spec.mapping('train_dataset_path', '"{}"'.format(os.path.join(trg_folder_path, 'train')))
+            self.train_spec.mapping('eval_dataset_path', '"{}"'.format(os.path.join(trg_folder_path, 'test')))
+
+        elif 'detection' in self.itao_env.get_env('NGC_TASK'):
+            self.train_spec.mapping('image_directory_path', '"{}"'.format(os.path.join(trg_folder_path, 'images')))
+            self.train_spec.mapping('label_directory_path', '"{}"'.format(os.path.join(trg_folder_path, 'labels')))
+        

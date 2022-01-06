@@ -9,6 +9,7 @@ sys.path.append("../itao")
 from demo.qt_init import Init
 
 class Tab3(Init):
+
     def __init__(self):
         super().__init__()
 
@@ -69,6 +70,7 @@ class Tab3(Init):
         self.swith_page_button(True)
         self.ui.t3_bt_stop.setEnabled(False)
 
+    # Prune -------------------------------------------------------------------------------
 
     """ Prune 的事件 """
     def prune_event(self):
@@ -162,26 +164,52 @@ class Tab3(Init):
         self.update_progress(self.current_page_id, len(self.prune_log_key), len(self.prune_log_key))  
         self.prune_finish()  
 
+    """ 更新 epoch 的數值以及 itao_env 當中的參數 """
     def update_t3_epoch_event(self):
-        # output_model = self.ui.t3_retrain_out_model.text()
-        # self.retrain_conf['epoch'] = self.ui.t3_retrain_epoch.text()
         epoch = self.ui.t3_retrain_epoch.text()
         self.itao_env.update2('PRUNE', 'EPOCH', epoch)
         
+
+    """ 將QT中的PRUNE配置內容映射到PRUNE_CONF """
+    def update_prune_conf(self):
+        
+        self.logger.info("Updating PRUNE_CONF ... ")
+
+        # create prune folder
+        backbone = self.itao_env.get_env('BACKBONE')
+        nlayer = self.itao_env.get_env('NLAYER')
+        local_prune_dir = os.path.join(self.itao_env.get_env('TRAIN', 'LOCAL_OUTPUT_DIR'), f"{backbone}{nlayer}_pruned")
+
+        if not os.path.exists(local_prune_dir):
+            print('Create directory of pruned model {}'.format(local_prune_dir))
+            os.mkdir(local_prune_dir)
+        
+        # setup path of prune_model
+        prune_dir = self.itao_env.replace_docker_root(local_prune_dir)
+        prune_model_name = f'{backbone}{nlayer}_pruned.tlt' # if self.ui.t3_pruned_out_name.text() == "" else self.ui.t3_pruned_out_name.text()
+        
+        # setup path of output_model and input model  
+        prune_model = os.path.join(prune_dir, prune_model_name )
+        self.itao_env.update2('PRUNE', 'OUTPUT_MODEL', prune_model)
+        self.itao_env.update2('PRUNE', 'LOCAL_OUTPUT_MODEL', self.itao_env.replace_docker_root(prune_model, mode='root'))
+
+        # capture input model
+        self.update_prune_in_model()
+        
+        # setup key, thres, eq
+        self.itao_env.update2('PRUNE', 'THRES', round(float(self.ui.t3_pruned_threshold.value()), 2))
+        
         if 'yolo' in self.itao_env.get_env('TASK'):
-            output_model = "{}_{}{}_epoch_{:03}.tlt".format(
-                self.itao_env.get_env('TASK').replace('_',""),
-                self.itao_env.get_env('BACKBONE'), 
-                self.itao_env.get_env('NLAYER'),
-                int(epoch)
-            )
-        elif 'classi' in self.itao_env.get_env('TASK'):
-            output_model = "{}_{:03}.tlt".format(
-                self.itao_env.get_env('BACKBONE'), 
-                int(epoch)
-            )
-        self.ui.t3_retrain_out_model.setText(output_model)
-        return output_model
+            eq = 'intersection'   
+        else: 
+            eq = 'union'
+
+        self.itao_env.update2('PRUNE','EQ', eq)
+
+        # show conf
+        self.insert_text("Show pruned config", config=self.itao_env.get_env('PRUNE'))
+
+    # Retrain -------------------------------------------------------------------------------
 
     """ add retrain variable into env """
     def update_retrain_info(self):
@@ -257,13 +285,47 @@ class Tab3(Init):
         else:
             self.retrain_finish()
             self.worker_retrain.quit()
-    
+
+    """ 更新訓練輸出的參數 """
+    def mapping_retrained_model(self):
+        
+        # 取得所有的　model
+        local_model_list = self.get_trained_model(mode='RETRAIN')
+        
+        # 更新清單
+        basename_model_list = [ os.path.basename(model) for model in local_model_list ]
+        self.ui.t4_combo_infer_model.clear()
+        self.ui.t4_combo_export_model.clear()
+
+        self.ui.t4_combo_infer_model.addItems( basename_model_list )
+        self.ui.t4_combo_export_model.addItems( basename_model_list )
+
+        self.ui.t4_combo_infer_model.setCurrentIndex(0)
+        self.ui.t4_combo_export_model.setCurrentIndex(0)
+        
+        # 取得最後一個或是選擇的模型
+        local_target_model = local_model_list[0]  # last model
+        for model in local_model_list:
+            cur_epoch = os.path.splitext(model)[0].split('_')[-1]
+            if cur_epoch.isdigit(): 
+                cur_epoch = int(cur_epoch)
+                if cur_epoch == int(self.itao_env.get_env('TRAIN', 'EPOCH')):
+                    local_target_model = model
+        
+        target_model = self.itao_env.replace_docker_root(local_target_model)
+        self.itao_env.update2('RETRAIN', 'OUTPUT_MODEL', target_model)
+
+        # 因為 train 之後馬上接 eval 所以我這邊直接給 spec 最後一個模型
+        if 'classification' in self.itao_env.get_env('TASK'):
+            self.retrain_spec.mapping('model_path', f'"{target_model}"')
+
     """ 當 retrain 完成 """
     def retrain_finish(self):
         
         info = "Re-Train Model ... Done !\n"
         self.logger.info(info)
-        self.consoles[self.current_page_id].insertPlainText(info)
+        self.insert_text(info)
+        self.mapping_retrained_model()
 
         self.ui.t3_bt_retrain.setEnabled(True)  
         self.ui.t3_bt_pruned.setEnabled(True)
@@ -276,47 +338,6 @@ class Tab3(Init):
         root = os.path.dirname(self.itao_env.get_env('TRAIN', 'OUTPUT_MODEL'))
         intput_model = os.path.join( root, sel_model) 
         self.itao_env.update2('PRUNE', 'INPUT_MODEL', intput_model)
-
-    """ 將QT中的PRUNE配置內容映射到PRUNE_CONF """
-    def update_prune_conf(self):
-        
-        self.logger.info("Updating PRUNE_CONF ... ")
-
-        # create prune folder
-        backbone = self.itao_env.get_env('BACKBONE')
-        nlayer = self.itao_env.get_env('NLAYER')
-        local_prune_dir = os.path.join(self.itao_env.get_env('TRAIN', 'LOCAL_OUTPUT_DIR'), f"{backbone}{nlayer}_pruned")
-
-        if not os.path.exists(local_prune_dir):
-            print('Create directory of pruned model {}'.format(local_prune_dir))
-            os.mkdir(local_prune_dir)
-        
-        # setup path of prune_model
-        prune_dir = self.itao_env.replace_docker_root(local_prune_dir)
-        prune_model_name = f'{backbone}{nlayer}_pruned.tlt' # if self.ui.t3_pruned_out_name.text() == "" else self.ui.t3_pruned_out_name.text()
-        # self.ui.t3_retrain_pretrain.setText(prune_model_name)
-        
-        # setup path of output_model and input model  
-        prune_model = os.path.join(prune_dir, prune_model_name )
-        self.itao_env.update2('PRUNE', 'OUTPUT_MODEL', prune_model)
-        self.itao_env.update2('PRUNE', 'LOCAL_OUTPUT_MODEL', self.itao_env.replace_docker_root(prune_model, mode='root'))
-        self.itao_env.get_env('TRAIN', 'OUTPUT_DIR')
-
-        # capture input model
-        self.update_prune_in_model()
-        
-        # setup key, thres, eq
-        self.itao_env.update2('PRUNE', 'THRES', round(float(self.ui.t3_pruned_threshold.value()), 2))
-        
-        if 'yolo' in self.itao_env.get_env('TASK'):
-            eq = 'intersection'   
-        else: 
-            eq = 'union'
-
-        self.itao_env.update2('PRUNE','EQ', eq)
-
-        # show conf
-        self.insert_text("Show pruned config", config=self.itao_env.get_env('PRUNE'))
 
     """ 將QT中的RETRAIN配置內容映射到RETRAIN_CONF """
     def update_retrain_conf(self):
@@ -338,19 +359,15 @@ class Tab3(Init):
         self.itao_env.update2('RETRAIN', 'BATCH_SIZE', batch_size)
         self.itao_env.update2('RETRAIN', 'LR', lr)
         
-        # 更新
-        output_model = self.update_t3_epoch_event()
-        
         output_model_dir = os.path.join(self.itao_env.get_env('USER_EXPERIMENT_DIR'), 'output_retrain')
         output_weight_dir = os.path.join(output_model_dir, 'weights')
         
         local_weight_model_dir = self.itao_env.replace_docker_root(output_weight_dir,mode='root')
         if not os.path.exists(local_weight_model_dir): os.makedirs(local_weight_model_dir)
 
-        output_model_path = os.path.join(output_weight_dir, output_model )
         self.itao_env.update2('RETRAIN', 'OUTPUT_DIR', output_model_dir)
-        self.itao_env.update2('RETRAIN', 'OUTPUT_MODEL', output_model_path)
-        
+        self.itao_env.update2('RETRAIN', 'LOCAL_OUTPUT_DIR', self.itao_env.replace_docker_root(output_model_dir, mode='root'))
+
         if 'classification' in self.itao_env.get_env('TASK'):
             self.retrain_spec.mapping('arch', '"{}"'.format(backbone))            
             self.retrain_spec.mapping('batch_size_per_gpu', int(batch_size))
@@ -365,8 +382,8 @@ class Tab3(Init):
             self.retrain_spec.mapping('pretrained_model_path', '"{}"'.format(input_model))
             self.retrain_spec.mapping('eval_dataset_path', '"{}"'.format( self.train_spec.find_key('eval_dataset_path')))
 
-            self.retrain_spec.mapping('model_path', f'"{output_model_path}"')
-            self.retrain_spec.mapping('pretrained_model_path', '"{}"'.format(input_model))
+            # self.retrain_spec.mapping('model_path', f'"{self.itao_env.get_env("RETRAIN", "OUTPUT_MODEL")}"')
+            # self.retrain_spec.mapping('pretrained_model_path', '"{}"'.format(input_model))
 
         elif 'yolo' in self.itao_env.get_env('TASK'):
 
