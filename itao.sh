@@ -74,7 +74,7 @@ elif [[ ${MODE} == "build" ]];then
         workon ${TRG_ENV}
         if [[ -z $(pip3 list --disable-pip-version-check | grep pyindex) ]];then pip3 install nvidia-pyindex -q --disable-pip-version-check;fi
         if [[ -z $(pip3 list --disable-pip-version-check | grep tao) ]];then pip3 install nvidia-tao==0.1.19 -q --disable-pip-version-check;fi
-        pip3 install numpy PyQt5 matplotlib pyqtgraph -q --disable-pip-version-check wget
+        pip3 install numpy PyQt5 matplotlib pyqtgraph -q --disable-pip-version-check wget GPUtil
         if [[ -z $(pip3 list --disable-pip-version-check | grep tao) ]];then log "Testing TAO ... Done";fi
 
         # dependy for PyQt5 on Ubuntu
