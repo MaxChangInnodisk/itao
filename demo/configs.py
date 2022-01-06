@@ -3,7 +3,8 @@ OPT = {
         "ResNet":{"ResNet"}, 
         "VGG":{"VGG"}, 
         "GoogleNet":{"GoogleNet"}, 
-        "AlexNet":{"AlexNet"}
+        "AlexNet":{"AlexNet"},
+        "MobileNet":{"MobileNet"}
     },
     "Object Detection":{
         "DetectNet_v2":{"ResNet", "VGG", "GoogleNet", "AlexNet"}, 

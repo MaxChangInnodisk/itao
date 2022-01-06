@@ -63,7 +63,7 @@ class Tab2(Init):
             'task': self.itao_env.get_env('TASK'), 
             'spec': self.itao_env.get_env('TRAIN','SPECS'),
             'output_dir': self.itao_env.get_env('TRAIN', 'OUTPUT_DIR'), 
-            'key': self.itao_env.get_env('TRAIN', 'KEY'),
+            'key': self.itao_env.get_env('KEY'),
             'num_gpus': self.itao_env.get_env('NUM_GPUS'),
             'gpu_index':self.gpu_idx
         }
@@ -198,11 +198,12 @@ class Tab2(Init):
         self.logger.info(info)
         self.insert_text(info, div=True)
         self.init_plot()
+        self.update_eval_conf()
 
         args = {
             'task': self.itao_env.get_env('TASK'), 
             'spec': self.itao_env.get_env('TRAIN', 'SPECS'),
-            'key': self.itao_env.get_env('TRAIN', 'KEY'),
+            'key': self.itao_env.get_env('KEY'),
             'num_gpus': self.itao_env.get_env('NUM_GPUS'),
             'gpu_index':self.gpu_idx
         }
@@ -217,13 +218,41 @@ class Tab2(Init):
             self.worker_eval.trigger.connect(self.update_eval_log)
         else:
             self.eval_finish()
+    
+    """ 更新 eval 的參數 """
+    def update_eval_conf(self):
+        local_model_list = self.get_trained_model()
+        local_target_model = local_model_list[0]  # last model
+        for model in local_model_list:
+            cur_epoch = os.path.splitext(model)[0].split('_')[-1]
+            if cur_epoch.isdigit(): 
+                cur_epoch = int(cur_epoch)
+                if cur_epoch == int(self.itao_env.get_env('TRAIN', 'EPOCH')):
+                    local_target_model = model
+        
+        target_model = self.itao_env.replace_docker_root(local_target_model)
+        self.itao_env.update2('TRAIN', 'OUTPUT_MODEL', target_model)
+        self.train_spec.mapping('model_path', f'"{target_model}"')
 
     """ 即時更新與 epoch 相關的資訊 """
     def update_epoch_event(self):
-        if self.ui.t2_epoch.text() != "":
-            model_name = f"{self.itao_env.get_env('BACKBONE')}_{int(self.ui.t2_epoch.text()):03}.tlt"
-            self.ui.t2_model_name.setText(model_name)
-            self.ui.t3_pruned_in_model.setText(model_name)
+        task = self.itao_env.get_env('TASK')
+        epoch = self.ui.t2_epoch.text()
+        
+        if 'yolo' in self.itao_env.get_env('TASK'):
+            output_model = "{}_{}{}_epoch_{:03}.tlt".format(
+                self.itao_env.get_env('TASK').replace('_',""),
+                self.itao_env.get_env('BACKBONE'), 
+                self.itao_env.get_env('NLAYER'),
+                int(epoch)
+            )
+        elif 'classi' in self.itao_env.get_env('TASK'):
+            output_model = "{}_{:03}.tlt".format(
+                self.itao_env.get_env('BACKBONE'), 
+                int(epoch)
+            )
+
+        self.ui.t2_model_name.setText(output_model)
 
     """ 將 t2 的資訊映射到 self.train_conf 上 """
     def update_train_conf(self):
@@ -231,7 +260,6 @@ class Tab2(Init):
         self.logger.info("Updating self.train_conf ... ")
 
         # Update train spec to itao_env.json
-        self.itao_env.update2('TRAIN', 'KEY', self.ui.t2_key.text())
         self.itao_env.update2('TRAIN', 'EPOCH', self.ui.t2_epoch.text())
         self.itao_env.update2('TRAIN', 'INPUT_SHAPE', self.ui.t2_input_shape.text())
         self.itao_env.update2('TRAIN', 'LR', self.ui.t2_lr.text())
@@ -251,11 +279,11 @@ class Tab2(Init):
             self.train_spec.mapping('batch_size_per_gpu', self.itao_env.get_env('TRAIN','BATCH_SIZE'))
 
             # eval model path
-            output_model_dir = os.path.join(self.itao_env.get_env('TRAIN','OUTPUT_DIR'), 'weights')
-            output_model_path = os.path.join( output_model_dir, f"{self.itao_env.get_env('BACKBONE')}_{int(self.itao_env.get_env('TRAIN','EPOCH')):03}.tlt")
-            self.itao_env.update2('TRAIN', 'LOCAL_OUTPUT_MODEL', self.itao_env.replace_docker_root(output_model_path, mode='root'))
-            self.itao_env.update2('TRAIN', 'OUTPUT_MODEL', output_model_path)
-            self.train_spec.mapping('model_path', f'"{output_model_path}"')
+            # output_model_dir = os.path.join(self.itao_env.get_env('TRAIN','OUTPUT_DIR'), 'weights')
+            # output_model_path = os.path.join( output_model_dir, f"{self.itao_env.get_env('BACKBONE')}_{int(self.itao_env.get_env('TRAIN','EPOCH')):03}.tlt")
+            # self.itao_env.update2('TRAIN', 'LOCAL_OUTPUT_MODEL', self.itao_env.replace_docker_root(output_model_path, mode='root'))
+            # self.itao_env.update2('TRAIN', 'OUTPUT_MODEL', output_model_path)
+            # self.train_spec.mapping('model_path', f'"{output_model_path}"')
         
         elif self.itao_env.get_env('TASK')=='yolo_v4':
             # epoch
@@ -272,12 +300,12 @@ class Tab2(Init):
             self.train_spec.mapping('batch_size_per_gpu', self.itao_env.get_env('TRAIN','BATCH_SIZE'))
         
             # eval model path
-            output_model_dir = os.path.join(self.itao_env.get_env('TRAIN', 'OUTPUT_DIR'), 'weights')
-            output_model_path = os.path.join( output_model_dir, "{task}_{backbone}{nlayers}_epoch_{epoch:03}.tlt".format(
-                task = self.itao_env.get_env('TASK').lower().replace('_', ''),
-                backbone = self.itao_env.get_env('BACKBONE'),
-                nlayers = self.itao_env.get_env('NLAYER'),
-                epoch = int(self.itao_env.get_env('TRAIN','EPOCH'))
-            ))
-            self.itao_env.update2('TRAIN', 'LOCAL_OUTPUT_MODEL', self.itao_env.replace_docker_root(output_model_path, mode='root'))
-            self.itao_env.update2('TRAIN', 'OUTPUT_MODEL', output_model_path)
+            # output_model_dir = os.path.join(self.itao_env.get_env('TRAIN', 'OUTPUT_DIR'), 'weights')
+            # output_model_path = os.path.join( output_model_dir, "{task}_{backbone}{nlayers}_epoch_{epoch:03}.tlt".format(
+            #     task = self.itao_env.get_env('TASK').lower().replace('_', ''),
+            #     backbone = self.itao_env.get_env('BACKBONE'),
+            #     nlayers = self.itao_env.get_env('NLAYER'),
+            #     epoch = int(self.itao_env.get_env('TRAIN','EPOCH'))
+            # ))
+            # self.itao_env.update2('TRAIN', 'LOCAL_OUTPUT_MODEL', self.itao_env.replace_docker_root(output_model_path, mode='root'))
+            # self.itao_env.update2('TRAIN', 'OUTPUT_MODEL', output_model_path)

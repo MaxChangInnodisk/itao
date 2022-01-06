@@ -269,6 +269,8 @@ class Init(QtWidgets.QMainWindow):
             self.mv_cursor(pos='end')
 
             self.t3_first_time=False
+        
+        self.get_trained_model()
             
     """ 更新頁面與按鈕 """
     def update_page(self):
@@ -442,3 +444,16 @@ class Init(QtWidgets.QMainWindow):
                 self.ui.t2_bt_stop.setEnabled(False) 
             # if self.debug:
             self.swith_page_button(True)
+
+    """ 取得最新訓練的模型 """
+    def get_trained_model(self) -> list:
+        
+        output_dir = self.itao_env.get_env('TRAIN', 'LOCAL_OUTPUT_DIR')
+        trained_model_list = os.listdir( os.path.join(output_dir, 'weights'))
+        trained_model_list.sort(reverse=True)
+        new_trained_model_list =[ model for model in trained_model_list if self.train_spec.find_key('arch') in model ]
+
+        self.ui.t3_pruned_in_model.clear()
+        self.ui.t3_pruned_in_model.addItems(new_trained_model_list[:10])
+        self.ui.t3_pruned_in_model.setCurrentIndex(0)
+        return [ os.path.join( os.path.join(output_dir, 'weights'), model ) for model in new_trained_model_list ] 

@@ -17,6 +17,7 @@ class Tab3(Init):
         self.ui.t3_bt_retrain.clicked.connect(self.retrain_event)
         self.ui.t3_bt_stop.clicked.connect(self.stop_event)
         self.ui.t3_retrain_epoch.textChanged.connect(self.update_t3_epoch_event)
+        self.ui.t3_pruned_in_model.currentIndexChanged.connect(self.update_prune_in_model)
 
         self.t3_var = { "avg_epoch":[],
                         "avg_loss":[],
@@ -90,7 +91,7 @@ class Tab3(Init):
             'task': self.itao_env.get_env('TASK'), 
             'input_model': self.itao_env.get_env('PRUNE', 'INPUT_MODEL'),
             'output_model': self.itao_env.get_env('PRUNE', 'OUTPUT_MODEL'),
-            'key': self.itao_env.get_env('PRUNE', 'KEY'),
+            'key': self.itao_env.get_env('KEY'),
             'pth' : self.itao_env.get_env('PRUNE', 'THRES'), 
             'eq' : self.itao_env.get_env('PRUNE', 'EQ'),
             'num_gpus': self.itao_env.get_env('NUM_GPUS'),
@@ -168,7 +169,6 @@ class Tab3(Init):
         self.itao_env.update2('PRUNE', 'EPOCH', epoch)
         
         if 'yolo' in self.itao_env.get_env('TASK'):
-
             output_model = "{}_{}{}_epoch_{:03}.tlt".format(
                 self.itao_env.get_env('TASK').replace('_',""),
                 self.itao_env.get_env('BACKBONE'), 
@@ -270,6 +270,13 @@ class Tab3(Init):
         self.ui.t3_bt_stop.setEnabled(False)
         self.swith_page_button(1)
 
+    """ 更新預計要 prune 的模型 """
+    def update_prune_in_model(self):
+        sel_model = self.ui.t3_pruned_in_model.currentText()
+        root = os.path.dirname(self.itao_env.get_env('TRAIN', 'OUTPUT_MODEL'))
+        intput_model = os.path.join( root, sel_model) 
+        self.itao_env.update2('PRUNE', 'INPUT_MODEL', intput_model)
+
     """ 將QT中的PRUNE配置內容映射到PRUNE_CONF """
     def update_prune_conf(self):
         
@@ -287,20 +294,18 @@ class Tab3(Init):
         # setup path of prune_model
         prune_dir = self.itao_env.replace_docker_root(local_prune_dir)
         prune_model_name = f'{backbone}{nlayer}_pruned.tlt' # if self.ui.t3_pruned_out_name.text() == "" else self.ui.t3_pruned_out_name.text()
-        # update information on itao
-        # self.ui.t3_pruned_out_name.setText(prune_model_name)
         self.ui.t3_retrain_pretrain.setText(prune_model_name)
         
         # setup path of output_model and input model  
         prune_model = os.path.join(prune_dir, prune_model_name )
-        self.prune_conf['output_model']=prune_model
         self.itao_env.update2('PRUNE', 'OUTPUT_MODEL', prune_model)
         self.itao_env.update2('PRUNE', 'LOCAL_OUTPUT_MODEL', self.itao_env.replace_docker_root(prune_model, mode='root'))
-        self.itao_env.update2('PRUNE', 'INPUT_MODEL', self.itao_env.get_env('TRAIN', 'OUTPUT_MODEL'))
+        self.itao_env.get_env('TRAIN', 'OUTPUT_DIR')
+
+        # capture input model
+        self.update_prune_in_model()
         
         # setup key, thres, eq
-        self.itao_env.update2('PRUNE', 'KEY', self.itao_env.get_env('TRAIN', 'KEY'))
-        # self.ui.t3_pruned_key.setText(self.itao_env.get_env('PRUNE', 'KEY'))
         self.itao_env.update2('PRUNE', 'THRES', round(float(self.ui.t3_pruned_threshold.value()), 2))
         
         if 'yolo' in self.itao_env.get_env('TASK'):
@@ -308,7 +313,6 @@ class Tab3(Init):
         else: 
             eq = 'union'
 
-        self.prune_conf['eq'] = eq
         self.itao_env.update2('PRUNE','EQ', eq)
 
         # show conf

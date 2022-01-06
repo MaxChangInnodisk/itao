@@ -1,103 +1,200 @@
-01-05 17:25:49 INFO Create Logger: dev
-01-05 17:25:49 INFO Initial iTAO ... 
-01-05 17:25:49 INFO Setting Basic Variable ... 
-01-05 17:25:49 INFO Created Environment File
-01-05 17:25:49 INFO Page Change: Tab 1 
-01-05 17:25:49 INFO First time loading tab 1 ... 
-01-05 17:25:49 INFO Checking environment (iTAO) ... Actived
-01-05 17:25:49 INFO Installed NGC CLI
-01-05 17:25:50 INFO Press OK with the warning message.
-01-05 17:25:52 INFO Update combo box: task
-01-05 17:25:52 INFO Upd env: "NGC_TASK" -> classification
-01-05 17:25:53 INFO Update combo box: model
-01-05 17:25:53 INFO Upd env: "TASK" -> classification
-01-05 17:25:54 INFO Update combo box: backbone
-01-05 17:25:54 INFO Upd env: "BACKBONE" -> resnet
-01-05 17:25:54 INFO Upd env: "LOCAL_PROJECT_DIR" -> /home/max/Workspace/itao/tasks
-01-05 17:25:54 INFO Upd env: "LOCAL_EXPERIMENT_DIR" -> /home/max/Workspace/itao/tasks/classification
-01-05 17:25:54 INFO Upd env: "USER_EXPERIMENT_DIR" -> /workspace/tao-experiments/classification
-01-05 17:25:54 INFO Upd env: "LOCAL_DATA_DIR" -> /home/max/Workspace/itao/data
-01-05 17:25:54 INFO Upd env: "DATA_DOWNLOAD_DIR" -> /workspace/tao-experiments/classification
-01-05 17:25:54 INFO Upd env: [TRAIN][LOCAL_OUTPUT_DIR]=/home/max/Workspace/itao/tasks/classification/output
-01-05 17:25:54 INFO Upd env: [TRAIN][OUTPUT_DIR]=/workspace/tao-experiments/classification/output
-01-05 17:25:54 INFO Upd env: "LOCAL_SPECS_DIR" -> /home/max/Workspace/itao/tasks/classification/specs
-01-05 17:25:54 INFO Upd env: "SPECS_DIR" -> /workspace/tao-experiments/classification/specs
-01-05 17:25:54 INFO Get specification ... 
-01-05 17:25:54 INFO Upd env: [TRAIN][LOCAL_SPECS]=/home/max/Workspace/itao/tasks/classification/specs/classification_train_spec.cfg
-01-05 17:25:54 INFO Upd env: [TRAIN][SPECS]=/workspace/tao-experiments/classification/specs/classification_train_spec.cfg
-01-05 17:25:54 INFO Get specification ... 
-01-05 17:25:54 INFO Upd env: [RETRAIN][LOCAL_SPECS]=/home/max/Workspace/itao/tasks/classification/specs/classification_retrain_spec.cfg
-01-05 17:25:54 INFO Upd env: [RETRAIN][SPECS]=/workspace/tao-experiments/classification/specs/classification_retrain_spec.cfg
-01-05 17:25:54 INFO Loading Target Module ... 
-01-05 17:25:54 INFO Update combo box: n_layers
-01-05 17:25:54 INFO Upd env: "NLAYER" -> 10
-01-05 17:25:54 INFO Add key: [model_config][n_layers]=10
-01-05 17:26:16 INFO Update combo box: model
-01-05 17:26:16 INFO Upd env: "TASK" -> classification
-01-05 17:26:17 INFO Update combo box: backbone
-01-05 17:26:17 INFO Upd env: "BACKBONE" -> googlenet
-01-05 17:26:17 INFO Upd env: "LOCAL_PROJECT_DIR" -> /home/max/Workspace/itao/tasks
-01-05 17:26:17 INFO Upd env: "LOCAL_EXPERIMENT_DIR" -> /home/max/Workspace/itao/tasks/classification
-01-05 17:26:17 INFO Upd env: "USER_EXPERIMENT_DIR" -> /workspace/tao-experiments/classification
-01-05 17:26:17 INFO Upd env: "LOCAL_DATA_DIR" -> /home/max/Workspace/itao/data
-01-05 17:26:17 INFO Upd env: "DATA_DOWNLOAD_DIR" -> /workspace/tao-experiments/classification
-01-05 17:26:17 INFO Upd env: [TRAIN][LOCAL_OUTPUT_DIR]=/home/max/Workspace/itao/tasks/classification/output
-01-05 17:26:17 INFO Upd env: [TRAIN][OUTPUT_DIR]=/workspace/tao-experiments/classification/output
-01-05 17:26:17 INFO Upd env: "LOCAL_SPECS_DIR" -> /home/max/Workspace/itao/tasks/classification/specs
-01-05 17:26:17 INFO Upd env: "SPECS_DIR" -> /workspace/tao-experiments/classification/specs
-01-05 17:26:17 INFO Get specification ... 
-01-05 17:26:17 INFO Upd env: [TRAIN][LOCAL_SPECS]=/home/max/Workspace/itao/tasks/classification/specs/classification_train_spec.cfg
-01-05 17:26:17 INFO Upd env: [TRAIN][SPECS]=/workspace/tao-experiments/classification/specs/classification_train_spec.cfg
-01-05 17:26:17 INFO Get specification ... 
-01-05 17:26:17 INFO Upd env: [RETRAIN][LOCAL_SPECS]=/home/max/Workspace/itao/tasks/classification/specs/classification_retrain_spec.cfg
-01-05 17:26:17 INFO Upd env: [RETRAIN][SPECS]=/workspace/tao-experiments/classification/specs/classification_retrain_spec.cfg
-01-05 17:26:17 INFO Loading Target Module ... 
-01-05 17:26:22 INFO Update combo box: n_layers
-01-05 17:26:22 INFO Upd env: "NLAYER" -> Default
-01-05 17:26:22 INFO Del key: [model_config][n_layers]
-01-05 17:26:25 INFO Update combo box: model
-01-05 17:26:25 INFO Upd env: "TASK" -> classification
-01-05 17:26:26 INFO Update combo box: backbone
-01-05 17:26:26 INFO Upd env: "BACKBONE" -> resnet
-01-05 17:26:26 INFO Upd env: "LOCAL_PROJECT_DIR" -> /home/max/Workspace/itao/tasks
-01-05 17:26:26 INFO Upd env: "LOCAL_EXPERIMENT_DIR" -> /home/max/Workspace/itao/tasks/classification
-01-05 17:26:26 INFO Upd env: "USER_EXPERIMENT_DIR" -> /workspace/tao-experiments/classification
-01-05 17:26:26 INFO Upd env: "LOCAL_DATA_DIR" -> /home/max/Workspace/itao/data
-01-05 17:26:26 INFO Upd env: "DATA_DOWNLOAD_DIR" -> /workspace/tao-experiments/classification
-01-05 17:26:26 INFO Upd env: [TRAIN][LOCAL_OUTPUT_DIR]=/home/max/Workspace/itao/tasks/classification/output
-01-05 17:26:26 INFO Upd env: [TRAIN][OUTPUT_DIR]=/workspace/tao-experiments/classification/output
-01-05 17:26:26 INFO Upd env: "LOCAL_SPECS_DIR" -> /home/max/Workspace/itao/tasks/classification/specs
-01-05 17:26:26 INFO Upd env: "SPECS_DIR" -> /workspace/tao-experiments/classification/specs
-01-05 17:26:26 INFO Get specification ... 
-01-05 17:26:26 INFO Upd env: [TRAIN][LOCAL_SPECS]=/home/max/Workspace/itao/tasks/classification/specs/classification_train_spec.cfg
-01-05 17:26:26 INFO Upd env: [TRAIN][SPECS]=/workspace/tao-experiments/classification/specs/classification_train_spec.cfg
-01-05 17:26:26 INFO Get specification ... 
-01-05 17:26:26 INFO Upd env: [RETRAIN][LOCAL_SPECS]=/home/max/Workspace/itao/tasks/classification/specs/classification_retrain_spec.cfg
-01-05 17:26:26 INFO Upd env: [RETRAIN][SPECS]=/workspace/tao-experiments/classification/specs/classification_retrain_spec.cfg
-01-05 17:26:26 INFO Loading Target Module ... 
-01-05 17:26:30 INFO Update combo box: n_layers
-01-05 17:26:30 INFO Upd env: "NLAYER" -> 10
-01-05 17:26:30 INFO Add key: [model_config][n_layers]=10
-01-05 17:26:33 INFO Update combo box: model
-01-05 17:26:33 INFO Upd env: "TASK" -> classification
-01-05 17:26:35 INFO Update combo box: backbone
-01-05 17:26:35 INFO Upd env: "BACKBONE" -> googlenet
-01-05 17:26:35 INFO Upd env: "LOCAL_PROJECT_DIR" -> /home/max/Workspace/itao/tasks
-01-05 17:26:35 INFO Upd env: "LOCAL_EXPERIMENT_DIR" -> /home/max/Workspace/itao/tasks/classification
-01-05 17:26:35 INFO Upd env: "USER_EXPERIMENT_DIR" -> /workspace/tao-experiments/classification
-01-05 17:26:35 INFO Upd env: "LOCAL_DATA_DIR" -> /home/max/Workspace/itao/data
-01-05 17:26:35 INFO Upd env: "DATA_DOWNLOAD_DIR" -> /workspace/tao-experiments/classification
-01-05 17:26:35 INFO Upd env: [TRAIN][LOCAL_OUTPUT_DIR]=/home/max/Workspace/itao/tasks/classification/output
-01-05 17:26:35 INFO Upd env: [TRAIN][OUTPUT_DIR]=/workspace/tao-experiments/classification/output
-01-05 17:26:35 INFO Upd env: "LOCAL_SPECS_DIR" -> /home/max/Workspace/itao/tasks/classification/specs
-01-05 17:26:35 INFO Upd env: "SPECS_DIR" -> /workspace/tao-experiments/classification/specs
-01-05 17:26:35 INFO Get specification ... 
-01-05 17:26:35 INFO Upd env: [TRAIN][LOCAL_SPECS]=/home/max/Workspace/itao/tasks/classification/specs/classification_train_spec.cfg
-01-05 17:26:35 INFO Upd env: [TRAIN][SPECS]=/workspace/tao-experiments/classification/specs/classification_train_spec.cfg
-01-05 17:26:35 INFO Get specification ... 
-01-05 17:26:35 INFO Upd env: [RETRAIN][LOCAL_SPECS]=/home/max/Workspace/itao/tasks/classification/specs/classification_retrain_spec.cfg
-01-05 17:26:35 INFO Upd env: [RETRAIN][SPECS]=/workspace/tao-experiments/classification/specs/classification_retrain_spec.cfg
-01-05 17:26:35 INFO Loading Target Module ... 
-01-05 17:26:37 INFO Update combo box: n_layers
-01-05 17:26:37 INFO Upd env: "NLAYER" -> Default
-01-05 17:26:37 INFO Del key: [model_config][n_layers]
+01-06 09:52:42 INFO Create Logger: dev
+01-06 09:52:42 INFO Initial iTAO ... 
+01-06 09:52:42 INFO Setting Basic Variable ... 
+01-06 09:52:42 WARN Debug Mode
+01-06 09:52:42 INFO Created Environment File
+01-06 09:52:42 INFO Page Change: Tab 1 
+01-06 09:52:42 INFO First time loading tab 1 ... 
+01-06 09:52:42 INFO Checking environment (iTAO) ... Actived
+01-06 09:52:42 INFO Installed NGC CLI
+01-06 09:52:43 INFO Press OK with the warning message.
+01-06 09:52:44 INFO Update combo box: task
+01-06 09:52:44 INFO Upd env: "NGC_TASK" -> classification
+01-06 09:52:45 INFO Update combo box: model
+01-06 09:52:45 INFO Upd env: "TASK" -> classification
+01-06 09:52:45 INFO Update combo box: backbone
+01-06 09:52:45 INFO Upd env: "BACKBONE" -> resnet
+01-06 09:52:45 INFO Upd env: "LOCAL_PROJECT_DIR" -> /home/max/Workspace/itao/tasks
+01-06 09:52:45 INFO Upd env: "LOCAL_EXPERIMENT_DIR" -> /home/max/Workspace/itao/tasks/classification
+01-06 09:52:45 INFO Upd env: "USER_EXPERIMENT_DIR" -> /workspace/tao-experiments/classification
+01-06 09:52:45 INFO Upd env: "LOCAL_DATA_DIR" -> /home/max/Workspace/itao/data
+01-06 09:52:45 INFO Upd env: "DATA_DOWNLOAD_DIR" -> /workspace/tao-experiments/classification
+01-06 09:52:45 INFO Upd env: [TRAIN][LOCAL_OUTPUT_DIR]=/home/max/Workspace/itao/tasks/classification/output
+01-06 09:52:45 INFO Upd env: [TRAIN][OUTPUT_DIR]=/workspace/tao-experiments/classification/output
+01-06 09:52:45 INFO Upd env: "LOCAL_SPECS_DIR" -> /home/max/Workspace/itao/tasks/classification/specs
+01-06 09:52:45 INFO Upd env: "SPECS_DIR" -> /workspace/tao-experiments/classification/specs
+01-06 09:52:45 INFO Get specification ... 
+01-06 09:52:45 INFO Upd env: [TRAIN][LOCAL_SPECS]=/home/max/Workspace/itao/tasks/classification/specs/classification_train_spec.cfg
+01-06 09:52:45 INFO Upd env: [TRAIN][SPECS]=/workspace/tao-experiments/classification/specs/classification_train_spec.cfg
+01-06 09:52:45 INFO Get specification ... 
+01-06 09:52:45 INFO Upd env: [RETRAIN][LOCAL_SPECS]=/home/max/Workspace/itao/tasks/classification/specs/classification_retrain_spec.cfg
+01-06 09:52:45 INFO Upd env: [RETRAIN][SPECS]=/workspace/tao-experiments/classification/specs/classification_retrain_spec.cfg
+01-06 09:52:45 INFO Loading Target Module ... 
+01-06 09:52:46 INFO Update combo box: n_layers
+01-06 09:52:46 INFO Upd env: "NLAYER" -> 10
+01-06 09:52:46 INFO Start to download model ... 
+01-06 09:52:46 INFO Upd env: [TRAIN][LOCAL_PRETRAINED_MODEL]=/home/max/Workspace/itao/tasks/classification/pretrained_resnet10/pretrained_classification_vresnet10/resnet_10.hdf5
+01-06 09:52:46 INFO Pre-trained Model is downloaded. (/home/max/Workspace/itao/tasks/classification/pretrained_resnet10/pretrained_classification_vresnet10/resnet_10.hdf5)
+01-06 09:52:48 INFO Upd env: "LOCAL_DATASET" -> /home/max/Workspace/itao/tasks/data/mask
+01-06 09:52:48 INFO Upd env: "DATASET" -> /workspace/tao-experiments/data/mask
+01-06 09:52:48 INFO Update environ of mount file ... 
+01-06 09:52:48 INFO Creating json file for mount path into docker ... 
+01-06 09:52:48 INFO Selected Folder: /home/max/Workspace/itao/tasks/data/mask
+01-06 09:52:49 INFO Page Change: Tab 2 
+01-06 09:52:49 INFO First time loading tab 2 ... 
+01-06 09:52:50 INFO Updating self.train_conf ... 
+01-06 09:52:50 INFO Upd env: [TRAIN][KEY]=nvidia_tlt
+01-06 09:52:50 INFO Upd env: [TRAIN][EPOCH]=50
+01-06 09:52:50 INFO Upd env: [TRAIN][INPUT_SHAPE]=3,224,224
+01-06 09:52:50 INFO Upd env: [TRAIN][LR]=0.006
+01-06 09:52:50 INFO Upd env: [TRAIN][BATCH_SIZE]=16
+01-06 09:52:50 INFO Upd env: [TRAIN][CUSTOM]=
+01-06 09:52:50 INFO Start training ... 
+01-06 09:52:50 INFO ----------------
+01-06 09:52:50 INFO ['tao', 'classification', 'train', '-e', '/workspace/tao-experiments/classification/specs/classification_train_spec.cfg', '-r', '/workspace/tao-experiments/classification/output', '-k', 'nvidia_tlt', '--gpus', '1']
+01-06 09:52:50 INFO ----------------
+01-06 09:52:50 INFO Training Model ... Finished !
+01-06 09:52:50 INFO Start to evaluate model ... 
+01-06 09:52:50 INFO Upd env: [TRAIN][OUTPUT_MODEL]=/workspace/tao-experiments/classification/output/weights/resnet_050.tlt
+01-06 09:52:50 INFO ----------------
+01-06 09:52:50 INFO ['tao', 'classification', 'evaluate', '-e', '/workspace/tao-experiments/classification/specs/classification_train_spec.cfg', '-k', 'nvidia_tlt']
+01-06 09:52:50 INFO ----------------
+01-06 09:52:50 INFO Evaluating Model ... Done !
+
+01-06 09:52:50 INFO Page Change: Tab 3 
+01-06 09:52:50 INFO First time loading tab 3 ... 
+01-06 09:52:50 INFO Define retrain specification ... 
+01-06 09:52:52 INFO Pruning model ... 
+01-06 09:52:52 INFO Updating PRUNE_CONF ... 
+01-06 09:52:52 INFO Upd env: [PRUNE][OUTPUT_MODEL]=/workspace/tao-experiments/classification/output/resnet10_pruned/resnet10_pruned.tlt
+01-06 09:52:52 INFO Upd env: [PRUNE][LOCAL_OUTPUT_MODEL]=/home/max/Workspace/itao/tasks/classification/output/resnet10_pruned/resnet10_pruned.tlt
+01-06 09:52:52 INFO Upd env: [PRUNE][INPUT_MODEL]=/workspace/tao-experiments/classification/output/weights/resnet_050.tlt
+01-06 09:52:52 INFO Upd env: [PRUNE][KEY]=nvidia_tlt
+01-06 09:52:52 INFO Upd env: [PRUNE][THRES]=0.3
+01-06 09:52:52 INFO Upd env: [PRUNE][EQ]=union
+01-06 09:52:52 INFO ----------------
+01-06 09:52:52 INFO ['tao', 'classification', 'prune', '-m', '/workspace/tao-experiments/classification/output/weights/resnet_050.tlt', '-o', '/workspace/tao-experiments/classification/output/resnet10_pruned/resnet10_pruned.tlt', '-eq', 'union', '-pth', '0.3', '-k', 'nvidia_tlt']
+01-06 09:52:52 INFO ----------------
+01-06 09:52:54 DEBU Matplotlib created a temporary config/cache directory at /tmp/matplotlib-pur4jes_ because the default path (/.config/matplotlib) is not a writable directory; it is highly recommended to set the MPLCONFIGDIR environment variable to a writable directory, in particular to speed up the import of Matplotlib and to better support multiprocessing.
+01-06 09:52:54 DEBU Matplotlib created a temporary config/cache directory at /tmp/matplotlib-pur4jes_ because the default path (/.config/matplotlib) is not a writable directory; it is highly recommended to set the MPLCONFIGDIR environment variable to a writable directory, in particular to speed up the import of Matplotlib and to better support multiprocessing.
+
+01-06 09:52:54 DEBU Using TensorFlow backend.
+01-06 09:52:54 DEBU Using TensorFlow backend.
+
+01-06 09:52:57 DEBU Using TensorFlow backend.
+01-06 09:52:57 DEBU Using TensorFlow backend.
+
+01-06 09:52:59 DEBU 2022-01-06 01:52:59,543 [INFO] modulus.pruning.pruning: Exploring graph for retainable indices
+01-06 09:52:59 DEBU  modulus.pruning.pruning: Exploring graph for retainable indices
+
+01-06 09:52:59 DEBU 2022-01-06 01:52:59,677 [INFO] modulus.pruning.pruning: Pruning model and appending pruned nodes to new graph
+01-06 09:52:59 DEBU  modulus.pruning.pruning: Pruning model and appending pruned nodes to new graph
+
+01-06 09:53:03 DEBU 2022-01-06 01:53:03,274 [INFO] iva.common.magnet_prune: Pruning ratio (pruned model / original model): 0.996139054247264
+01-06 09:53:03 DEBU  iva.common.magnet_prune: Pruning ratio (pruned model / original model): 0.996139054247264
+
+01-06 09:53:15 DEBU end
+
+01-06 09:53:15 INFO Comparing Model ... 
+01-06 09:53:19 INFO Page Change: Tab 1 
+01-06 09:53:20 INFO Update combo box: task
+01-06 09:53:20 INFO Upd env: "NGC_TASK" -> object_detection
+01-06 09:53:20 INFO Update environ of mount file ... 
+01-06 09:53:20 INFO Creating json file for mount path into docker ... 
+01-06 09:53:21 INFO Update combo box: model
+01-06 09:53:21 INFO Upd env: "TASK" -> yolo_v4
+01-06 09:53:21 INFO Update environ of mount file ... 
+01-06 09:53:21 INFO Creating json file for mount path into docker ... 
+01-06 09:53:22 INFO Update combo box: backbone
+01-06 09:53:22 INFO Upd env: "BACKBONE" -> resnet
+01-06 09:53:22 INFO Update environ of mount file ... 
+01-06 09:53:22 INFO Creating json file for mount path into docker ... 
+01-06 09:53:22 INFO Upd env: "LOCAL_PROJECT_DIR" -> /home/max/Workspace/itao/tasks
+01-06 09:53:22 INFO Upd env: "LOCAL_EXPERIMENT_DIR" -> /home/max/Workspace/itao/tasks/yolo_v4
+01-06 09:53:22 INFO Upd env: "USER_EXPERIMENT_DIR" -> /workspace/tao-experiments/yolo_v4
+01-06 09:53:22 INFO Upd env: "LOCAL_DATA_DIR" -> /home/max/Workspace/itao/data
+01-06 09:53:22 INFO Upd env: "DATA_DOWNLOAD_DIR" -> /workspace/tao-experiments/yolo_v4
+01-06 09:53:22 INFO Upd env: [TRAIN][LOCAL_OUTPUT_DIR]=/home/max/Workspace/itao/tasks/yolo_v4/output
+01-06 09:53:22 INFO Upd env: [TRAIN][OUTPUT_DIR]=/workspace/tao-experiments/yolo_v4/output
+01-06 09:53:22 INFO Upd env: "LOCAL_SPECS_DIR" -> /home/max/Workspace/itao/tasks/yolo_v4/specs
+01-06 09:53:22 INFO Upd env: "SPECS_DIR" -> /workspace/tao-experiments/yolo_v4/specs
+01-06 09:53:22 INFO Get specification ... 
+01-06 09:53:22 INFO Upd env: [TRAIN][LOCAL_SPECS]=/home/max/Workspace/itao/tasks/yolo_v4/specs/yolo_v4_train_kitti_seq_spec.txt
+01-06 09:53:22 INFO Upd env: [TRAIN][SPECS]=/workspace/tao-experiments/yolo_v4/specs/yolo_v4_train_kitti_seq_spec.txt
+01-06 09:53:22 INFO Get specification ... 
+01-06 09:53:22 INFO Upd env: [RETRAIN][LOCAL_SPECS]=/home/max/Workspace/itao/tasks/yolo_v4/specs/yolo_v4_retrain_kitti_seq_spec.txt
+01-06 09:53:22 INFO Upd env: [RETRAIN][SPECS]=/workspace/tao-experiments/yolo_v4/specs/yolo_v4_retrain_kitti_seq_spec.txt
+01-06 09:53:22 INFO Loading Target Module ... 
+01-06 09:53:23 INFO Update combo box: n_layers
+01-06 09:53:23 INFO Upd env: "NLAYER" -> 10
+01-06 09:53:23 INFO Update environ of mount file ... 
+01-06 09:53:23 INFO Creating json file for mount path into docker ... 
+01-06 09:53:23 INFO Start to download model ... 
+01-06 09:53:23 INFO Upd env: [TRAIN][LOCAL_PRETRAINED_MODEL]=/home/max/Workspace/itao/tasks/yolo_v4/pretrained_resnet10/pretrained_object_detection_vresnet10/resnet_10.hdf5
+01-06 09:53:23 INFO Pre-trained Model is downloaded. (/home/max/Workspace/itao/tasks/yolo_v4/pretrained_resnet10/pretrained_object_detection_vresnet10/resnet_10.hdf5)
+01-06 09:53:23 INFO Update environ of mount file ... 
+01-06 09:53:23 INFO Creating json file for mount path into docker ... 
+01-06 09:53:26 INFO Upd env: "LOCAL_DATASET" -> /home/max/Workspace/itao/tasks/data/usb_dets
+01-06 09:53:26 INFO Upd env: "DATASET" -> /workspace/tao-experiments/data/usb_dets
+01-06 09:53:26 INFO Update environ of mount file ... 
+01-06 09:53:26 INFO Creating json file for mount path into docker ... 
+01-06 09:53:26 INFO Selected Folder: /home/max/Workspace/itao/tasks/data/usb_dets
+01-06 09:53:26 INFO Page Change: Tab 2 
+01-06 09:53:31 INFO Updating self.train_conf ... 
+01-06 09:53:31 INFO Upd env: [TRAIN][KEY]=nvidia_tlt
+01-06 09:53:31 INFO Upd env: [TRAIN][EPOCH]=30
+01-06 09:53:31 INFO Upd env: [TRAIN][INPUT_SHAPE]=3,224,224
+01-06 09:53:31 INFO Upd env: [TRAIN][LR]=0.006
+01-06 09:53:31 INFO Upd env: [TRAIN][BATCH_SIZE]=16
+01-06 09:53:31 INFO Upd env: [TRAIN][CUSTOM]=
+01-06 09:53:31 DEBU Get shape: 3, 224, 224
+01-06 09:53:31 INFO Calculate kmeans for yolo ...
+01-06 09:53:31 INFO Start training ... 
+01-06 09:53:31 WARN Using GPU (index:0)
+01-06 09:53:31 INFO ----------------
+01-06 09:53:31 INFO ['tao', 'yolo_v4', 'train', '-e', '/workspace/tao-experiments/yolo_v4/specs/yolo_v4_train_kitti_seq_spec.txt', '-r', '/workspace/tao-experiments/yolo_v4/output', '-k', 'nvidia_tlt', '--gpus', '1', '--gpu_index', '0']
+01-06 09:53:31 INFO ----------------
+01-06 09:53:31 INFO Training Model ... Finished !
+01-06 09:53:31 INFO Start to evaluate model ... 
+01-06 09:53:31 INFO Upd env: [TRAIN][OUTPUT_MODEL]=/workspace/tao-experiments/yolo_v4/output/weights/yolov4_resnet10_epoch_020.tlt
+01-06 09:53:31 INFO ----------------
+01-06 09:53:31 INFO ['tao', 'yolo_v4', 'evaluate', '-e', '/workspace/tao-experiments/yolo_v4/specs/yolo_v4_train_kitti_seq_spec.txt', '-k', 'nvidia_tlt', '-m', '/workspace/tao-experiments/yolo_v4/output/weights/yolov4_resnet10_epoch_020.tlt', '--gpus', '1', '--gpu_index', '0']
+01-06 09:53:31 INFO ----------------
+01-06 09:53:31 INFO Evaluating Model ... Done !
+
+01-06 09:53:32 INFO Page Change: Tab 3 
+01-06 09:53:49 INFO Upd env: [PRUNE][INPUT_MODEL]=/workspace/tao-experiments/yolo_v4/output/weights/yolov4_resnet10_epoch_020.tlt
+01-06 09:53:54 INFO Pruning model ... 
+01-06 09:53:54 INFO Updating PRUNE_CONF ... 
+01-06 09:53:54 INFO Upd env: [PRUNE][OUTPUT_MODEL]=/workspace/tao-experiments/yolo_v4/output/resnet10_pruned/resnet10_pruned.tlt
+01-06 09:53:54 INFO Upd env: [PRUNE][LOCAL_OUTPUT_MODEL]=/home/max/Workspace/itao/tasks/yolo_v4/output/resnet10_pruned/resnet10_pruned.tlt
+01-06 09:53:54 INFO Upd env: [PRUNE][INPUT_MODEL]=/workspace/tao-experiments/yolo_v4/output/weights/yolov4_resnet10_epoch_020.tlt
+01-06 09:53:54 INFO Upd env: [PRUNE][KEY]=nvidia_tlt
+01-06 09:53:54 INFO Upd env: [PRUNE][THRES]=0.3
+01-06 09:53:54 INFO Upd env: [PRUNE][EQ]=intersection
+01-06 09:53:54 INFO ----------------
+01-06 09:53:54 INFO ['tao', 'yolo_v4', 'prune', '-m', '/workspace/tao-experiments/yolo_v4/output/weights/yolov4_resnet10_epoch_020.tlt', '-e', '/workspace/tao-experiments/yolo_v4/specs/yolo_v4_train_kitti_seq_spec.txt', '-o', '/workspace/tao-experiments/yolo_v4/output/resnet10_pruned/resnet10_pruned.tlt', '-eq', 'intersection', '-pth', '0.3', '-k', 'nvidia_tlt', '--gpu_index', '0']
+01-06 09:53:54 INFO ----------------
+01-06 09:53:56 DEBU Matplotlib created a temporary config/cache directory at /tmp/matplotlib-ty50nszd because the default path (/.config/matplotlib) is not a writable directory; it is highly recommended to set the MPLCONFIGDIR environment variable to a writable directory, in particular to speed up the import of Matplotlib and to better support multiprocessing.
+01-06 09:53:56 DEBU Matplotlib created a temporary config/cache directory at /tmp/matplotlib-ty50nszd because the default path (/.config/matplotlib) is not a writable directory; it is highly recommended to set the MPLCONFIGDIR environment variable to a writable directory, in particular to speed up the import of Matplotlib and to better support multiprocessing.
+
+01-06 09:53:56 DEBU Using TensorFlow backend.
+01-06 09:53:56 DEBU Using TensorFlow backend.
+
+01-06 09:53:59 DEBU Using TensorFlow backend.
+01-06 09:53:59 DEBU Using TensorFlow backend.
+
+01-06 09:54:10 DEBU 2022-01-06 01:54:09,999 [INFO] modulus.pruning.pruning: Exploring graph for retainable indices
+01-06 09:54:10 DEBU  modulus.pruning.pruning: Exploring graph for retainable indices
+
+01-06 09:54:15 DEBU 2022-01-06 01:54:15,400 [INFO] modulus.pruning.pruning: Pruning model and appending pruned nodes to new graph
+01-06 09:54:15 DEBU  modulus.pruning.pruning: Pruning model and appending pruned nodes to new graph
+
+01-06 09:55:56 DEBU 2022-01-06 01:55:56,858 [INFO] __main__: Pruning ratio (pruned model / original model): 0.9670213901578035
+01-06 09:55:56 DEBU  __main__: Pruning ratio (pruned model / original model): 0.9670213901578035
+
+01-06 09:56:09 DEBU end
+
+01-06 09:56:09 INFO Comparing Model ... 
+01-06 09:56:56 INFO Page Change: Tab 2 
+01-06 09:56:58 INFO Page Change: Tab 1 

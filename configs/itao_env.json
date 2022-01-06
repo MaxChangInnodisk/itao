@@ -3,25 +3,43 @@
   "NUM_GPUS": "1",
   "LOCAL_PROJECT_DIR": "/home/max/Workspace/itao/tasks",
   "LOCAL_DATA_DIR": "/home/max/Workspace/itao/data",
-  "LOCAL_EXPERIMENT_DIR": "/home/max/Workspace/itao/tasks/classification",
+  "LOCAL_EXPERIMENT_DIR": "/home/max/Workspace/itao/tasks/yolo_v4",
   "PROJECT_DIR": "/workspace/tao-experiments",
-  "USER_EXPERIMENT_DIR": "/workspace/tao-experiments/classification",
-  "DATA_DOWNLOAD_DIR": "/workspace/tao-experiments/classification",
+  "USER_EXPERIMENT_DIR": "/workspace/tao-experiments/yolo_v4",
+  "DATA_DOWNLOAD_DIR": "/workspace/tao-experiments/yolo_v4",
   "CLI": "ngccli_cat_linux.zip",
-  "NGC_TASK": "classification",
-  "TASK": "classification",
-  "BACKBONE": "googlenet",
+  "NGC_TASK": "object_detection",
+  "TASK": "yolo_v4",
+  "BACKBONE": "resnet",
   "TRAIN": {
-    "LOCAL_OUTPUT_DIR": "/home/max/Workspace/itao/tasks/classification/output",
-    "OUTPUT_DIR": "/workspace/tao-experiments/classification/output",
-    "LOCAL_SPECS": "/home/max/Workspace/itao/tasks/classification/specs/classification_train_spec.cfg",
-    "SPECS": "/workspace/tao-experiments/classification/specs/classification_train_spec.cfg"
+    "LOCAL_OUTPUT_DIR": "/home/max/Workspace/itao/tasks/yolo_v4/output",
+    "OUTPUT_DIR": "/workspace/tao-experiments/yolo_v4/output",
+    "LOCAL_SPECS": "/home/max/Workspace/itao/tasks/yolo_v4/specs/yolo_v4_train_kitti_seq_spec.txt",
+    "SPECS": "/workspace/tao-experiments/yolo_v4/specs/yolo_v4_train_kitti_seq_spec.txt",
+    "LOCAL_PRETRAINED_MODEL": "/home/max/Workspace/itao/tasks/yolo_v4/pretrained_resnet10/pretrained_object_detection_vresnet10/resnet_10.hdf5",
+    "KEY": "nvidia_tlt",
+    "EPOCH": "30",
+    "INPUT_SHAPE": "3,224,224",
+    "LR": "0.006",
+    "BATCH_SIZE": "16",
+    "CUSTOM": "",
+    "OUTPUT_MODEL": "/workspace/tao-experiments/yolo_v4/output/weights/yolov4_resnet10_epoch_020.tlt"
   },
-  "LOCAL_SPECS_DIR": "/home/max/Workspace/itao/tasks/classification/specs",
-  "SPECS_DIR": "/workspace/tao-experiments/classification/specs",
+  "LOCAL_SPECS_DIR": "/home/max/Workspace/itao/tasks/yolo_v4/specs",
+  "SPECS_DIR": "/workspace/tao-experiments/yolo_v4/specs",
   "RETRAIN": {
-    "LOCAL_SPECS": "/home/max/Workspace/itao/tasks/classification/specs/classification_retrain_spec.cfg",
-    "SPECS": "/workspace/tao-experiments/classification/specs/classification_retrain_spec.cfg"
+    "LOCAL_SPECS": "/home/max/Workspace/itao/tasks/yolo_v4/specs/yolo_v4_retrain_kitti_seq_spec.txt",
+    "SPECS": "/workspace/tao-experiments/yolo_v4/specs/yolo_v4_retrain_kitti_seq_spec.txt"
   },
-  "NLAYER": "Default"
+  "NLAYER": "10",
+  "LOCAL_DATASET": "/home/max/Workspace/itao/tasks/data/usb_dets",
+  "DATASET": "/workspace/tao-experiments/data/usb_dets",
+  "PRUNE": {
+    "OUTPUT_MODEL": "/workspace/tao-experiments/yolo_v4/output/resnet10_pruned/resnet10_pruned.tlt",
+    "LOCAL_OUTPUT_MODEL": "/home/max/Workspace/itao/tasks/yolo_v4/output/resnet10_pruned/resnet10_pruned.tlt",
+    "INPUT_MODEL": "/workspace/tao-experiments/yolo_v4/output/weights/yolov4_resnet10_epoch_020.tlt",
+    "KEY": "nvidia_tlt",
+    "THRES": 0.3,
+    "EQ": "intersection"
+  }
 }

@@ -217,8 +217,11 @@ class Tab1(Init):
             elif 'detection' in self.itao_env.get_env('NGC_TASK'):
                 key_nlayer = 'nlayers'
 
-            if 'default' in self.itao_env.get_env('NLAYER').lower():
+            if not self.itao_env.get_env('NLAYER').isdigit():
                 self.train_spec.del_spec_item(scope='model_config', key=key_nlayer)
+                # 更新 spec 裡面的 arch
+                self.train_spec.mapping('arch', '"{}_{}"'.format(self.itao_env.get_env('BACKBONE').lower(), self.itao_env.get_env('NLAYER')))
+
             else:
                 if self.train_spec.find_key(key_nlayer):
                     self.train_spec.mapping(key_nlayer, self.itao_env.get_env('NLAYER'))
