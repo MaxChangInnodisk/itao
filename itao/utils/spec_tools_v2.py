@@ -127,15 +127,15 @@ class DefineSpec():
         for idx, cnt in enumerate(self.spec_cnt):
             if key in cnt:
                 org_key, org_val = self.spec_cnt[idx].split(":")
-
-                # make sure key is correct. ( e.g. problem with model_path and pretrained_model_path )
                 if key == org_key.replace(" ", ""):
                     self.spec_cnt[idx] = f"{org_key}: {val}\n"
+                    return
                 else:
-                    print('Mapping Error')
-                    print('Original key: {}, Mapping key: {}'.format(org_key, key))
+                    self.logger.warning('Original key: {}, Mapping key: {}'.format(org_key, key))
+                    continue
             else:
                 continue
+        self.logger.error('Mapping Error')
 
         self.list_to_spec(self.spec_cnt)
 

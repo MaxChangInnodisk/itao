@@ -450,10 +450,22 @@ class Init(QtWidgets.QMainWindow):
         
         output_dir = self.itao_env.get_env('TRAIN', 'LOCAL_OUTPUT_DIR')
         trained_model_list = os.listdir( os.path.join(output_dir, 'weights'))
-        trained_model_list.sort(reverse=True)
+        trained_model_list.sort()
         new_trained_model_list =[ model for model in trained_model_list if self.train_spec.find_key('arch') in model ]
 
+        min_idx, max_idx = 0, len(new_trained_model_list)
+        for cur_idx, model in enumerate(new_trained_model_list):
+            cur_epoch = os.path.splitext(model)[0].split('_')[-1]
+            if cur_epoch.isdigit(): 
+                cur_epoch = int(cur_epoch)
+                if cur_epoch == int(self.itao_env.get_env('TRAIN', 'EPOCH')):
+                    max_idx = cur_idx
+                    if max_idx>5:
+                        min_idx = max_idx-5
+
+        cut_trained_model = new_trained_model_list[min_idx:max_idx+1]
+        cut_trained_model.reverse()
         self.ui.t3_pruned_in_model.clear()
-        self.ui.t3_pruned_in_model.addItems(new_trained_model_list[:10])
+        self.ui.t3_pruned_in_model.addItems(cut_trained_model)
         self.ui.t3_pruned_in_model.setCurrentIndex(0)
-        return [ os.path.join( os.path.join(output_dir, 'weights'), model ) for model in new_trained_model_list ] 
+        return [ os.path.join( os.path.join(output_dir, 'weights'), model ) for model in cut_trained_model ] 
