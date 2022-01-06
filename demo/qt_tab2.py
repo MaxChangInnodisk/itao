@@ -188,6 +188,7 @@ class Tab2(Init):
         self.logger.info(info)
         self.insert_text(info)
 
+        self.mapping_trained_model()
         self.eval_event()
         self.ui.t2_bt_train.setEnabled(True)
         self.swith_page_button(True)
@@ -198,7 +199,7 @@ class Tab2(Init):
         self.logger.info(info)
         self.insert_text(info, div=True)
         self.init_plot()
-        self.update_eval_conf()
+        
 
         args = {
             'task': self.itao_env.get_env('TASK'), 
@@ -220,7 +221,7 @@ class Tab2(Init):
             self.eval_finish()
     
     """ 更新 eval 的參數 """
-    def update_eval_conf(self):
+    def mapping_trained_model(self):
         local_model_list = self.get_trained_model()
         local_target_model = local_model_list[0]  # last model
         for model in local_model_list:
@@ -232,27 +233,31 @@ class Tab2(Init):
         
         target_model = self.itao_env.replace_docker_root(local_target_model)
         self.itao_env.update2('TRAIN', 'OUTPUT_MODEL', target_model)
-        self.train_spec.mapping('model_path', f'"{target_model}"')
+
+        if 'classification' in self.itao_env.get_env('TASK'):
+            self.train_spec.mapping('model_path', f'"{target_model}"')
 
     """ 即時更新與 epoch 相關的資訊 """
     def update_epoch_event(self):
-        task = self.itao_env.get_env('TASK')
-        epoch = self.ui.t2_epoch.text()
+        self.logger.warning('unused method -> update_epoch_event')
+        pass
+        # task = self.itao_env.get_env('TASK')
+        # epoch = self.ui.t2_epoch.text()
         
-        if 'yolo' in self.itao_env.get_env('TASK'):
-            output_model = "{}_{}{}_epoch_{:03}.tlt".format(
-                self.itao_env.get_env('TASK').replace('_',""),
-                self.itao_env.get_env('BACKBONE'), 
-                self.itao_env.get_env('NLAYER'),
-                int(epoch)
-            )
-        elif 'classi' in self.itao_env.get_env('TASK'):
-            output_model = "{}_{:03}.tlt".format(
-                self.itao_env.get_env('BACKBONE'), 
-                int(epoch)
-            )
+        # if 'yolo' in self.itao_env.get_env('TASK'):
+        #     output_model = "{}_{}{}_epoch_{:03}.tlt".format(
+        #         self.itao_env.get_env('TASK').replace('_',""),
+        #         self.itao_env.get_env('BACKBONE'), 
+        #         self.itao_env.get_env('NLAYER'),
+        #         int(epoch)
+        #     )
+        # elif 'classi' in self.itao_env.get_env('TASK'):
+        #     output_model = "{}_{:03}.tlt".format(
+        #         self.itao_env.get_env('BACKBONE'), 
+        #         int(epoch)
+        #     )
 
-        self.ui.t2_model_name.setText(output_model)
+        # self.ui.t2_model_name.setText(output_model)
 
     """ 將 t2 的資訊映射到 self.train_conf 上 """
     def update_train_conf(self):
@@ -266,7 +271,7 @@ class Tab2(Init):
         self.itao_env.update2('TRAIN', 'BATCH_SIZE', self.ui.t2_batch.text())
         self.itao_env.update2('TRAIN', 'CUSTOM', self.ui.t2_c1.text())
 
-        self.update_epoch_event()
+        # self.update_epoch_event()
 
         if self.itao_env.get_env('NGC_TASK')=='classification':
             # epoch
@@ -278,12 +283,6 @@ class Tab2(Init):
             # batch size
             self.train_spec.mapping('batch_size_per_gpu', self.itao_env.get_env('TRAIN','BATCH_SIZE'))
 
-            # eval model path
-            # output_model_dir = os.path.join(self.itao_env.get_env('TRAIN','OUTPUT_DIR'), 'weights')
-            # output_model_path = os.path.join( output_model_dir, f"{self.itao_env.get_env('BACKBONE')}_{int(self.itao_env.get_env('TRAIN','EPOCH')):03}.tlt")
-            # self.itao_env.update2('TRAIN', 'LOCAL_OUTPUT_MODEL', self.itao_env.replace_docker_root(output_model_path, mode='root'))
-            # self.itao_env.update2('TRAIN', 'OUTPUT_MODEL', output_model_path)
-            # self.train_spec.mapping('model_path', f'"{output_model_path}"')
         
         elif self.itao_env.get_env('TASK')=='yolo_v4':
             # epoch
@@ -299,13 +298,3 @@ class Tab2(Init):
             # batch size
             self.train_spec.mapping('batch_size_per_gpu', self.itao_env.get_env('TRAIN','BATCH_SIZE'))
         
-            # eval model path
-            # output_model_dir = os.path.join(self.itao_env.get_env('TRAIN', 'OUTPUT_DIR'), 'weights')
-            # output_model_path = os.path.join( output_model_dir, "{task}_{backbone}{nlayers}_epoch_{epoch:03}.tlt".format(
-            #     task = self.itao_env.get_env('TASK').lower().replace('_', ''),
-            #     backbone = self.itao_env.get_env('BACKBONE'),
-            #     nlayers = self.itao_env.get_env('NLAYER'),
-            #     epoch = int(self.itao_env.get_env('TRAIN','EPOCH'))
-            # ))
-            # self.itao_env.update2('TRAIN', 'LOCAL_OUTPUT_MODEL', self.itao_env.replace_docker_root(output_model_path, mode='root'))
-            # self.itao_env.update2('TRAIN', 'OUTPUT_MODEL', output_model_path)

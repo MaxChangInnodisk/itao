@@ -294,7 +294,7 @@ class Tab3(Init):
         # setup path of prune_model
         prune_dir = self.itao_env.replace_docker_root(local_prune_dir)
         prune_model_name = f'{backbone}{nlayer}_pruned.tlt' # if self.ui.t3_pruned_out_name.text() == "" else self.ui.t3_pruned_out_name.text()
-        self.ui.t3_retrain_pretrain.setText(prune_model_name)
+        # self.ui.t3_retrain_pretrain.setText(prune_model_name)
         
         # setup path of output_model and input model  
         prune_model = os.path.join(prune_dir, prune_model_name )
@@ -332,7 +332,7 @@ class Tab3(Init):
         lr = self.ui.t3_retrain_lr.text()
 
         # 更新到 env 方便 debug以及取用
-        self.ui.t3_retrain_key.setText(self.itao_env.get_env('KEY'))
+        # self.ui.t3_retrain_key.setText(self.itao_env.get_env('KEY'))
         self.itao_env.update2('RETRAIN', 'INPUT_MODEL', input_model)
         self.itao_env.update2('RETRAIN', 'EPOCH', epoch)
         self.itao_env.update2('RETRAIN', 'BATCH_SIZE', batch_size)
