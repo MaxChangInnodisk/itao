@@ -1949,27 +1949,6 @@
                    </property>
                   </widget>
                  </item>
-                 <item row="1" column="4">
-                  <widget class="QWidget" name="t4_etlt_group" native="true">
-                   <layout class="QGridLayout" name="gridLayout_24">
-                    <property name="leftMargin">
-                     <number>0</number>
-                    </property>
-                    <property name="topMargin">
-                     <number>0</number>
-                    </property>
-                    <property name="rightMargin">
-                     <number>0</number>
-                    </property>
-                    <property name="bottomMargin">
-                     <number>0</number>
-                    </property>
-                    <property name="spacing">
-                     <number>0</number>
-                    </property>
-                   </layout>
-                  </widget>
-                 </item>
                  <item row="1" column="0">
                   <widget class="QLabel" name="t4_lbl_out_name">
                    <property name="maximumSize">
@@ -2008,13 +1987,6 @@
                     </size>
                    </property>
                   </spacer>
-                 </item>
-                 <item row="1" column="3">
-                  <widget class="QLabel" name="label">
-                   <property name="text">
-                    <string>TensorRT</string>
-                   </property>
-                  </widget>
                  </item>
                 </layout>
                </widget>
