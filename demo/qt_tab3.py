@@ -3,6 +3,7 @@
 import sys, os
 from typing import *
 import pyqtgraph as pg
+from PyQt5.QtWidgets import QFileDialog
 
 """ 自己的函式庫自己撈"""
 sys.path.append("../itao")
@@ -14,11 +15,14 @@ class Tab3(Init):
         super().__init__()
 
         self.worker_prune, self.worker_retrain = None, None
+        self.use_pretrained = False
+        
         self.ui.t3_bt_pruned.clicked.connect(self.prune_event)
         self.ui.t3_bt_retrain.clicked.connect(self.retrain_event)
         self.ui.t3_bt_stop.clicked.connect(self.stop_event)
         self.ui.t3_retrain_epoch.textChanged.connect(self.update_t3_epoch_event)
         self.ui.t3_pruned_in_model.currentIndexChanged.connect(self.update_prune_in_model)
+        self.ui.t3_bt_checkpoint.clicked.connect(self.ckpt_to_pre_retrained)
 
         self.t3_var = { "avg_epoch":[],
                         "avg_loss":[],
@@ -70,6 +74,23 @@ class Tab3(Init):
         self.swith_page_button(True)
         self.ui.t3_bt_stop.setEnabled(False)
 
+    """ 如果使用的是 checkpoint 的話 """
+    def ckpt_to_pre_retrained(self):
+        
+        root = self.itao_env.get_env('LOCAL_EXPERIMENT_DIR')
+
+        filename, filetype = QFileDialog.getOpenFileNames(self, "Open file", root,"TLT Model (*.tlt)" ,options =QFileDialog.DontUseNativeDialog)
+
+        if filename != None:
+
+            ckpt = filename[0]
+            self.logger.info('Selected Checkpoint: {}'.format(ckpt))
+            self.itao_env.update2('RETRAIN', 'LOCAL_PRETRAINED_MODEL', ckpt)
+            self.itao_env.update2('RETRAIN', 'PRETRAINED_MODEL', self.itao_env.replace_docker_root(ckpt))
+
+            self.use_pretrained = True
+        else:
+            self.logger.error('Failed to load checkpoint ...')
     # Prune -------------------------------------------------------------------------------
 
     """ Prune 的事件 """
@@ -345,7 +366,7 @@ class Tab3(Init):
         self.logger.info('Updating self.retrain_conf ... ')
         
         # 從 GUI 中取得參數
-        input_model = self.itao_env.get_env('PRUNE', 'OUTPUT_MODEL')
+        input_model = self.itao_env.get_env('PRUNE', 'OUTPUT_MODEL') if not self.use_pretrained else self.itao_env.get_env('RETRAIN', 'PRETRAINED_MODEL')
         backbone = self.itao_env.get_env('BACKBONE').lower()
         nlayer = self.itao_env.get_env('NLAYER')
         epoch = self.ui.t3_retrain_epoch.text()
@@ -353,7 +374,6 @@ class Tab3(Init):
         lr = self.ui.t3_retrain_lr.text()
 
         # 更新到 env 方便 debug以及取用
-        # self.ui.t3_retrain_key.setText(self.itao_env.get_env('KEY'))
         self.itao_env.update2('RETRAIN', 'INPUT_MODEL', input_model)
         self.itao_env.update2('RETRAIN', 'EPOCH', epoch)
         self.itao_env.update2('RETRAIN', 'BATCH_SIZE', batch_size)
@@ -381,9 +401,6 @@ class Tab3(Init):
 
             self.retrain_spec.mapping('pretrained_model_path', '"{}"'.format(input_model))
             self.retrain_spec.mapping('eval_dataset_path', '"{}"'.format( self.train_spec.find_key('eval_dataset_path')))
-
-            # self.retrain_spec.mapping('model_path', f'"{self.itao_env.get_env("RETRAIN", "OUTPUT_MODEL")}"')
-            # self.retrain_spec.mapping('pretrained_model_path', '"{}"'.format(input_model))
 
         elif 'yolo' in self.itao_env.get_env('TASK'):
 

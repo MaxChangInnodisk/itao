@@ -135,10 +135,10 @@ class Tab2(Init):
 
         if filename != None:
 
-            self.logger.info('Selected Checkpoint: {}'.format(filename))
-
-            pretrained_model = self.itao_env.replace_docker_root(filename)
-            self.itao_env.update2('TRAIN', 'LOCAL_PRETRAINED_MODEL', pretrained_model)
+            ckpt = filename[0]
+            self.logger.info('Selected Checkpoint: {}'.format(ckpt))
+            self.itao_env.update2('TRAIN', 'LOCAL_PRETRAINED_MODEL', ckpt)
+            self.itao_env.update2('TRAIN', 'PRETRAINED_MODEL', self.itao_env.replace_docker_root(ckpt))
 
             self.use_pretrained = True
         else:
@@ -148,6 +148,15 @@ class Tab2(Init):
     def update_train_conf(self):
         
         self.logger.info("Updating config of training ... ")
+
+        # 更新 specs 的 pretrained_model_path 的部份
+        model_path = self.itao_env.get_env('TRAIN', 'PRETRAINED_MODEL')
+        if 'classification' in self.itao_env.get_env('NGC_TASK'):
+            self.train_spec.mapping('pretrained_model_path', f'"{model_path}"')
+
+        elif 'detection' in self.itao_env.get_env('NGC_TASK'):
+            self.train_spec.mapping('pretrain_model_path', f'"{model_path}"')
+
 
         # Update train spec to itao_env.json
         self.itao_env.update2('TRAIN', 'EPOCH', self.ui.t2_epoch.text())

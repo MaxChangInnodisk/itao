@@ -30,7 +30,7 @@ class Tab4(Init):
         self.ui.t4_bt_export.clicked.connect(self.export_event)
         self.ui.t4_bt_pre_infer.clicked.connect(self.ctrl_result_event)
         self.ui.t4_bt_next_infer.clicked.connect(self.ctrl_result_event)
-        self.ui.t4_combo_infer_model.currentIndexChanged.connect(self.update_infer_model)
+        # self.ui.t4_combo_infer_model.currentIndexChanged.connect(self.update_infer_model)
         self.ui.t4_combo_export_model.currentIndexChanged.connect(self.update_export_model)
 
         # define key of scheduler

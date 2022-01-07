@@ -271,6 +271,7 @@ class Tab1(Init):
             model_path = data.split(":")[1]
             finish_info  = 'Pre-trained Model is downloaded. ({})'.format(model_path)
             self.itao_env.update2('TRAIN', 'LOCAL_PRETRAINED_MODEL', model_path)
+            self.itao_env.update2('TRAIN', 'PRETRAINED_MODEL', self.itao_env.replace_docker_root(model_path))
             self.logger.info(finish_info)
             self.insert_text(finish_info)
 
@@ -363,12 +364,12 @@ class Tab1(Init):
             else:
                 self.train_spec.add_spec_item(scope='model_config', key=key_nlayer, val=self.itao_env.get_env('NLAYER'), level=2)
 
-        # 更新 specs 的 pretrained_model_path 的部份
-        model_path = self.itao_env.get_env('TRAIN', 'LOCAL_PRETRAINED_MODEL')
-        if 'classification' in self.itao_env.get_env('NGC_TASK'):
-            self.train_spec.mapping('pretrained_model_path', f'"{self.itao_env.replace_docker_root(model_path)}"')
-        elif 'detection' in self.itao_env.get_env('NGC_TASK'):
-            self.train_spec.mapping('pretrain_model_path', f'"{self.itao_env.replace_docker_root(model_path)}"')
+        # # 更新 specs 的 pretrained_model_path 的部份
+        # model_path = self.itao_env.get_env('TRAIN', 'LOCAL_PRETRAINED_MODEL')
+        # if 'classification' in self.itao_env.get_env('NGC_TASK'):
+        #     self.train_spec.mapping('pretrained_model_path', f'"{self.itao_env.replace_docker_root(model_path)}"')
+        # elif 'detection' in self.itao_env.get_env('NGC_TASK'):
+        #     self.train_spec.mapping('pretrain_model_path', f'"{self.itao_env.replace_docker_root(model_path)}"')
 
         # 更新dataset
         trg_folder_path = self.itao_env.get_env('DATASET')

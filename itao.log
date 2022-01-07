@@ -1,105 +1,106 @@
-01-06 16:21:28 INFO Create Logger: dev
-01-06 16:21:28 INFO Initial iTAO ... 
-01-06 16:21:29 INFO Setting Basic Variable ... 
-01-06 16:21:29 WARN Debug Mode
-01-06 16:21:29 INFO Created Environment File
-01-06 16:21:29 INFO Page Change: Tab 1 
-01-06 16:21:29 INFO First time loading tab 1 ... 
-01-06 16:21:29 INFO Checking environment (iTAO) ... Actived
-01-06 16:21:29 INFO Installed NGC CLI
-01-06 16:21:29 INFO Press OK with the warning message.
-01-06 16:21:31 INFO Update combo box: task
-01-06 16:21:31 INFO Upd env: "NGC_TASK" -> classification
-01-06 16:21:32 INFO Update combo box: model
-01-06 16:21:32 INFO Upd env: "TASK" -> classification
-01-06 16:21:33 INFO Update combo box: backbone
-01-06 16:21:33 INFO Upd env: "BACKBONE" -> resnet
-01-06 16:21:33 INFO Upd env: "LOCAL_PROJECT_DIR" -> /home/max/Workspace/itao/tasks
-01-06 16:21:33 INFO Upd env: "LOCAL_EXPERIMENT_DIR" -> /home/max/Workspace/itao/tasks/classification
-01-06 16:21:33 INFO Upd env: "USER_EXPERIMENT_DIR" -> /workspace/tao-experiments/classification
-01-06 16:21:33 INFO Upd env: "LOCAL_DATA_DIR" -> /home/max/Workspace/itao/data
-01-06 16:21:33 INFO Upd env: "DATA_DOWNLOAD_DIR" -> /workspace/tao-experiments/classification
-01-06 16:21:33 INFO Upd env: [TRAIN][LOCAL_OUTPUT_DIR]=/home/max/Workspace/itao/tasks/classification/output
-01-06 16:21:33 INFO Upd env: [TRAIN][OUTPUT_DIR]=/workspace/tao-experiments/classification/output
-01-06 16:21:33 INFO Upd env: "LOCAL_SPECS_DIR" -> /home/max/Workspace/itao/tasks/classification/specs
-01-06 16:21:33 INFO Upd env: "SPECS_DIR" -> /workspace/tao-experiments/classification/specs
-01-06 16:21:33 INFO Get specification ... 
-01-06 16:21:33 INFO Upd env: [TRAIN][LOCAL_SPECS]=/home/max/Workspace/itao/tasks/classification/specs/classification_train_spec.cfg
-01-06 16:21:33 INFO Upd env: [TRAIN][SPECS]=/workspace/tao-experiments/classification/specs/classification_train_spec.cfg
-01-06 16:21:33 INFO Get specification ... 
-01-06 16:21:33 INFO Upd env: [RETRAIN][LOCAL_SPECS]=/home/max/Workspace/itao/tasks/classification/specs/classification_retrain_spec.cfg
-01-06 16:21:33 INFO Upd env: [RETRAIN][SPECS]=/workspace/tao-experiments/classification/specs/classification_retrain_spec.cfg
-01-06 16:21:33 INFO Loading Target Module ... 
-01-06 16:21:33 INFO Update combo box: n_layers
-01-06 16:21:33 INFO Upd env: "NLAYER" -> 10
-01-06 16:21:34 INFO Start to download model ... 
-01-06 16:21:34 INFO Upd env: [TRAIN][LOCAL_PRETRAINED_MODEL]=/home/max/Workspace/itao/tasks/classification/pretrained_resnet10/pretrained_classification_vresnet10/resnet_10.hdf5
-01-06 16:21:34 INFO Pre-trained Model is downloaded. (/home/max/Workspace/itao/tasks/classification/pretrained_resnet10/pretrained_classification_vresnet10/resnet_10.hdf5)
-01-06 16:21:36 INFO Upd env: "LOCAL_DATASET" -> /home/max/Workspace/itao/tasks/data/mask
-01-06 16:21:36 INFO Upd env: "DATASET" -> /workspace/tao-experiments/data/mask
-01-06 16:21:36 INFO Selected Folder: /home/max/Workspace/itao/tasks/data/mask
-01-06 16:21:36 INFO Select GPU:0 (NVIDIA GeForce RTX 2070 SUPER)
-01-06 16:21:36 INFO Page 1 is finished, mapping varible into spec
-01-06 16:21:36 INFO Update environ of mount file ... 
-01-06 16:21:36 INFO Creating json file for mount path into docker ... 
-01-06 16:21:36 INFO Update environ of mount file ... 
-01-06 16:21:36 INFO Creating json file for mount path into docker ... 
-01-06 16:21:38 INFO Select GPU:0 (NVIDIA GeForce RTX 2070 SUPER)
-01-06 16:21:38 INFO Update environ of mount file ... 
-01-06 16:21:38 INFO Creating json file for mount path into docker ... 
-01-06 16:21:39 INFO Page Change: Tab 2 
-01-06 16:21:39 INFO First time loading tab 2 ... 
-01-06 16:21:48 INFO Selected Checkpoint: []
-01-06 16:21:48 INFO Upd env: [TRAIN][LOCAL_PRETRAINED_MODEL]=[]
-01-06 16:21:49 INFO Updating config of training ... 
-01-06 16:21:49 INFO Upd env: [TRAIN][EPOCH]=50
-01-06 16:21:49 INFO Upd env: [TRAIN][INPUT_SHAPE]=3,224,224
-01-06 16:21:49 INFO Upd env: [TRAIN][LR]=0.006
-01-06 16:21:49 INFO Upd env: [TRAIN][BATCH_SIZE]=16
-01-06 16:21:49 INFO Upd env: [TRAIN][CUSTOM]=
-01-06 16:21:49 INFO Start training ... 
-01-06 16:21:49 INFO ----------------
-01-06 16:21:49 INFO ['tao', 'classification', 'train', '-e', '/workspace/tao-experiments/classification/specs/classification_train_spec.cfg', '-r', '/workspace/tao-experiments/classification/output', '-k', 'nvidia_tlt', '--gpus', '1']
-01-06 16:21:49 INFO ----------------
-01-06 16:21:49 INFO Training Model ... Finished !
-01-06 16:21:49 INFO Upd env: [TRAIN][OUTPUT_MODEL]=/workspace/tao-experiments/classification/output/weights/resnet_050.tlt
-01-06 16:21:49 WARN Original key:   pretrained_model_path, Mapping key: model_path
-01-06 16:21:49 INFO Start to evaluate model ... 
-01-06 16:21:49 INFO ----------------
-01-06 16:21:49 INFO ['tao', 'classification', 'evaluate', '-e', '/workspace/tao-experiments/classification/specs/classification_train_spec.cfg', '-k', 'nvidia_tlt']
-01-06 16:21:49 INFO ----------------
-01-06 16:21:49 INFO Evaluating Model ... Done !
+01-07 10:46:45 INFO Create Logger: dev
+01-07 10:46:45 INFO Initial iTAO ... 
+01-07 10:46:45 INFO Setting Basic Variable ... 
+01-07 10:46:45 WARN Debug Mode
+01-07 10:46:45 INFO Created Environment File
+01-07 10:46:45 INFO Page Change: Tab 1 
+01-07 10:46:45 INFO First time loading tab 1 ... 
+01-07 10:46:45 INFO Checking environment (iTAO) ... Actived
+01-07 10:46:45 INFO Installed NGC CLI
+01-07 10:46:45 INFO Press OK with the warning message.
+01-07 10:46:47 INFO Update combo box: task
+01-07 10:46:47 INFO Upd env: "NGC_TASK" -> classification
+01-07 10:46:48 INFO Update combo box: model
+01-07 10:46:48 INFO Upd env: "TASK" -> classification
+01-07 10:46:50 INFO Update combo box: backbone
+01-07 10:46:50 INFO Upd env: "BACKBONE" -> resnet
+01-07 10:46:50 INFO Upd env: "LOCAL_PROJECT_DIR" -> /home/max/Workspace/itao/tasks
+01-07 10:46:50 INFO Upd env: "LOCAL_EXPERIMENT_DIR" -> /home/max/Workspace/itao/tasks/classification
+01-07 10:46:50 INFO Upd env: "USER_EXPERIMENT_DIR" -> /workspace/tao-experiments/classification
+01-07 10:46:50 INFO Upd env: "LOCAL_DATA_DIR" -> /home/max/Workspace/itao/data
+01-07 10:46:50 INFO Upd env: "DATA_DOWNLOAD_DIR" -> /workspace/tao-experiments/classification
+01-07 10:46:50 INFO Upd env: [TRAIN][LOCAL_OUTPUT_DIR]=/home/max/Workspace/itao/tasks/classification/output
+01-07 10:46:50 INFO Upd env: [TRAIN][OUTPUT_DIR]=/workspace/tao-experiments/classification/output
+01-07 10:46:50 INFO Upd env: "LOCAL_SPECS_DIR" -> /home/max/Workspace/itao/tasks/classification/specs
+01-07 10:46:50 INFO Upd env: "SPECS_DIR" -> /workspace/tao-experiments/classification/specs
+01-07 10:46:50 INFO Get specification ... 
+01-07 10:46:50 INFO Upd env: [TRAIN][LOCAL_SPECS]=/home/max/Workspace/itao/tasks/classification/specs/classification_train_spec.cfg
+01-07 10:46:50 INFO Upd env: [TRAIN][SPECS]=/workspace/tao-experiments/classification/specs/classification_train_spec.cfg
+01-07 10:46:50 INFO Get specification ... 
+01-07 10:46:50 INFO Upd env: [RETRAIN][LOCAL_SPECS]=/home/max/Workspace/itao/tasks/classification/specs/classification_retrain_spec.cfg
+01-07 10:46:50 INFO Upd env: [RETRAIN][SPECS]=/workspace/tao-experiments/classification/specs/classification_retrain_spec.cfg
+01-07 10:46:50 INFO Loading Target Module ... 
+01-07 10:46:51 INFO Update combo box: n_layers
+01-07 10:46:51 INFO Upd env: "NLAYER" -> 10
+01-07 10:46:51 INFO Start to download model ... 
+01-07 10:46:51 INFO Upd env: [TRAIN][LOCAL_PRETRAINED_MODEL]=/home/max/Workspace/itao/tasks/classification/pretrained_resnet10/pretrained_classification_vresnet10/resnet_10.hdf5
+01-07 10:46:51 INFO Upd env: [TRAIN][PRETRAINED_MODEL]=/workspace/tao-experiments/classification/pretrained_resnet10/pretrained_classification_vresnet10/resnet_10.hdf5
+01-07 10:46:51 INFO Pre-trained Model is downloaded. (/home/max/Workspace/itao/tasks/classification/pretrained_resnet10/pretrained_classification_vresnet10/resnet_10.hdf5)
+01-07 10:46:53 INFO Upd env: "LOCAL_DATASET" -> /home/max/Workspace/itao/tasks/data/mask
+01-07 10:46:53 INFO Upd env: "DATASET" -> /workspace/tao-experiments/data/mask
+01-07 10:46:53 INFO Selected Folder: /home/max/Workspace/itao/tasks/data/mask
+01-07 10:46:53 INFO Select GPU:0 (NVIDIA GeForce RTX 2070 SUPER)
+01-07 10:46:53 INFO Page 1 is finished, mapping varible into spec
+01-07 10:46:53 INFO Update environ of mount file ... 
+01-07 10:46:53 INFO Creating json file for mount path into docker ... 
+01-07 10:46:53 INFO Update environ of mount file ... 
+01-07 10:46:53 INFO Creating json file for mount path into docker ... 
+01-07 10:46:54 INFO Select GPU:0 (NVIDIA GeForce RTX 2070 SUPER)
+01-07 10:46:54 INFO Update environ of mount file ... 
+01-07 10:46:54 INFO Creating json file for mount path into docker ... 
+01-07 10:46:55 INFO Page Change: Tab 2 
+01-07 10:46:55 INFO First time loading tab 2 ... 
+01-07 10:46:56 INFO Updating config of training ... 
+01-07 10:46:56 INFO Upd env: [TRAIN][EPOCH]=50
+01-07 10:46:56 INFO Upd env: [TRAIN][INPUT_SHAPE]=3,224,224
+01-07 10:46:56 INFO Upd env: [TRAIN][LR]=0.006
+01-07 10:46:56 INFO Upd env: [TRAIN][BATCH_SIZE]=16
+01-07 10:46:56 INFO Upd env: [TRAIN][CUSTOM]=
+01-07 10:46:56 INFO Start training ... 
+01-07 10:46:56 INFO ----------------
+01-07 10:46:56 INFO ['tao', 'classification', 'train', '-e', '/workspace/tao-experiments/classification/specs/classification_train_spec.cfg', '-r', '/workspace/tao-experiments/classification/output', '-k', 'nvidia_tlt', '--gpus', '1']
+01-07 10:46:56 INFO ----------------
+01-07 10:46:56 INFO Training Model ... Finished !
+01-07 10:46:56 INFO Upd env: [TRAIN][OUTPUT_MODEL]=/workspace/tao-experiments/classification/output/weights/resnet_050.tlt
+01-07 10:46:56 WARN Original key:   pretrained_model_path, Mapping key: model_path
+01-07 10:46:56 INFO Start to evaluate model ... 
+01-07 10:46:56 INFO ----------------
+01-07 10:46:56 INFO ['tao', 'classification', 'evaluate', '-e', '/workspace/tao-experiments/classification/specs/classification_train_spec.cfg', '-k', 'nvidia_tlt']
+01-07 10:46:56 INFO ----------------
+01-07 10:46:56 INFO Evaluating Model ... Done !
 
-01-06 16:21:51 INFO Page Change: Tab 3 
-01-06 16:21:51 INFO First time loading tab 3 ... 
-01-06 16:21:51 INFO Define retrain specification ... 
-01-06 16:22:08 INFO Pruning model ... 
-01-06 16:22:08 INFO Updating PRUNE_CONF ... 
-01-06 16:22:08 INFO Upd env: [PRUNE][OUTPUT_MODEL]=/workspace/tao-experiments/classification/output/resnet10_pruned/resnet10_pruned.tlt
-01-06 16:22:08 INFO Upd env: [PRUNE][LOCAL_OUTPUT_MODEL]=/home/max/Workspace/itao/tasks/classification/output/resnet10_pruned/resnet10_pruned.tlt
-01-06 16:22:08 INFO Upd env: [PRUNE][INPUT_MODEL]=/workspace/tao-experiments/classification/output/weights/resnet_050.tlt
-01-06 16:22:08 INFO Upd env: [PRUNE][THRES]=0.3
-01-06 16:22:08 INFO Upd env: [PRUNE][EQ]=union
-01-06 16:22:08 INFO ----------------
-01-06 16:22:08 INFO ['tao', 'classification', 'prune', '-m', '/workspace/tao-experiments/classification/output/weights/resnet_050.tlt', '-o', '/workspace/tao-experiments/classification/output/resnet10_pruned/resnet10_pruned.tlt', '-eq', 'union', '-pth', '0.3', '-k', 'nvidia_tlt']
-01-06 16:22:08 INFO ----------------
-01-06 16:22:08 INFO Comparing Model ... 
-01-06 16:22:26 INFO Updating self.retrain_conf ... 
-01-06 16:22:26 INFO Upd env: [RETRAIN][INPUT_MODEL]=/workspace/tao-experiments/classification/output/resnet10_pruned/resnet10_pruned.tlt
-01-06 16:22:26 INFO Upd env: [RETRAIN][EPOCH]=50
-01-06 16:22:26 INFO Upd env: [RETRAIN][BATCH_SIZE]=16
-01-06 16:22:26 INFO Upd env: [RETRAIN][LR]=0.006
-01-06 16:22:26 INFO Upd env: [RETRAIN][OUTPUT_DIR]=/workspace/tao-experiments/classification/output_retrain
-01-06 16:22:26 INFO Upd env: [RETRAIN][LOCAL_OUTPUT_DIR]=/home/max/Workspace/itao/tasks/classification/output_retrain
-01-06 16:22:26 WARN Original key:   n_layers, Mapping key: n_layer
-01-06 16:22:26 WARN Not found any key (n_layer) in spec (retrain).
-01-06 16:22:26 WARN Original key:   eval_dataset_path, Mapping key: val_dataset_path
-01-06 16:22:26 INFO Start retraining ... 
-01-06 16:22:26 INFO ----------------
-01-06 16:22:26 INFO ['tao', 'classification', 'train', '-e', '/workspace/tao-experiments/classification/specs/classification_retrain_spec.cfg', '-r', '/workspace/tao-experiments/classification/output_retrain', '-k', 'nvidia_tlt', '--gpus', '1']
-01-06 16:22:26 INFO ----------------
-01-06 16:22:26 INFO Re-Train Model ... Done !
+01-07 10:46:56 INFO Page Change: Tab 3 
+01-07 10:46:56 INFO First time loading tab 3 ... 
+01-07 10:46:56 INFO Define retrain specification ... 
+01-07 10:46:57 INFO Pruning model ... 
+01-07 10:46:57 INFO Updating PRUNE_CONF ... 
+01-07 10:46:57 INFO Upd env: [PRUNE][OUTPUT_MODEL]=/workspace/tao-experiments/classification/output/resnet10_pruned/resnet10_pruned.tlt
+01-07 10:46:57 INFO Upd env: [PRUNE][LOCAL_OUTPUT_MODEL]=/home/max/Workspace/itao/tasks/classification/output/resnet10_pruned/resnet10_pruned.tlt
+01-07 10:46:57 INFO Upd env: [PRUNE][INPUT_MODEL]=/workspace/tao-experiments/classification/output/weights/resnet_050.tlt
+01-07 10:46:57 INFO Upd env: [PRUNE][THRES]=0.3
+01-07 10:46:57 INFO Upd env: [PRUNE][EQ]=union
+01-07 10:46:57 INFO ----------------
+01-07 10:46:57 INFO ['tao', 'classification', 'prune', '-m', '/workspace/tao-experiments/classification/output/weights/resnet_050.tlt', '-o', '/workspace/tao-experiments/classification/output/resnet10_pruned/resnet10_pruned.tlt', '-eq', 'union', '-pth', '0.3', '-k', 'nvidia_tlt']
+01-07 10:46:57 INFO ----------------
+01-07 10:46:57 INFO Comparing Model ... 
+01-07 10:47:02 INFO Selected Checkpoint: /home/max/Workspace/itao/tasks/classification/output_retrain/weights/resnet_047.tlt
+01-07 10:47:02 INFO Upd env: [RETRAIN][LOCAL_PRETRAINED_MODEL]=/home/max/Workspace/itao/tasks/classification/output_retrain/weights/resnet_047.tlt
+01-07 10:47:02 INFO Upd env: [RETRAIN][PRETRAINED_MODEL]=/workspace/tao-experiments/classification/output_retrain/weights/resnet_047.tlt
+01-07 10:47:16 INFO Updating self.retrain_conf ... 
+01-07 10:47:16 INFO Upd env: [RETRAIN][INPUT_MODEL]=/workspace/tao-experiments/classification/output_retrain/weights/resnet_047.tlt
+01-07 10:47:16 INFO Upd env: [RETRAIN][EPOCH]=50
+01-07 10:47:16 INFO Upd env: [RETRAIN][BATCH_SIZE]=16
+01-07 10:47:16 INFO Upd env: [RETRAIN][LR]=0.006
+01-07 10:47:16 INFO Upd env: [RETRAIN][OUTPUT_DIR]=/workspace/tao-experiments/classification/output_retrain
+01-07 10:47:16 INFO Upd env: [RETRAIN][LOCAL_OUTPUT_DIR]=/home/max/Workspace/itao/tasks/classification/output_retrain
+01-07 10:47:16 WARN Original key:   n_layers, Mapping key: n_layer
+01-07 10:47:16 WARN Not found any key (n_layer) in spec (retrain).
+01-07 10:47:16 WARN Original key:   eval_dataset_path, Mapping key: val_dataset_path
+01-07 10:47:16 INFO Start retraining ... 
+01-07 10:47:16 INFO ----------------
+01-07 10:47:16 INFO ['tao', 'classification', 'train', '-e', '/workspace/tao-experiments/classification/specs/classification_retrain_spec.cfg', '-r', '/workspace/tao-experiments/classification/output_retrain', '-k', 'nvidia_tlt', '--gpus', '1']
+01-07 10:47:16 INFO ----------------
+01-07 10:47:16 INFO Re-Train Model ... Done !
 
-01-06 16:22:26 INFO Upd env: [RETRAIN][OUTPUT_MODEL]=/workspace/tao-experiments/classification/output_retrain/weights/resnet_050.tlt
-01-06 16:22:26 WARN Original key:   pretrained_model_path, Mapping key: model_path
-01-06 16:22:30 INFO Page Change: Tab 4 
+01-07 10:47:16 INFO Upd env: [RETRAIN][OUTPUT_MODEL]=/workspace/tao-experiments/classification/output_retrain/weights/resnet_050.tlt
+01-07 10:47:16 WARN Original key:   pretrained_model_path, Mapping key: model_path
