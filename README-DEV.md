@@ -30,10 +30,10 @@ pip3 install numpy PyQt5 matplotlib pyqtgraph wget -q --disable-pip-version-chec
 
 # developer
 workon tao-test
-python3 ./demo/app.py
+python3 demo
 
 # debug mode
-# python3 ./demo/app.py debug
+# python3 demo --debug --page <TAB_ID> --opt <TAB_OPT>
 ```
 
 ## Detail

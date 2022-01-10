@@ -1,20 +1,37 @@
-#!/bin/bash
-
-MODE=$1
-DEBUG_PAGE=$2
-DEBUG_OPT=$3
-BASHRC=$(realpath ~/.bashrc)
-WORKON_HOME=$(realpath ~/Envs)
-LS_INFO=("export WORKON_HOME=${WORKON_HOME}","export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3")
-TRG_ENV="tao-test"
-CREATE_ENV=1
-
+# ---------------------------------------------------------
 function log() {
     now=$(date +"%T")
     echo -e "[$now] $@"
 }
+# ---------------------------------------------------------
+function printd(){
 
+    REST="\e[0m";
+    GREEN="\\e[0;32m";   BGREEN="\\e[7;32m";
+    RED="\\e[0;31m";     BRED="\\e[7;31m";
+    Cyan="\\e[0;36m";  BCyan="\\e[7;36m";
+    YELLOW="\\e[33m";
+    BLINK="\e[5m";
+
+    COL=$(stty size | cut -d" " -f2);
+    SYM="—"
+    # printf "${SYM}%.0s" $(seq 1 $COL); printf "\n"
+    if [ -z $2 ];then COLOR=$REST
+    elif [ $2 = "G" ];then COLOR=$GREEN
+    elif [ $2 = "R" ];then COLOR=$RED
+    elif [ $2 = "BG" ];then COLOR=$BGREEN
+    elif [ $2 = "BR" ];then COLOR=$BRED
+    elif [ $2 = "Cy" ];then COLOR=$Cyan
+    elif [ $2 = "BCy" ];then COLOR=$BCyan
+    elif [ $2 = "Blink" ];then COLOR=$BLINK
+    else COLOR=$REST
+    fi
+    echo
+    echo -e "${COLOR}$1${REST}"
+}
+# ---------------------------------------------------------
 function help(){
+    echo "Welcom to TAO-ECO" | figlet -k | lolcat
     echo "---------------------------------------"
     echo ""
     echo "$ ./itao.sh [OPT]"
@@ -33,91 +50,114 @@ function help(){
     echo ""
     echo "---------------------------------------"
 }
+# ---------------------------------------------------------
+function counting_time(){
 
+    TITLE=$1
+    TIMES=$2
+    CNT="${TITLE} ... "
+
+    printf "%s" "${CNT}"
+    for i in $(seq ${TIMES} -1 1 );do
+        echo -e "\r${dict[$i]} ${TITLE} (${i}) \c${RESET}"
+        sleep 1
+    done
+    echo -e "${RESET}START\n"
+}
+# ---------------------------------------------------------
+function build_image(){
+    printd "Bulding Docker Image ..." BG
+    IMG=$1
+    DOCKER=$2
+
+    docker build -t ${IMG} -f ${DOCKER} ${ROOT} .
+}
+# ---------------------------------------------------------
+function check_image(){ 
+    echo "$(docker images --format "table {{.Repository}}:{{.Tag}}" | grep ${1} | wc -l )"
+}
+# ---------------------------------------------------------
+function check_container(){ 
+    echo "$(docker ps -a --format "{{.Names}}" | grep ${1} | wc -l ) "
+}
+# ---------------------------------------------------------
+function run_container(){
+    CNT=$1
+    IMG=$2
+    CAM=$3
+
+    echo -e "Searching Container (${CNT}) ... \c"
+    export DISPLAY=:0
+    `xhost +` > /dev/null 2>&1
+
+    if [[ $( check_container ${CNT} ) -gt 0 ]]; then
+        
+        echo -e "PASS \n"
+
+        # counting_time "Start to run the container" 3 
+        
+        docker start ${CNT} > /dev/null 2>&1
+        docker attach ${CNT} 
+    else 
+        echo -e "Failed \n"
+
+        docker run --gpus all --name ${CNT} -it \
+        --device=${CAM}:${CAM} \
+        -v=`pwd`:/workspace \
+        -v=`realpath ~/.docker/config.json`:/root/.docker/config.json \
+        -v=/var/run/docker.sock:/var/run/docker.sock \
+        -v=/tmp/.X11-unix:/tmp/.X11-unix:rw -e DISPLAY=unix$DISPLAY \
+        ${IMG} `python3 demo --docker`
+    fi
+}
+
+#
+
+# ---------------------------------------------------------
+printd "Initialize ..." BG
+sudo apt-get install figlet boxes lolcat -qqy
+clear
+
+while getopts ":h:i" option; do
+   case $option in
+        h) # display help
+            help
+            exit;;
+        i)
+            exit;;
+   esac
+done
+# ---------------------------------------------------------
+MODE=$1
+CAM=$2
+
+IMG_NAME="itao"
+IMG_VER="v0.3"
+IMG="${IMG_NAME}:${IMG_VER}"
+DOCKER="./docker/Dockerfile"
+
+CNT="itao"
+# ---------------------------------------------------------
 if [[ -z ${MODE} ]] || [[ ${MODE} == "help" ]];then
     help
     exit 1
+elif [[ ${MODE} = "build" ]];then
+    # build
     
-elif [[ ${MODE} == "build" ]];then
+    build_image ${IMG} ${DOCKER} 
 
-    log "Start building iTAO ..."
+elif [[ ${MODE} = "run" ]];then
+    
+    printd "Checking Environment " BG
 
-    log "Checking virtualenv ..."
-    if [[ -z $(pip3 list | grep virtualenv) ]];then
-
-        log "Installing virtualenv and virtualenvwrapper ..."
-        pip3 install virtualenv 
-        pip3 install virtualenvwrapper 
-
-        log "Seting up virtual enviroment ..."
-        for INFO in ${LS_INFO};do
-            if [[ -z "$(cat ${BASHRC} | grep ${INFO})" ]];then
-                echo $INFO >> $BASHRC
-            fi
-        done
-        source $BASHRC
+    if [[ $(check_image ${IMG}) -eq 0 ]];then
+        build_image ${IMG} ${DOCKER}
+    else
+        echo "Environment is exists."
     fi
 
-    log "Checking enviroment ..."
-    # source `which virtualenvwrapper.sh`
-    source /usr/local/bin/virtualenvwrapper.sh
-    for ENV in $(lsvirtualenv);do
-        if [[ ${ENV} == ${TRG_ENV} ]]; then CREATE_ENV=0; fi
-    done
+    printd "Activate Environment" BG
+    run_container ${CNT} ${IMG} ${CAM}
 
-    if [[ ${CREATE_ENV} -eq 1 ]];then
-        log "Create new enviroment ..."
-        mkvirtualenv ${TRG_ENV} -p $(which python3)
-    fi
-
-    log "Launch ${TRG_ENV} & checking python's packages ('nvidia-pyindex', 'nvidia-tao') ..."
-    workon ${TRG_ENV}
-    
-    # install 
-    if [[ -z $(pip3 list --disable-pip-version-check | grep pyindex) ]];then pip3 install nvidia-pyindex -q --disable-pip-version-check;fi
-    if [[ -z $(pip3 list --disable-pip-version-check | grep tao) ]];then pip3 install nvidia-tao==0.1.19 -q --disable-pip-version-check;fi
-    
-    pip3 install numpy PyQt5 matplotlib pyqtgraph --disable-pip-version-check wget GPUtil
-
-    # dependy for PyQt5 on Ubuntu
-    # apt-get install -y libxcb-xinerama0
-    # export QT_DEBUG_PLUGINS=1
-
-    # TAO_ZIP="cv_samples_v1.2.0.zip"
-    # TASK_ROOT="tasks"
-    # if [[ ! -d ${TASK_ROOT} ]];then
-    #     log "Downing load specifications of tao_v1.2.0 ..."
-    #     wget --content-disposition https://api.ngc.nvidia.com/v2/resources/nvidia/tao/cv_samples/versions/v1.2.0/zip -O ${TAO_ZIP} > /dev/null 2>&1
-    #     unzip -u ${TAO_ZIP} -d ${TASK_ROOT} > /dev/null 2>&1
-    #     rm -rf ${TAO_ZIP} 
-    # fi
-
-    DATA_ROOT="${TASK_ROOT}/data"
-    if [[ ! -d ${DATA_ROOT} ]];then
-    log "Create data folder in ${TASK_ROOT}"
-        mkdir ${DATA_ROOT}
-    fi
-    
-    log "Done"
-
-    source ./itao.sh run
-
-elif [[ ${MODE} == 'run' ]];then
-    log "Start training AI with iTAO."
-    source `which virtualenvwrapper.sh`
-    log "Launch virtualenv ${TRG_ENV}"
-    workon ${TRG_ENV}
-    python3 ./demo
-elif [[ ${MODE} == 'debug' ]];then
-    log "Start training AI with iTAO ( debug mode )."
-    source `which virtualenvwrapper.sh`
-    log "Launch virtualenv ${TRG_ENV}"
-    workon ${TRG_ENV}
-    log "Check arguments ... "
-    if [[ -z ${DEBUG_PAGE} || -z ${DEBUG_OPT} ]];then
-        log "DEBUG MODE: $./itao.sh debug <DEBUG_PAGE:1, 2, 3, 4> <DEBUG_OPT:train, eval, prune, retrain, export, infer>"
-        exit 1
-    fi
-    python3 ./demo ${MODE} ${DEBUG_PAGE} ${DEBUG_OPT}
-
+    exit 
 fi

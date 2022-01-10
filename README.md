@@ -8,13 +8,13 @@
 4. base on virtualenv and virtualenvwrapper
 
 ## Build
-auto install virtualenv and create a new virtual environment (tao-test).
+auto build the docker image
 ```bash
 ./itao.sh build
 ```
 
 ## Run
-activate "tao-test" and startup iTAO demo.
+activate the container with iTAO.
 ```bash
 ./itao.sh run
 ```
@@ -22,7 +22,8 @@ activate "tao-test" and startup iTAO demo.
 ## Debug Mode
 You can enable target option for debug. DEBUG_PAGE means the page from 1 to 4 and DEBUG_OPT is the feature in DEBUG_PAGE (e.g. train, kmeans, eval, etc.)
 ```bash
-./itao.sh debug <DEBUG_PAGE> <DEBUG_OPT>
+# Make sure you are in docker container
+python3 demo --docker --debug --page <DEBUG_PAGE> --opt <DEBUG_OPT>
 ```
 
 ## Developer Mode
