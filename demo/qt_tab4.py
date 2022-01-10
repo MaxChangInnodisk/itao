@@ -5,9 +5,10 @@ from typing import *
 from xml.etree.ElementTree import iterparse
 from PyQt5 import QtGui
 from PyQt5.QtWidgets import QMessageBox
+from PyQt5.QtWidgets import QFileDialog
 
 """ 自己的函式庫自己撈"""
-sys.path.append("../itao")
+sys.path.append(os.path.abspath(f'{os.getcwd()}'))
 from itao.csv_tools import csv_to_list
 from demo.qt_init import Init
         
@@ -25,13 +26,12 @@ class Tab4(Init):
         self.small_frame_size, self.big_frame_size = 0, 0
 
         # connect event to button
-        self.ui.t4_bt_upload.clicked.connect(self.get_folder)
+        self.ui.t4_bt_upload.clicked.connect(self.get_infer_data_folder)
         self.ui.t4_bt_infer.clicked.connect(self.infer_event)
         self.ui.t4_bt_export.clicked.connect(self.export_event)
         self.ui.t4_bt_pre_infer.clicked.connect(self.ctrl_result_event)
         self.ui.t4_bt_next_infer.clicked.connect(self.ctrl_result_event)
         # self.ui.t4_combo_infer_model.currentIndexChanged.connect(self.update_infer_model)
-        self.ui.t4_combo_export_model.currentIndexChanged.connect(self.update_export_model)
 
         # define key of scheduler
         self.export_log_key = [ "Registry: ['nvcr.io']",
@@ -46,6 +46,51 @@ class Tab4(Init):
 
         self.infer_key = ['root: Registry', 'Loading experiment spec','Processing', 'Inference complete', 'Stopping container']
 
+
+
+    def update_t4_actions(self):
+        act_enabled = []
+        act_disabled = []
+        if self.debug:
+            for key in self.run_t4_option.keys():
+                if int(self.debug_page)==4 and key==self.debug_opt:
+                    self.run_t4_option[key]=True
+                    act_enabled.append(key)
+                else:
+                    self.run_t4_option[key]=False
+                    act_disabled.append(key)
+        
+        if self.is_docker:
+            self.infer_key.pop(0)
+            self.infer_key.pop(4-1)
+            print(self.infer_key)
+                    
+        self.logger.info("T4 Actions {} is enabled".format(act_enabled))
+        self.logger.info("T4 Actions {} is disabled".format(act_disabled))
+
+    def t4_first_time_event(self):
+        if self.t4_first_time:
+            self.update_t4_actions()
+            
+            self.first_line=True
+            self.ui.bt_next.setText('Close')
+
+            # 放在這裡綁定主要是怕更新到，一直報錯
+            self.ui.t4_combo_export_model.currentIndexChanged.connect(self.update_export_model)
+
+            self.t4_first_time = False
+
+    def get_infer_data_folder(self):
+        folder_path = None
+
+        root = "./tasks/data"
+        folder_path = QFileDialog.getExistingDirectory(self, "Open folder", root, options=QFileDialog.DontUseNativeDialog)
+        self.infer_folder = folder_path
+        self.itao_env.update2('INFER', 'LOCAL_INPUT_DATA', folder_path)
+        self.itao_env.update2('INFER', 'INPUT_DATA', self.itao_env.replace_docker_root(folder_path))
+
+        self.logger.info('Selected Folder: {}'.format(folder_path))
+
     # Export -------------------------------------------------------------------------------
 
     """ 檢查 radio 按了哪個 """
@@ -56,10 +101,11 @@ class Tab4(Init):
 
     """ 更新最新選擇要匯出的模型 """
     def update_export_model(self):
-        sel_model = self.ui.t4_combo_export_model.currentText()
-        root = os.path.dirname(self.itao_env.get_env('RETRAIN', 'OUTPUT_MODEL'))
-        intput_model = os.path.join( root, sel_model) 
-        self.itao_env.update2('EXPORT', 'INPUT_MODEL', intput_model)
+        if not self.t4_first_time:
+            sel_model = self.ui.t4_combo_export_model.currentText()
+            root = os.path.dirname(self.itao_env.get_env('RETRAIN', 'OUTPUT_MODEL'))
+            intput_model = os.path.join( root, sel_model) 
+            self.itao_env.update2('EXPORT', 'INPUT_MODEL', intput_model)
 
     """ 當 export 完成的時候 """
     def export_finish(self):
@@ -151,7 +197,8 @@ class Tab4(Init):
             'spec': self.itao_env.get_env('RETRAIN','SPECS'), 
             'intput_model': self.itao_env.get_env('RETRAIN', 'INPUT_MODEL'), 
             'output_model': self.itao_env.get_env('EXPORT', 'OUTPUT_MODEL'), 
-            'dtype': self.itao_env.get_env('EXPORT', 'PRECISION') 
+            'dtype': self.itao_env.get_env('EXPORT', 'PRECISION'),
+            'is_docker':self.is_docker 
         }
 
         self.worker_export = self.export_cmd( args=cmd_args )
@@ -220,7 +267,8 @@ class Tab4(Init):
             'key' : self.itao_env.get_env('KEY'),
             'spec' : self.itao_env.get_env('INFER', 'SPECS'),
             'model': self.itao_env.get_env('RETRAIN', 'OUTPUT_MODEL'),
-            'input_dir': self.itao_env.get_env('INFER', 'INPUT_DATA')
+            'input_dir': self.itao_env.get_env('INFER', 'INPUT_DATA'),
+            'is_docker':self.is_docker
         }
 
         # add option of gpu

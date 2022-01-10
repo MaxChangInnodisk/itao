@@ -35,34 +35,33 @@ class Init(QtWidgets.QMainWindow):
         self.setWindowTitle('iTAO')
 
         # 基本常數設定
-        self.logger.info('Setting Basic Variable ... ')
         self.first_page_id = 0  # 1-1 = 0
         self.end_page_id = 3    # 4-1 = 3
         self.div_symbol = "----------------------------------------------------\n"
+        self.debug, self.debug_page, self.debug_opt, self.is_docker = None, None, None, None
 
+        # 選項參數
         self.option, self.option_nlayer = OPT, ARCH_LAYER
 
-        if len(sys.argv)>=2 and sys.argv[1].lower()=='debug':
-            self.debug = True  
-            self.debug_page = int(sys.argv[2]) if sys.argv[2] is not None else 0
-            self.debug_opt = sys.argv[3] if sys.argv[3] is not None else 0
-        else:
-            self.debug = False 
-            
-        if self.debug: 
-            self.logger.warning('Debug Mode')
-
+        # 頁面設定
         self.t1_first_time, self.t2_firt_time, self.t3_first_time, self.t4_first_time = True, True, True, True   # 初次進入頁面
         self.first_line = True  # 第一行
 
+
+        self.logger.info('Setting Basic Variable ... ')
         """ 環境相關 """
         self.train_cmd, self.eval_cmd, self.retrain_cmd, self.prune_cmd, self.infer_cmd, self.export_cmd = None, None, None, None, None, None
         self.kmeans_cmd = None
         self.train_spec, self.retrain_spec = None, None
-        self.itao_env = SetupEnv()  # 建立 configs/itao_env.json 檔案，目的在於建立共用的變數以及 Docker 與 Local 之間的路徑
-        self.itao_env.create_env_file() 
-        self.ngc = InstallNGC() # NGC 的安裝Thread
+        # self.itao_env = SetupEnv()  # 建立 configs/itao_env.json 檔案，目的在於建立共用的變數以及 Docker 與 Local 之間的路徑
+        # self.itao_env.create_env_file(is_docker=self.is_docker) 
+        # self.ngc = InstallNGC() # NGC 的安裝Thread
+        # self.stop_tao = StopTAO() # 統一關閉 TAO 的方法
+
+        self.itao_env = None
+        self.ngc = None
         self.stop_tao = StopTAO() # 統一關閉 TAO 的方法
+        
 
         """ Console """
         self.t1_info = ""
@@ -96,15 +95,40 @@ class Init(QtWidgets.QMainWindow):
         self.ui.bt_next.clicked.connect(self.ctrl_page_event)
         self.ui.bt_previous.clicked.connect(self.ctrl_page_event)
         
-        self.update_page()  # 更新頁面資訊
-        self.ui.main_tab.currentChanged.connect(self.update_page)
-
         """ 設定 GPU 編號 (--gpu_index) """
         self.gpu_idx = 0
 
+    def start(self, debug, debug_page, debug_opt, is_docker):
+        
+        self.logger.info('Setting up running mode ...')
+        
+        # 取得到運行模式
+        self.debug, self.debug_page, self.debug_opt, self.is_docker = debug, debug_page, debug_opt, is_docker
+
+        self.itao_env = SetupEnv()  # 建立 configs/itao_env.json 檔案，目的在於建立共用的變數以及 Docker 與 Local 之間的路徑
+        self.itao_env.create_env_file(is_docker=self.is_docker) 
+        self.ngc = InstallNGC() # NGC 的安裝Thread
+        self.stop_tao = StopTAO() # 統一關閉 TAO 的方法
+
+        self.update_page()  # 更新頁面資訊
+        self.ui.main_tab.currentChanged.connect(self.update_page)
+
         """ 設定全螢幕 """
         self.change_font_event('Arial', 14)
-        self.showFullScreen()
+        self.showFullScreen()   
+        self.show()   
+
+    def update_t1_actions(self):
+        pass
+
+    def update_t2_actions(self):
+        pass
+
+    def update_t3_actions(self):
+        pass
+
+    def update_t4_actions(self):
+        pass
 
     def show_warning_msg(self):
         # set default
@@ -124,7 +148,7 @@ class Init(QtWidgets.QMainWindow):
     def keyPressEvent(self, event):
         
         if event.key() == QtCore.Qt.Key_Escape:
-            self.stop_tao.start()
+            # self.stop_tao.start()
             sys.exit(0)
         if event.key() == QtCore.Qt.Key_F12:
             if self.isFullScreen():
@@ -159,118 +183,67 @@ class Init(QtWidgets.QMainWindow):
         return 1 if proc.returncode == 0 else 0
 
     """ 取得資料夾路徑 """
-    def get_folder(self):
-        folder_path = None
-        if self.current_page_id==0:
-            folder_path = QFileDialog.getExistingDirectory(self, "Open folder", "./tasks/data", options=QFileDialog.DontUseNativeDialog)
-            trg_folder_path = self.itao_env.replace_docker_root(folder_path)
+    # def get_folder(self):
+    #     folder_path = None
+    #     if self.current_page_id==0:
+    #         folder_path = QFileDialog.getExistingDirectory(self, "Open folder", "./tasks/data", options=QFileDialog.DontUseNativeDialog)
+    #         trg_folder_path = self.itao_env.replace_docker_root(folder_path)
             
-            if 'classification' == self.itao_env.get_env('NGC_TASK'):
-                self.train_spec.mapping('train_dataset_path', '"{}"'.format(os.path.join(trg_folder_path, 'train')))
-                self.train_spec.mapping('eval_dataset_path', '"{}"'.format(os.path.join(trg_folder_path, 'test')))
+    #         if 'classi' == self.itao_env.get_env('NGC_TASK'):
+    #             self.train_spec.mapping('train_dataset_path', '"{}"'.format(os.path.join(trg_folder_path, 'train')))
+    #             self.train_spec.mapping('val_dataset_path', '"{}"'.format(os.path.join(trg_folder_path, 'val')))
+    #             self.train_spec.mapping('eval_dataset_path', '"{}"'.format(os.path.join(trg_folder_path, 'test')))
+                
+    #         elif 'detection' in self.itao_env.get_env('NGC_TASK'):
+    #             self.train_spec.mapping('image_directory_path', '"{}"'.format(os.path.join(trg_folder_path, 'images')))
+    #             self.train_spec.mapping('label_directory_path', '"{}"'.format(os.path.join(trg_folder_path, 'labels')))
 
-            elif 'detection' in self.itao_env.get_env('NGC_TASK'):
-                self.train_spec.mapping('image_directory_path', '"{}"'.format(os.path.join(trg_folder_path, 'images')))
-                self.train_spec.mapping('label_directory_path', '"{}"'.format(os.path.join(trg_folder_path, 'labels')))
-
-            self.itao_env.update('LOCAL_DATASET', folder_path)
-            self.itao_env.update('DATASET', trg_folder_path)
+    #         self.itao_env.update('LOCAL_DATASET', folder_path)
+    #         self.itao_env.update('DATASET', trg_folder_path)
             
-            self.sel_idx[5]=1 
-            self.update_progress(self.current_page_id, self.sel_idx.count(1), len(self.t1_objects))
+    #         self.sel_idx[5]=1 
+    #         self.update_progress(self.current_page_id, self.sel_idx.count(1), len(self.t1_objects))
 
-            self.ui.t1_combo_gpus.setEnabled(True)
+    #         self.ui.t1_combo_gpus.setEnabled(True)
             
-        elif self.current_page_id==3:
-            root = "./tasks/data"
-            folder_path = QFileDialog.getExistingDirectory(self, "Open folder", root, options=QFileDialog.DontUseNativeDialog)
-            self.infer_folder = folder_path
-            self.itao_env.update2('INFER', 'LOCAL_INPUT_DATA', folder_path)
-            self.itao_env.update2('INFER', 'INPUT_DATA', self.itao_env.replace_docker_root(folder_path))
-        else:
-            folder_path = QFileDialog.getExistingDirectory(self, "Open folder", "./", options=QFileDialog.DontUseNativeDialog)
+    #     elif self.current_page_id==3:
+    #         root = "./tasks/data"
+    #         folder_path = QFileDialog.getExistingDirectory(self, "Open folder", root, options=QFileDialog.DontUseNativeDialog)
+    #         self.infer_folder = folder_path
+    #         self.itao_env.update2('INFER', 'LOCAL_INPUT_DATA', folder_path)
+    #         self.itao_env.update2('INFER', 'INPUT_DATA', self.itao_env.replace_docker_root(folder_path))
+    #     else:
+    #         folder_path = QFileDialog.getExistingDirectory(self, "Open folder", "./", options=QFileDialog.DontUseNativeDialog)
 
-        self.logger.info('Selected Folder: {}'.format(folder_path))
+    #     self.logger.info('Selected Folder: {}'.format(folder_path))
 
-    """ 取得檔案路徑 """
-    def get_file(self):
+    # """ 取得檔案路徑 """
+    # def get_file(self):
         
-        filename, filetype = QFileDialog.getOpenFileNames(self, "Open file", "./", options =QFileDialog.DontUseNativeDialog)
-        if self.current_page_id==0:
-            pass
-        elif self.current_page_id==3:
-            self.infer_files = filename
+    #     filename, filetype = QFileDialog.getOpenFileNames(self, "Open file", "./", options =QFileDialog.DontUseNativeDialog)
+    #     if self.current_page_id==0:
+    #         pass
+    #     elif self.current_page_id==3:
+    #         self.infer_files = filename
 
-        self.logger.info('Selected File: {}'.format(filename))
-
-    """ 安裝 NGC CLI """
-    def install_ngc_event(self, data):
-        if data=="exist" or data=="end":
-            self.logger.info('Installed NGC CLI')
-            self.insert_text("Done", t_fmt=False)
-            self.insert_text("Choose a task ... ", endsym='')
-        else:
-            self.consoles[self.current_page_id].insertPlainText(data)
+    #     self.logger.info('Selected File: {}'.format(filename))
 
     """ 第一次進入 tab 1 的事件 """
     def t1_first_time_event(self):
-        if self.t1_first_time:
-            self.logger.info('First time loading tab 1 ... ')
-            self.first_line=True
-
-            itao_stats = 'Checking environment (iTAO) ... {}'.format('Actived' if self.check_tao() else 'Failed') # 檢查 itao 環境
-            self.logger.info(itao_stats)
-            self.insert_text(itao_stats)   
-            
-            self.insert_text('Installing NGC CLI ... ', endsym=' ') 
-
-            self.ngc.start()    # 開始安裝
-            self.ngc.trigger.connect(self.install_ngc_event)   # 綁定事件
-
-            self.t1_first_time=False
+        pass
 
     """ 第一次進入 tab 2 的事件 """
     def t2_first_time_event(self):
-        if self.t2_firt_time:
-            self.logger.info('First time loading tab 2 ... ')
-            self.first_line=True
-            
-            BASIC = {
-                'Epoch':'The number of epochs is a hyperparameter that defines the number times that the learning algorithm will work through the entire training dataset.',
-                'Batch': 'The batch size is a hyperparameter that defines the number of samples to work through before updating the internal model parameters.',
-                'Checkpoint' :'If you want to resume your training, please press button to choose a pretrain model.'
-            }
-
-            self.insert_text('Setup specification for AI training ...', div=True, config=BASIC)
-
-            self.insert_text('\n* Suggestion:', t_fmt=False)
-            self.insert_text('Epoch -> 50~100 ( Depends on the value of loss)', t_fmt=False)
-            self.insert_text('Batch Size -> 4, 8, 16 ( Higher value needs more memory of the GPU)', t_fmt=False)
-            self.mv_cursor(pos='end')
-            self.t2_firt_time=False
+        pass
 
     """ 第一次進入 tab 3 的事件 """
     def t3_first_time_event(self):
-        # prune and retrain
-        if self.t3_first_time:
-            # setup retrain spec
-            self.logger.info('First time loading tab 3 ... ')
-            self.logger.info('Define retrain specification ... ')
+        pass
+    
+    """ 第一次進入 tab 4 的事件 """
+    def t4_first_time_event(self):
+        pass
 
-            self.first_line=True
-            BASIC = {
-                'Threshold':'Pruning removes parameters from the model to reduce the model size',
-            }
-            self.insert_text('Prune the AI model first ...', div=True, config=BASIC)
-            self.insert_text('\n* Suggestion:', t_fmt=False)
-            self.insert_text('Epoch -> 50~100 ( Depends on the value of loss)', t_fmt=False)
-            self.insert_text('Threshold -> 0.3~0.6 (Higher `pth` gives you smaller model (and thus higher inference speed) but worse accuracy)', t_fmt=False)
-            self.mv_cursor(pos='end')
-
-            self.t3_first_time=False
-        
-        self.get_trained_model()
-            
     """ 更新頁面與按鈕 """
     def update_page(self):
         
@@ -286,15 +259,14 @@ class Init(QtWidgets.QMainWindow):
         
         if self.current_page_id==0:
             self.t1_first_time_event()
-
         elif self.current_page_id==1:
             self.t2_first_time_event()
-
         elif self.current_page_id==2:
             self.t3_first_time_event()
+        elif self.current_page_id==3:
+            self.t4_first_time_event()
         else:
-            self.first_line=True
-            self.ui.bt_next.setText('Close')
+            pass
 
     """ 更新頁面的事件 next, previous 按鈕 """
     def ctrl_page_event(self):
@@ -369,7 +341,6 @@ class Init(QtWidgets.QMainWindow):
             
             if 'detection' in self.itao_env.get_env('TASK'):
                 self.train_spec.set_label_for_detection(key='target_class_mapping')
-
         elif self.current_page_id==1:
             pass
         elif self.current_page_id==2:
@@ -442,7 +413,7 @@ class Init(QtWidgets.QMainWindow):
             self.swith_page_button(True)
 
     """ 取得最新訓練的模型 """
-    def get_trained_model(self, mode='TRAIN') -> list:
+    def trained_model_list(self, mode='TRAIN') -> list:
         
         output_dir = self.itao_env.get_env(mode, 'LOCAL_OUTPUT_DIR')
         trained_model_list = os.listdir( os.path.join(output_dir, 'weights'))

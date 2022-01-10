@@ -8,8 +8,8 @@ import importlib
 from PyQt5.QtWidgets import QFileDialog, QComboBox
 
 """ 自己的函式庫自己撈"""
-sys.path.append("../itao")
-import itao
+import sys, os
+sys.path.append(os.path.abspath(f'{os.getcwd()}'))
 from itao.utils.spec_tools_v2 import DefineSpec
 from itao.qtasks.download_model import DownloadModel
 from itao.dataset_format import DSET_FMT_LS
@@ -41,6 +41,36 @@ class Tab1(Init):
 
         self.debound = [0,0,0,0,0,0]
         self.setting_combo_box = False
+
+    """ 安裝 NGC CLI """
+    def install_ngc_event(self, data):
+        if data=="exist" or data=="end":
+            self.logger.info('Installed NGC CLI')
+            self.insert_text("Done", t_fmt=False)
+            self.insert_text("Choose a task ... ", endsym='')
+        else:
+            self.consoles[self.current_page_id].insertPlainText(data)
+
+    """ 第一次進入 tab 1 的事件 """
+    def update_t1_actions(self):
+        pass
+
+    def t1_first_time_event(self):
+        if self.t1_first_time:
+            self.logger.info('First time loading tab 1 ... ')
+            self.update_t1_actions()
+            self.first_line=True
+
+            itao_stats = 'Checking environment (iTAO) ... {}'.format('Actived' if self.check_tao() else 'Failed') # 檢查 itao 環境
+            self.logger.info(itao_stats)
+            self.insert_text(itao_stats)   
+            
+            self.insert_text('Installing NGC CLI ... ', endsym=' ') 
+
+            self.ngc.start()    # 開始安裝
+            self.ngc.trigger.connect(self.install_ngc_event)   # 綁定事件
+
+            self.t1_first_time=False
 
     """ 取得能使用的 GPU (itao.utils.gpu_tools)  """
     def get_available_gpu(self) -> list:
@@ -375,6 +405,7 @@ class Tab1(Init):
         trg_folder_path = self.itao_env.get_env('DATASET')
         if 'classification' in self.itao_env.get_env('NGC_TASK'):        
             self.train_spec.mapping('train_dataset_path', '"{}"'.format(os.path.join(trg_folder_path, 'train')))
+            self.train_spec.mapping('val_dataset_path', '"{}"'.format(os.path.join(trg_folder_path, 'val')))
             self.train_spec.mapping('eval_dataset_path', '"{}"'.format(os.path.join(trg_folder_path, 'test')))
 
         elif 'detection' in self.itao_env.get_env('NGC_TASK'):

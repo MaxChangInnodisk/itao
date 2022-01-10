@@ -6,7 +6,6 @@ import pyqtgraph as pg
 from PyQt5.QtWidgets import QFileDialog
 
 """ 自己的函式庫自己撈"""
-sys.path.append("../itao")
 from demo.qt_init import Init
 
 class Tab3(Init):
@@ -44,9 +43,42 @@ class Tab3(Init):
             'retrain':True,
             'eval':True
         }
+
+    def update_t3_actions(self):
+        act_enabled = []
+        act_disabled = []
         if self.debug:
             for key in self.run_t3_option.keys():
-                self.run_t3_option[key]=True if int(self.debug_page)==3 and key==self.debug_opt else False
+                if int(self.debug_page)==3 and key==self.debug_opt:
+                    self.run_t3_option[key]=True
+                    act_enabled.append(key)
+                else:
+                    self.run_t3_option[key]=False
+                    act_disabled.append(key)
+                    
+        self.logger.info("T3 Actions {} is enabled".format(act_enabled))
+        self.logger.info("T3 Actions {} is disabled".format(act_disabled))
+
+    def t3_first_time_event(self):
+        # prune and retrain
+        if self.t3_first_time:
+            # setup retrain spec
+            self.logger.info('First time loading tab 3 ... ')
+            self.logger.info('Define retrain specification ... ')
+            self.update_t3_actions()
+            self.first_line=True
+            BASIC = {
+                'Threshold':'Pruning removes parameters from the model to reduce the model size',
+            }
+            self.insert_text('Prune the AI model first ...', div=True, config=BASIC)
+            self.insert_text('\n* Suggestion:', t_fmt=False)
+            self.insert_text('Epoch -> 50~100 ( Depends on the value of loss)', t_fmt=False)
+            self.insert_text('Threshold -> 0.3~0.6 (Higher `pth` gives you smaller model (and thus higher inference speed) but worse accuracy)', t_fmt=False)
+            self.mv_cursor(pos='end')
+
+            self.t3_first_time=False
+        
+        self.trained_model_list()
 
     """ 按下停止的事件 """
     def stop_event(self):
@@ -118,7 +150,8 @@ class Tab3(Init):
             'pth' : self.itao_env.get_env('PRUNE', 'THRES'), 
             'eq' : self.itao_env.get_env('PRUNE', 'EQ'),
             'num_gpus': self.itao_env.get_env('NUM_GPUS'),
-            'gpu_index':self.gpu_idx
+            'gpu_index':self.gpu_idx,
+            'is_docker':self.is_docker
         }
 
         cmd_args['spec'] = self.itao_env.get_env('TRAIN', 'SPECS')
@@ -259,7 +292,8 @@ class Tab3(Init):
             'spec': self.itao_env.get_env('RETRAIN','SPECS'),
             'output_dir': self.itao_env.get_env('RETRAIN', 'OUTPUT_DIR'), 
             'num_gpus': self.itao_env.get_env('NUM_GPUS'),
-            'gpu_index':self.gpu_idx
+            'gpu_index':self.gpu_idx,
+            'is_docker':self.is_docker
         }
 
         self.worker_retrain = self.retrain_cmd( args = cmd_args )
@@ -311,7 +345,7 @@ class Tab3(Init):
     def mapping_retrained_model(self):
         
         # 取得所有的　model
-        local_model_list = self.get_trained_model(mode='RETRAIN')
+        local_model_list = self.trained_model_list(mode='RETRAIN')
         
         # 更新清單
         basename_model_list = [ os.path.basename(model) for model in local_model_list ]

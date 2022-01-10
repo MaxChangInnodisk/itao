@@ -1,3 +1,5 @@
+import sys, os
+sys.path.append(os.path.abspath(f'{os.getcwd()}'))
 from qt_tab1 import Tab1
 from qt_tab2 import Tab2
 from qt_tab3 import Tab3

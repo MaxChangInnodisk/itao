@@ -1,0 +1,63 @@
+#!/bin/bash
+sep="\n----------------------\n"
+printd(){
+    printf "\n"; echo $1; printf "\n"
+}
+
+opt="Check List: \n\n
+[1] Ubuntu      \t\t [2] CUDA  \n 
+[3] TensorRT    \t\t [4] Gstreamer  \n 
+[5] DeepStream    \t [6] Check Camera \n 
+[0] Quit"
+
+check_camera(){
+
+    if [[ -z $(ls /dev/ | grep video) ]];then
+        printd "There is no camera device"
+        return 
+    fi
+
+    printf "%s" "Find camera device, Would you want to open it ? [Y/n]: "
+    read cam
+    cam=$(echo $cam | tr '[:upper:]' '[:lower:]')
+    echo $cam
+    if [[ ${cam} = "y" ]];then      
+        python3 $( dirname -- $0 )/open_camera.py
+    else
+        clear
+        return 
+    fi
+}
+
+check_tool(){
+
+    clear;echo
+
+    case $1 in
+        1) cat /etc/issue
+        ;;
+        2) nvcc -V
+        ;;
+        3) dpkg -l | grep nvinfer
+        ;;
+        4) dpkg -l | grep gstreamer | head 
+        ;;
+        5) deepstream-app --version-all
+        ;;
+        6) check_camera
+        ;;
+        0) echo -e "Quit\n"; exit 1
+        ;;
+    esac 
+}
+
+while [ 1 ]
+do
+    
+    echo; echo -e $opt | boxes -d shell -p a1l2; echo -e "Please Enter Option Number: \c"
+
+    read idx
+
+    check_tool $idx
+
+done

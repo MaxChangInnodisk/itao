@@ -47,6 +47,10 @@ class InferCMD(QThread):
             "-cm", f"{ new_args['class_map'] }"
         ]
         
+        # check is in docker
+        if args['is_docker'] and args['is_docker']==True:
+            self.cmd.pop(0)
+
         # add gpus if needed
         if 'num_gpus' in args.keys():
             self.cmd.append("--gpus")

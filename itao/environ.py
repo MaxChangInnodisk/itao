@@ -23,7 +23,7 @@ class SetupEnv:
             return path.replace(self.env['PROJECT_DIR'], self.env['LOCAL_PROJECT_DIR']) if self.env['PROJECT_DIR'] in path else path
 
     """ create environ file ( defualt: ./configs/itao_env.json )"""
-    def create_env_file(self):
+    def create_env_file(self, is_docker=False):
 
         local_project_dir = os.path.join(self.cwd, 'tasks')
         local_data_dir = os.path.join(local_project_dir, 'data')
@@ -37,6 +37,10 @@ class SetupEnv:
                     "USER_EXPERIMENT_DIR": "",
                     "DATA_DOWNLOAD_DIR": "",
                     "CLI": "ngccli_cat_linux.zip" }
+
+        if is_docker:
+            self.logger.warning('Running in docker ...')
+            content["PROJECT_DIR"]=f"{local_project_dir}"
 
         if not os.path.exists(os.path.dirname(self.env_cfg)):
             os.makedirs(os.path.dirname(self.env_cfg))
@@ -86,7 +90,7 @@ class SetupEnv:
         return(self.env)
 
     """ Important: create mount file for TAO Tookit which identify local path to docker path """
-    def create_mount_json(self):
+    def create_mount_json(self, is_docker=True):
         self.logger.info("Creating json file for mount path into docker ... ")
 
         if self.env["LOCAL_PROJECT_DIR"] == "":
@@ -116,6 +120,11 @@ class SetupEnv:
                 "user": "{}:{}".format(os.getuid(), os.getgid())
             }
         }
+
+        if is_docker:
+            drive_map["Mounts"][0]["destination"]=self.env["LOCAL_PROJECT_DIR"]
+            drive_map["Mounts"][1]["destination"]=self.env["LOCAL_SPECS_DIR"]
+
         # Writing the mounts file.
         with open(self.mounts_file, "w") as mfile:
             json.dump(drive_map, mfile, indent=4)

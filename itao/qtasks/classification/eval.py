@@ -26,7 +26,7 @@ class EvalCMD(QThread):
 
         # symbol
         self.symbol = '[INFO]'
-        self.record_symbol = 'Processing dataset'
+        self.record_symbol = 'Evaluation Loss'
         self.record = False
 
         # parsing arguments
@@ -42,7 +42,10 @@ class EvalCMD(QThread):
             "-e", f"{ new_args['spec'] }",
             "-k", f"{ new_args['key'] }"
         ]
-        
+        # check is in docker
+        if args['is_docker'] and args['is_docker']==True:
+            self.cmd.pop(0)
+
         self.logger.info('----------------')
         self.logger.info(self.cmd)
         self.logger.info('----------------')

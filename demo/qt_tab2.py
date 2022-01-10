@@ -7,7 +7,8 @@ import importlib
 from PyQt5.QtWidgets import QFileDialog
 
 """ 自己的函式庫自己撈"""
-sys.path.append("../itao")
+import sys, os
+sys.path.append(os.path.abspath(f'{os.getcwd()}'))
 
 from itao.environ import SetupEnv
 from demo.qt_init import Init
@@ -27,6 +28,7 @@ class Tab2(Init):
         self.ui.t2_bt_stop.clicked.connect(self.stop_event)
         self.ui.t2_epoch.textChanged.connect(self.update_epoch_event)
         self.ui.t2_bt_checkpoint.clicked.connect(self.ckpt_to_pretrained)
+
         self.backup = False
         self.kmeans_enable = False
         self.use_pretrained = False
@@ -36,9 +38,42 @@ class Tab2(Init):
             'train':True,
             'eval':True
         }
+
+    def update_t2_actions(self):
+        act_enabled = []
+        act_disabled = []
         if self.debug:
             for key in self.run_t2_option.keys():
-                self.run_t2_option[key]=True if int(self.debug_page)==2 and key==self.debug_opt else False
+                if int(self.debug_page)==2 and key==self.debug_opt:
+                    self.run_t2_option[key]=True
+                    act_enabled.append(key)
+                else:
+                    self.run_t2_option[key]=False
+                    act_disabled.append(key)
+                    
+        self.logger.info("T2 Actions {} is enabled".format(act_enabled))
+        self.logger.info("T2 Actions {} is disabled".format(act_disabled))
+
+    def t2_first_time_event(self):
+        if self.t2_firt_time:
+            self.logger.info('First time loading tab 2 ... ')
+            self.update_t2_actions()
+            self.first_line=True
+            
+            BASIC = {
+                'Epoch':'The number of epochs is a hyperparameter that defines the number times that the learning algorithm will work through the entire training dataset.',
+                'Batch': 'The batch size is a hyperparameter that defines the number of samples to work through before updating the internal model parameters.',
+                'Checkpoint' :'If you want to resume your training, please press button to choose a pretrain model.'
+            }
+
+            self.insert_text('Setup specification for AI training ...', div=True, config=BASIC)
+
+            self.insert_text('\n* Suggestion:', t_fmt=False)
+            self.insert_text('Epoch -> 50~100 ( Depends on the value of loss)', t_fmt=False)
+            self.insert_text('Batch Size -> 4, 8, 16 ( Higher value needs more memory of the GPU)', t_fmt=False)
+            self.mv_cursor(pos='end')
+            self.t2_firt_time=False
+
 
     """ 按下 stop 的事件 """
     def stop_event(self):
@@ -71,7 +106,8 @@ class Tab2(Init):
             'train_label':self.train_spec.find_key('label_directory_path'),
             'n_ancher':9, 
             'image_width':self.train_spec.find_key('output_width'), 
-            'image_height':self.train_spec.find_key('output_height')
+            'image_height':self.train_spec.find_key('output_height'),
+            'is_docker':self.is_docker
         }
         self.worker_kmeans = self.kmeans_cmd(args=args)
         self.kmeans_idx = 0
@@ -115,7 +151,8 @@ class Tab2(Init):
             'output_dir': self.itao_env.get_env('TRAIN', 'OUTPUT_DIR'), 
             'key': self.itao_env.get_env('KEY'),
             'num_gpus': self.itao_env.get_env('NUM_GPUS'),
-            'gpu_index':self.gpu_idx
+            'gpu_index':self.gpu_idx,
+            'is_docker':self.is_docker
         }
 
         self.worker = self.train_cmd( args = cmd_args )
@@ -152,6 +189,7 @@ class Tab2(Init):
         # 更新 specs 的 pretrained_model_path 的部份
         model_path = self.itao_env.get_env('TRAIN', 'PRETRAINED_MODEL')
         if 'classification' in self.itao_env.get_env('NGC_TASK'):
+            # if self.is_docker:
             self.train_spec.mapping('pretrained_model_path', f'"{model_path}"')
 
         elif 'detection' in self.itao_env.get_env('NGC_TASK'):
@@ -223,6 +261,7 @@ class Tab2(Init):
 
     """ 訓練前的動作 """
     def train_prep(self):
+        
         self.update_train_conf()
         self.init_plot()
         self.init_console()
@@ -256,7 +295,7 @@ class Tab2(Init):
     def mapping_trained_model(self):
         
         # 取得所有的　model
-        local_model_list = self.get_trained_model()
+        local_model_list = self.trained_model_list()
         
         # 更新清單
         self.ui.t3_pruned_in_model.clear()
@@ -294,7 +333,8 @@ class Tab2(Init):
             'spec': self.itao_env.get_env('TRAIN', 'SPECS'),
             'key': self.itao_env.get_env('KEY'),
             'num_gpus': self.itao_env.get_env('NUM_GPUS'),
-            'gpu_index':self.gpu_idx
+            'gpu_index':self.gpu_idx,
+            'is_docker':self.is_docker
         }
         
         # other case

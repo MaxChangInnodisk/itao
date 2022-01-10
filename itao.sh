@@ -50,55 +50,57 @@ elif [[ ${MODE} == "build" ]];then
         pip3 install virtualenvwrapper 
 
         log "Seting up virtual enviroment ..."
-        for INFO in LS_INFO;do
+        for INFO in ${LS_INFO};do
             if [[ -z "$(cat ${BASHRC} | grep ${INFO})" ]];then
                 echo $INFO >> $BASHRC
             fi
         done
         source $BASHRC
-
-    else
-        log "Checking enviroment ..."
-
-        source `which virtualenvwrapper.sh`
-        for ENV in $(lsvirtualenv);do
-            if [[ ${ENV} == ${TRG_ENV} ]]; then CREATE_ENV=0; fi
-        done
-
-        if [[ ${CREATE_ENV} -eq 1 ]];then
-            log "Create new enviroment ..."
-            mkvirtualenv ${TRG_ENV} -p $(which python3)
-        fi
-
-        log "Launch ${TRG_ENV} & checking python's packages ('nvidia-pyindex', 'nvidia-tao') ..."
-        workon ${TRG_ENV}
-        if [[ -z $(pip3 list --disable-pip-version-check | grep pyindex) ]];then pip3 install nvidia-pyindex -q --disable-pip-version-check;fi
-        if [[ -z $(pip3 list --disable-pip-version-check | grep tao) ]];then pip3 install nvidia-tao==0.1.19 -q --disable-pip-version-check;fi
-        pip3 install numpy PyQt5 matplotlib pyqtgraph -q --disable-pip-version-check wget GPUtil
-        if [[ -z $(pip3 list --disable-pip-version-check | grep tao) ]];then log "Testing TAO ... Done";fi
-
-        # dependy for PyQt5 on Ubuntu
-        # apt-get install -y libxcb-xinerama0
-
-        # TAO_ZIP="cv_samples_v1.2.0.zip"
-        # TASK_ROOT="tasks"
-        # if [[ ! -d ${TASK_ROOT} ]];then
-        #     log "Downing load specifications of tao_v1.2.0 ..."
-        #     wget --content-disposition https://api.ngc.nvidia.com/v2/resources/nvidia/tao/cv_samples/versions/v1.2.0/zip -O ${TAO_ZIP} > /dev/null 2>&1
-        #     unzip -u ${TAO_ZIP} -d ${TASK_ROOT} > /dev/null 2>&1
-        #     rm -rf ${TAO_ZIP} 
-        # fi
-
-        DATA_ROOT="${TASK_ROOT}/data"
-        if [[ ! -d ${DATA_ROOT} ]];then
-        log "Create data folder in ${TASK_ROOT}"
-            mkdir ${DATA_ROOT}
-        fi
-        
-        log "Done"
-
-        source ./itao.sh run
     fi
+
+    log "Checking enviroment ..."
+    # source `which virtualenvwrapper.sh`
+    source /usr/local/bin/virtualenvwrapper.sh
+    for ENV in $(lsvirtualenv);do
+        if [[ ${ENV} == ${TRG_ENV} ]]; then CREATE_ENV=0; fi
+    done
+
+    if [[ ${CREATE_ENV} -eq 1 ]];then
+        log "Create new enviroment ..."
+        mkvirtualenv ${TRG_ENV} -p $(which python3)
+    fi
+
+    log "Launch ${TRG_ENV} & checking python's packages ('nvidia-pyindex', 'nvidia-tao') ..."
+    workon ${TRG_ENV}
+    
+    # install 
+    if [[ -z $(pip3 list --disable-pip-version-check | grep pyindex) ]];then pip3 install nvidia-pyindex -q --disable-pip-version-check;fi
+    if [[ -z $(pip3 list --disable-pip-version-check | grep tao) ]];then pip3 install nvidia-tao==0.1.19 -q --disable-pip-version-check;fi
+    
+    pip3 install numpy PyQt5 matplotlib pyqtgraph --disable-pip-version-check wget GPUtil
+
+    # dependy for PyQt5 on Ubuntu
+    # apt-get install -y libxcb-xinerama0
+    # export QT_DEBUG_PLUGINS=1
+
+    # TAO_ZIP="cv_samples_v1.2.0.zip"
+    # TASK_ROOT="tasks"
+    # if [[ ! -d ${TASK_ROOT} ]];then
+    #     log "Downing load specifications of tao_v1.2.0 ..."
+    #     wget --content-disposition https://api.ngc.nvidia.com/v2/resources/nvidia/tao/cv_samples/versions/v1.2.0/zip -O ${TAO_ZIP} > /dev/null 2>&1
+    #     unzip -u ${TAO_ZIP} -d ${TASK_ROOT} > /dev/null 2>&1
+    #     rm -rf ${TAO_ZIP} 
+    # fi
+
+    DATA_ROOT="${TASK_ROOT}/data"
+    if [[ ! -d ${DATA_ROOT} ]];then
+    log "Create data folder in ${TASK_ROOT}"
+        mkdir ${DATA_ROOT}
+    fi
+    
+    log "Done"
+
+    source ./itao.sh run
 
 elif [[ ${MODE} == 'run' ]];then
     log "Start training AI with iTAO."

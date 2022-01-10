@@ -42,6 +42,11 @@ class PruneCMD(QThread):
             "-k", f"{ new_args['key'] }",
         ]
 
+        # check is in docker
+        if args['is_docker'] and args['is_docker']==True:
+            self.cmd.pop(0)
+            
+
         self.logger = CustomLogger().get_logger('dev')
         self.logger.info('----------------')
         self.logger.info(self.cmd)

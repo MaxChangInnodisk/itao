@@ -1,106 +1,253 @@
-01-07 10:46:45 INFO Create Logger: dev
-01-07 10:46:45 INFO Initial iTAO ... 
-01-07 10:46:45 INFO Setting Basic Variable ... 
-01-07 10:46:45 WARN Debug Mode
-01-07 10:46:45 INFO Created Environment File
-01-07 10:46:45 INFO Page Change: Tab 1 
-01-07 10:46:45 INFO First time loading tab 1 ... 
-01-07 10:46:45 INFO Checking environment (iTAO) ... Actived
-01-07 10:46:45 INFO Installed NGC CLI
-01-07 10:46:45 INFO Press OK with the warning message.
-01-07 10:46:47 INFO Update combo box: task
-01-07 10:46:47 INFO Upd env: "NGC_TASK" -> classification
-01-07 10:46:48 INFO Update combo box: model
-01-07 10:46:48 INFO Upd env: "TASK" -> classification
-01-07 10:46:50 INFO Update combo box: backbone
-01-07 10:46:50 INFO Upd env: "BACKBONE" -> resnet
-01-07 10:46:50 INFO Upd env: "LOCAL_PROJECT_DIR" -> /home/max/Workspace/itao/tasks
-01-07 10:46:50 INFO Upd env: "LOCAL_EXPERIMENT_DIR" -> /home/max/Workspace/itao/tasks/classification
-01-07 10:46:50 INFO Upd env: "USER_EXPERIMENT_DIR" -> /workspace/tao-experiments/classification
-01-07 10:46:50 INFO Upd env: "LOCAL_DATA_DIR" -> /home/max/Workspace/itao/data
-01-07 10:46:50 INFO Upd env: "DATA_DOWNLOAD_DIR" -> /workspace/tao-experiments/classification
-01-07 10:46:50 INFO Upd env: [TRAIN][LOCAL_OUTPUT_DIR]=/home/max/Workspace/itao/tasks/classification/output
-01-07 10:46:50 INFO Upd env: [TRAIN][OUTPUT_DIR]=/workspace/tao-experiments/classification/output
-01-07 10:46:50 INFO Upd env: "LOCAL_SPECS_DIR" -> /home/max/Workspace/itao/tasks/classification/specs
-01-07 10:46:50 INFO Upd env: "SPECS_DIR" -> /workspace/tao-experiments/classification/specs
-01-07 10:46:50 INFO Get specification ... 
-01-07 10:46:50 INFO Upd env: [TRAIN][LOCAL_SPECS]=/home/max/Workspace/itao/tasks/classification/specs/classification_train_spec.cfg
-01-07 10:46:50 INFO Upd env: [TRAIN][SPECS]=/workspace/tao-experiments/classification/specs/classification_train_spec.cfg
-01-07 10:46:50 INFO Get specification ... 
-01-07 10:46:50 INFO Upd env: [RETRAIN][LOCAL_SPECS]=/home/max/Workspace/itao/tasks/classification/specs/classification_retrain_spec.cfg
-01-07 10:46:50 INFO Upd env: [RETRAIN][SPECS]=/workspace/tao-experiments/classification/specs/classification_retrain_spec.cfg
-01-07 10:46:50 INFO Loading Target Module ... 
-01-07 10:46:51 INFO Update combo box: n_layers
-01-07 10:46:51 INFO Upd env: "NLAYER" -> 10
-01-07 10:46:51 INFO Start to download model ... 
-01-07 10:46:51 INFO Upd env: [TRAIN][LOCAL_PRETRAINED_MODEL]=/home/max/Workspace/itao/tasks/classification/pretrained_resnet10/pretrained_classification_vresnet10/resnet_10.hdf5
-01-07 10:46:51 INFO Upd env: [TRAIN][PRETRAINED_MODEL]=/workspace/tao-experiments/classification/pretrained_resnet10/pretrained_classification_vresnet10/resnet_10.hdf5
-01-07 10:46:51 INFO Pre-trained Model is downloaded. (/home/max/Workspace/itao/tasks/classification/pretrained_resnet10/pretrained_classification_vresnet10/resnet_10.hdf5)
-01-07 10:46:53 INFO Upd env: "LOCAL_DATASET" -> /home/max/Workspace/itao/tasks/data/mask
-01-07 10:46:53 INFO Upd env: "DATASET" -> /workspace/tao-experiments/data/mask
-01-07 10:46:53 INFO Selected Folder: /home/max/Workspace/itao/tasks/data/mask
-01-07 10:46:53 INFO Select GPU:0 (NVIDIA GeForce RTX 2070 SUPER)
-01-07 10:46:53 INFO Page 1 is finished, mapping varible into spec
-01-07 10:46:53 INFO Update environ of mount file ... 
-01-07 10:46:53 INFO Creating json file for mount path into docker ... 
-01-07 10:46:53 INFO Update environ of mount file ... 
-01-07 10:46:53 INFO Creating json file for mount path into docker ... 
-01-07 10:46:54 INFO Select GPU:0 (NVIDIA GeForce RTX 2070 SUPER)
-01-07 10:46:54 INFO Update environ of mount file ... 
-01-07 10:46:54 INFO Creating json file for mount path into docker ... 
-01-07 10:46:55 INFO Page Change: Tab 2 
-01-07 10:46:55 INFO First time loading tab 2 ... 
-01-07 10:46:56 INFO Updating config of training ... 
-01-07 10:46:56 INFO Upd env: [TRAIN][EPOCH]=50
-01-07 10:46:56 INFO Upd env: [TRAIN][INPUT_SHAPE]=3,224,224
-01-07 10:46:56 INFO Upd env: [TRAIN][LR]=0.006
-01-07 10:46:56 INFO Upd env: [TRAIN][BATCH_SIZE]=16
-01-07 10:46:56 INFO Upd env: [TRAIN][CUSTOM]=
-01-07 10:46:56 INFO Start training ... 
-01-07 10:46:56 INFO ----------------
-01-07 10:46:56 INFO ['tao', 'classification', 'train', '-e', '/workspace/tao-experiments/classification/specs/classification_train_spec.cfg', '-r', '/workspace/tao-experiments/classification/output', '-k', 'nvidia_tlt', '--gpus', '1']
-01-07 10:46:56 INFO ----------------
-01-07 10:46:56 INFO Training Model ... Finished !
-01-07 10:46:56 INFO Upd env: [TRAIN][OUTPUT_MODEL]=/workspace/tao-experiments/classification/output/weights/resnet_050.tlt
-01-07 10:46:56 WARN Original key:   pretrained_model_path, Mapping key: model_path
-01-07 10:46:56 INFO Start to evaluate model ... 
-01-07 10:46:56 INFO ----------------
-01-07 10:46:56 INFO ['tao', 'classification', 'evaluate', '-e', '/workspace/tao-experiments/classification/specs/classification_train_spec.cfg', '-k', 'nvidia_tlt']
-01-07 10:46:56 INFO ----------------
-01-07 10:46:56 INFO Evaluating Model ... Done !
+01-10 02:41:53 INFO Create Logger: dev
+01-10 02:41:53 INFO Initial iTAO ... 
+01-10 02:41:53 INFO Setting Basic Variable ... 
+01-10 02:41:53 INFO Setting up running mode ...
+01-10 02:41:53 WARN Running in docker ...
+01-10 02:41:53 INFO Created Environment File
+01-10 02:41:53 INFO Page Change: Tab 1 
+01-10 02:41:53 INFO First time loading tab 1 ... 
+01-10 02:41:54 INFO Checking environment (iTAO) ... Actived
+01-10 02:41:54 INFO Installed NGC CLI
+01-10 02:41:54 INFO Press OK with the warning message.
+01-10 02:41:57 INFO Update combo box: task
+01-10 02:41:57 INFO Upd env: "NGC_TASK" -> classification
+01-10 02:41:58 INFO Update combo box: model
+01-10 02:41:58 INFO Upd env: "TASK" -> classification
+01-10 02:41:59 INFO Update combo box: backbone
+01-10 02:41:59 INFO Upd env: "BACKBONE" -> resnet
+01-10 02:41:59 INFO Upd env: "LOCAL_PROJECT_DIR" -> /workspace/tasks
+01-10 02:41:59 INFO Upd env: "LOCAL_EXPERIMENT_DIR" -> /workspace/tasks/classification
+01-10 02:41:59 INFO Upd env: "USER_EXPERIMENT_DIR" -> /workspace/tasks/classification
+01-10 02:41:59 INFO Upd env: "LOCAL_DATA_DIR" -> /workspace/data
+01-10 02:41:59 INFO Upd env: "DATA_DOWNLOAD_DIR" -> /workspace/tasks/classification
+01-10 02:41:59 INFO Upd env: [TRAIN][LOCAL_OUTPUT_DIR]=/workspace/tasks/classification/output
+01-10 02:41:59 INFO Upd env: [TRAIN][OUTPUT_DIR]=/workspace/tasks/classification/output
+01-10 02:41:59 INFO Upd env: "LOCAL_SPECS_DIR" -> /workspace/tasks/classification/specs
+01-10 02:41:59 INFO Upd env: "SPECS_DIR" -> /workspace/tasks/classification/specs
+01-10 02:41:59 INFO Get specification ... 
+01-10 02:41:59 INFO Upd env: [TRAIN][LOCAL_SPECS]=/workspace/tasks/classification/specs/classification_train_spec.cfg
+01-10 02:41:59 INFO Upd env: [TRAIN][SPECS]=/workspace/tasks/classification/specs/classification_train_spec.cfg
+01-10 02:41:59 INFO Get specification ... 
+01-10 02:41:59 INFO Upd env: [RETRAIN][LOCAL_SPECS]=/workspace/tasks/classification/specs/classification_retrain_spec.cfg
+01-10 02:41:59 INFO Upd env: [RETRAIN][SPECS]=/workspace/tasks/classification/specs/classification_retrain_spec.cfg
+01-10 02:41:59 INFO Loading Target Module ... 
+01-10 02:41:59 INFO Update combo box: n_layers
+01-10 02:41:59 INFO Upd env: "NLAYER" -> 10
+01-10 02:42:00 INFO Start to download model ... 
+01-10 02:42:00 INFO Upd env: [TRAIN][LOCAL_PRETRAINED_MODEL]=/workspace/tasks/classification/pretrained_resnet10/pretrained_classification_vresnet10/resnet_10.hdf5
+01-10 02:42:00 INFO Upd env: [TRAIN][PRETRAINED_MODEL]=/workspace/tasks/classification/pretrained_resnet10/pretrained_classification_vresnet10/resnet_10.hdf5
+01-10 02:42:00 INFO Pre-trained Model is downloaded. (/workspace/tasks/classification/pretrained_resnet10/pretrained_classification_vresnet10/resnet_10.hdf5)
+01-10 02:42:02 INFO Upd env: "LOCAL_DATASET" -> /workspace/tasks/data/mask
+01-10 02:42:02 INFO Upd env: "DATASET" -> /workspace/tasks/data/mask
+01-10 02:42:02 INFO Selected Folder: /workspace/tasks/data/mask
+01-10 02:42:02 INFO Select GPU:0 (NVIDIA GeForce RTX 2070 SUPER)
+01-10 02:42:02 INFO Page 1 is finished, mapping varible into spec
+01-10 02:42:02 INFO Upd spec:   arch -> "resnet"
+01-10 02:42:02 INFO Upd spec:   n_layers -> 10
+01-10 02:42:02 INFO Upd spec:   train_dataset_path -> "/workspace/tasks/data/mask/train"
+01-10 02:42:02 INFO Upd spec:   val_dataset_path -> "/workspace/tasks/data/mask/val"
+01-10 02:42:02 WARN Original key:   eval_dataset_path, Mapping key: val_dataset_path
+01-10 02:42:02 INFO Upd spec:   eval_dataset_path -> "/workspace/tasks/data/mask/test"
+01-10 02:42:02 INFO Update environ of mount file ... 
+01-10 02:42:02 INFO Creating json file for mount path into docker ... 
+01-10 02:42:02 INFO Update environ of mount file ... 
+01-10 02:42:02 INFO Creating json file for mount path into docker ... 
+01-10 02:42:03 INFO Select GPU:0 (NVIDIA GeForce RTX 2070 SUPER)
+01-10 02:42:03 INFO Update environ of mount file ... 
+01-10 02:42:03 INFO Creating json file for mount path into docker ... 
+01-10 02:42:04 INFO Page Change: Tab 2 
+01-10 02:42:04 INFO First time loading tab 2 ... 
+01-10 02:42:04 INFO T2 Actions [] is enabled
+01-10 02:42:04 INFO T2 Actions ['kmeans', 'train', 'eval'] is disabled
+01-10 02:42:06 WARN unused method -> update_epoch_event
+01-10 02:42:07 WARN unused method -> update_epoch_event
+01-10 02:42:07 INFO Updating config of training ... 
+01-10 02:42:07 INFO Upd spec:   pretrained_model_path -> "/workspace/tasks/classification/pretrained_resnet10/pretrained_classification_vresnet10/resnet_10.hdf5"
+01-10 02:42:07 INFO Upd env: [TRAIN][EPOCH]=10
+01-10 02:42:07 INFO Upd env: [TRAIN][INPUT_SHAPE]=3,224,224
+01-10 02:42:07 INFO Upd env: [TRAIN][LR]=0.006
+01-10 02:42:07 INFO Upd env: [TRAIN][BATCH_SIZE]=16
+01-10 02:42:07 INFO Upd env: [TRAIN][CUSTOM]=
+01-10 02:42:07 INFO Upd spec:   n_epochs -> 10
+01-10 02:42:07 INFO Upd spec:   input_image_size -> "3,224,224"
+01-10 02:42:07 INFO Upd spec:   batch_size_per_gpu -> 16
+01-10 02:42:07 INFO Start training ... 
+01-10 02:42:07 INFO ----------------
+01-10 02:42:07 INFO ['classification', 'train', '-e', '/workspace/tasks/classification/specs/classification_train_spec.cfg', '-r', '/workspace/tasks/classification/output', '-k', 'nvidia_tlt', '--gpus', '1']
+01-10 02:42:07 INFO ----------------
+01-10 02:42:07 INFO Training Model ... Finished !
+01-10 02:42:07 INFO Upd env: [TRAIN][OUTPUT_MODEL]=/workspace/tasks/classification/output/weights/resnet_010.tlt
+01-10 02:42:07 WARN Original key:   pretrained_model_path, Mapping key: model_path
+01-10 02:42:07 INFO Upd spec:   model_path -> "/workspace/tasks/classification/output/weights/resnet_010.tlt"
+01-10 02:42:07 INFO Start to evaluate model ... 
+01-10 02:42:07 INFO ----------------
+01-10 02:42:07 INFO ['classification', 'evaluate', '-e', '/workspace/tasks/classification/specs/classification_train_spec.cfg', '-k', 'nvidia_tlt']
+01-10 02:42:07 INFO ----------------
+01-10 02:42:07 INFO Evaluating Model ... Done !
 
-01-07 10:46:56 INFO Page Change: Tab 3 
-01-07 10:46:56 INFO First time loading tab 3 ... 
-01-07 10:46:56 INFO Define retrain specification ... 
-01-07 10:46:57 INFO Pruning model ... 
-01-07 10:46:57 INFO Updating PRUNE_CONF ... 
-01-07 10:46:57 INFO Upd env: [PRUNE][OUTPUT_MODEL]=/workspace/tao-experiments/classification/output/resnet10_pruned/resnet10_pruned.tlt
-01-07 10:46:57 INFO Upd env: [PRUNE][LOCAL_OUTPUT_MODEL]=/home/max/Workspace/itao/tasks/classification/output/resnet10_pruned/resnet10_pruned.tlt
-01-07 10:46:57 INFO Upd env: [PRUNE][INPUT_MODEL]=/workspace/tao-experiments/classification/output/weights/resnet_050.tlt
-01-07 10:46:57 INFO Upd env: [PRUNE][THRES]=0.3
-01-07 10:46:57 INFO Upd env: [PRUNE][EQ]=union
-01-07 10:46:57 INFO ----------------
-01-07 10:46:57 INFO ['tao', 'classification', 'prune', '-m', '/workspace/tao-experiments/classification/output/weights/resnet_050.tlt', '-o', '/workspace/tao-experiments/classification/output/resnet10_pruned/resnet10_pruned.tlt', '-eq', 'union', '-pth', '0.3', '-k', 'nvidia_tlt']
-01-07 10:46:57 INFO ----------------
-01-07 10:46:57 INFO Comparing Model ... 
-01-07 10:47:02 INFO Selected Checkpoint: /home/max/Workspace/itao/tasks/classification/output_retrain/weights/resnet_047.tlt
-01-07 10:47:02 INFO Upd env: [RETRAIN][LOCAL_PRETRAINED_MODEL]=/home/max/Workspace/itao/tasks/classification/output_retrain/weights/resnet_047.tlt
-01-07 10:47:02 INFO Upd env: [RETRAIN][PRETRAINED_MODEL]=/workspace/tao-experiments/classification/output_retrain/weights/resnet_047.tlt
-01-07 10:47:16 INFO Updating self.retrain_conf ... 
-01-07 10:47:16 INFO Upd env: [RETRAIN][INPUT_MODEL]=/workspace/tao-experiments/classification/output_retrain/weights/resnet_047.tlt
-01-07 10:47:16 INFO Upd env: [RETRAIN][EPOCH]=50
-01-07 10:47:16 INFO Upd env: [RETRAIN][BATCH_SIZE]=16
-01-07 10:47:16 INFO Upd env: [RETRAIN][LR]=0.006
-01-07 10:47:16 INFO Upd env: [RETRAIN][OUTPUT_DIR]=/workspace/tao-experiments/classification/output_retrain
-01-07 10:47:16 INFO Upd env: [RETRAIN][LOCAL_OUTPUT_DIR]=/home/max/Workspace/itao/tasks/classification/output_retrain
-01-07 10:47:16 WARN Original key:   n_layers, Mapping key: n_layer
-01-07 10:47:16 WARN Not found any key (n_layer) in spec (retrain).
-01-07 10:47:16 WARN Original key:   eval_dataset_path, Mapping key: val_dataset_path
-01-07 10:47:16 INFO Start retraining ... 
-01-07 10:47:16 INFO ----------------
-01-07 10:47:16 INFO ['tao', 'classification', 'train', '-e', '/workspace/tao-experiments/classification/specs/classification_retrain_spec.cfg', '-r', '/workspace/tao-experiments/classification/output_retrain', '-k', 'nvidia_tlt', '--gpus', '1']
-01-07 10:47:16 INFO ----------------
-01-07 10:47:16 INFO Re-Train Model ... Done !
+01-10 02:42:08 INFO Page Change: Tab 3 
+01-10 02:42:08 INFO First time loading tab 3 ... 
+01-10 02:42:08 INFO Define retrain specification ... 
+01-10 02:42:08 INFO T3 Actions [] is enabled
+01-10 02:42:08 INFO T3 Actions ['prune', 'retrain', 'eval'] is disabled
+01-10 02:42:09 INFO Pruning model ... 
+01-10 02:42:09 INFO Updating PRUNE_CONF ... 
+01-10 02:42:09 INFO Upd env: [PRUNE][OUTPUT_MODEL]=/workspace/tasks/classification/output/resnet10_pruned/resnet10_pruned.tlt
+01-10 02:42:09 INFO Upd env: [PRUNE][LOCAL_OUTPUT_MODEL]=/workspace/tasks/classification/output/resnet10_pruned/resnet10_pruned.tlt
+01-10 02:42:09 INFO Upd env: [PRUNE][INPUT_MODEL]=/workspace/tasks/classification/output/weights/resnet_010.tlt
+01-10 02:42:09 INFO Upd env: [PRUNE][THRES]=0.3
+01-10 02:42:09 INFO Upd env: [PRUNE][EQ]=union
+01-10 02:42:09 INFO ----------------
+01-10 02:42:09 INFO ['classification', 'prune', '-m', '/workspace/tasks/classification/output/weights/resnet_010.tlt', '-o', '/workspace/tasks/classification/output/resnet10_pruned/resnet10_pruned.tlt', '-eq', 'union', '-pth', '0.3', '-k', 'nvidia_tlt']
+01-10 02:42:09 INFO ----------------
+01-10 02:42:09 INFO Comparing Model ... 
+01-10 02:42:10 INFO Upd env: [PRUNE][EPOCH]=1
+01-10 02:42:11 INFO Upd env: [PRUNE][EPOCH]=10
+01-10 02:42:11 INFO Updating self.retrain_conf ... 
+01-10 02:42:11 INFO Upd env: [RETRAIN][INPUT_MODEL]=/workspace/tasks/classification/output/resnet10_pruned/resnet10_pruned.tlt
+01-10 02:42:11 INFO Upd env: [RETRAIN][EPOCH]=10
+01-10 02:42:11 INFO Upd env: [RETRAIN][BATCH_SIZE]=16
+01-10 02:42:11 INFO Upd env: [RETRAIN][LR]=0.006
+01-10 02:42:11 INFO Upd env: [RETRAIN][OUTPUT_DIR]=/workspace/tasks/classification/output_retrain
+01-10 02:42:11 INFO Upd env: [RETRAIN][LOCAL_OUTPUT_DIR]=/workspace/tasks/classification/output_retrain
+01-10 02:42:11 INFO Upd spec:   arch -> "resnet"
+01-10 02:42:11 INFO Upd spec:   batch_size_per_gpu -> 16
+01-10 02:42:11 WARN Original key:   n_layers, Mapping key: n_layer
+01-10 02:42:11 WARN Not found any key (n_layer) in spec (retrain).
+01-10 02:42:11 INFO Upd spec:   n_epochs -> 10
+01-10 02:42:11 INFO Upd spec:   input_image_size -> "3,224,224"
+01-10 02:42:11 INFO Upd spec:   train_dataset_path -> "/workspace/tasks/data/mask/train"
+01-10 02:42:11 INFO Upd spec:   val_dataset_path -> "/workspace/tasks/data/mask/val"
+01-10 02:42:11 WARN Original key:   eval_dataset_path, Mapping key: val_dataset_path
+01-10 02:42:11 INFO Upd spec:   pretrained_model_path -> "/workspace/tasks/classification/output/resnet10_pruned/resnet10_pruned.tlt"
+01-10 02:42:11 INFO Upd spec:   eval_dataset_path -> "/workspace/tasks/data/mask/test"
+01-10 02:42:11 INFO Start retraining ... 
+01-10 02:42:11 INFO ----------------
+01-10 02:42:11 INFO ['classification', 'train', '-e', '/workspace/tasks/classification/specs/classification_retrain_spec.cfg', '-r', '/workspace/tasks/classification/output_retrain', '-k', 'nvidia_tlt', '--gpus', '1']
+01-10 02:42:11 INFO ----------------
+01-10 02:42:11 INFO Re-Train Model ... Done !
 
-01-07 10:47:16 INFO Upd env: [RETRAIN][OUTPUT_MODEL]=/workspace/tao-experiments/classification/output_retrain/weights/resnet_050.tlt
-01-07 10:47:16 WARN Original key:   pretrained_model_path, Mapping key: model_path
+01-10 02:42:11 INFO Upd env: [RETRAIN][OUTPUT_MODEL]=/workspace/tasks/classification/output_retrain/weights/resnet_010.tlt
+01-10 02:42:11 WARN Original key:   pretrained_model_path, Mapping key: model_path
+01-10 02:42:11 INFO Upd spec:   model_path -> "/workspace/tasks/classification/output_retrain/weights/resnet_010.tlt"
+01-10 02:42:12 INFO Page Change: Tab 4 
+01-10 02:42:12 INFO T4 Actions ['infer'] is enabled
+01-10 02:42:12 INFO T4 Actions ['export'] is disabled
+01-10 02:42:19 INFO Upd env: [INFER][LOCAL_INPUT_DATA]=/workspace/tasks/data/mask/test/mask
+01-10 02:42:19 INFO Upd env: [INFER][INPUT_DATA]=/workspace/tasks/data/mask/test/mask
+01-10 02:42:19 INFO Selected Folder: /workspace/tasks/data/mask/test/mask
+01-10 02:42:21 INFO Do Inference ... 
+01-10 02:42:21 INFO Upd env: [INFER][SPECS]=/workspace/tasks/classification/specs/classification_retrain_spec.cfg
+01-10 02:42:21 INFO Upd env: [INFER][INPUT_MODEL]=/workspace/tasks/classification/output_retrain/weights/resnet_010.tlt
+01-10 02:42:21 INFO Upd env: [INFER][BATCH_SIZE]=16
+01-10 02:42:21 INFO Upd env: [INFER][INPUT_MODEL]=/workspace/tasks/classification/output_retrain/weights/resnet_010.tlt
+01-10 02:42:21 INFO Upd env: [INFER][LOCAL_RESULTS_DIR]=/workspace/tasks/results
+01-10 02:42:21 INFO Upd env: [INFER][LOCAL_RES_IMG_DIR]=/workspace/tasks/results/classification/images
+01-10 02:42:21 INFO Upd env: [INFER][LOCAL_RES_LBL_DIR]=/workspace/tasks/results/classification/labels
+01-10 02:42:21 INFO Upd env: [INFER][RES_IMG_DIR]=/workspace/tasks/results/classification/images
+01-10 02:42:21 INFO Upd env: [INFER][RES_LBL_DIR]=/workspace/tasks/results/classification/labels
+01-10 02:42:21 INFO Upd env: [INFER][CLASS_MAP]=/workspace/tasks/classification/output_retrain/classmap.json
+01-10 02:42:21 INFO ----------------
+01-10 02:42:21 INFO ['classification', 'inference', '-e', '/workspace/tasks/classification/specs/classification_retrain_spec.cfg', '-k', 'nvidia_tlt', '-m', '/workspace/tasks/classification/output_retrain/weights/resnet_010.tlt', '-d', '/workspace/tasks/data/mask/test/mask', '-b', '16', '-cm', '/workspace/tasks/classification/output_retrain/classmap.json', '--gpus', '1', '--gpu_index', '0']
+01-10 02:42:21 INFO ----------------
+01-10 02:42:29 DEBU __________________________________________________________________________________________________
+01-10 02:42:29 DEBU Layer (type)                    Output Shape         Param #     Connected to                     
+01-10 02:42:29 DEBU ==================================================================================================
+01-10 02:42:29 DEBU input_1 (InputLayer)            (None, 3, 224, 224)  0                                            
+01-10 02:42:29 DEBU __________________________________________________________________________________________________
+01-10 02:42:29 DEBU conv1 (Conv2D)                  (None, 40, 112, 112) 5880        input_1[0][0]                    
+01-10 02:42:29 DEBU __________________________________________________________________________________________________
+01-10 02:42:29 DEBU bn_conv1 (BatchNormalization)   (None, 40, 112, 112) 160         conv1[0][0]                      
+01-10 02:42:29 DEBU __________________________________________________________________________________________________
+01-10 02:42:29 DEBU activation_1 (Activation)       (None, 40, 112, 112) 0           bn_conv1[0][0]                   
+01-10 02:42:29 DEBU __________________________________________________________________________________________________
+01-10 02:42:29 DEBU block_1a_conv_1 (Conv2D)        (None, 64, 56, 56)   23040       activation_1[0][0]               
+01-10 02:42:29 DEBU __________________________________________________________________________________________________
+01-10 02:42:29 DEBU block_1a_bn_1 (BatchNormalizati (None, 64, 56, 56)   256         block_1a_conv_1[0][0]            
+01-10 02:42:29 DEBU __________________________________________________________________________________________________
+01-10 02:42:29 DEBU block_1a_relu_1 (Activation)    (None, 64, 56, 56)   0           block_1a_bn_1[0][0]              
+01-10 02:42:29 DEBU __________________________________________________________________________________________________
+01-10 02:42:29 DEBU block_1a_conv_2 (Conv2D)        (None, 64, 56, 56)   36864       block_1a_relu_1[0][0]            
+01-10 02:42:29 DEBU __________________________________________________________________________________________________
+01-10 02:42:29 DEBU block_1a_conv_shortcut (Conv2D) (None, 64, 56, 56)   2560        activation_1[0][0]               
+01-10 02:42:29 DEBU __________________________________________________________________________________________________
+01-10 02:42:29 DEBU block_1a_bn_2 (BatchNormalizati (None, 64, 56, 56)   256         block_1a_conv_2[0][0]            
+01-10 02:42:29 DEBU __________________________________________________________________________________________________
+01-10 02:42:29 DEBU block_1a_bn_shortcut (BatchNorm (None, 64, 56, 56)   256         block_1a_conv_shortcut[0][0]     
+01-10 02:42:29 DEBU __________________________________________________________________________________________________
+01-10 02:42:29 DEBU add_1 (Add)                     (None, 64, 56, 56)   0           block_1a_bn_2[0][0]              
+01-10 02:42:29 DEBU                                                                  block_1a_bn_shortcut[0][0]       
+01-10 02:42:29 DEBU __________________________________________________________________________________________________
+01-10 02:42:29 DEBU block_1a_relu (Activation)      (None, 64, 56, 56)   0           add_1[0][0]                      
+01-10 02:42:29 DEBU __________________________________________________________________________________________________
+01-10 02:42:29 DEBU block_2a_conv_1 (Conv2D)        (None, 128, 28, 28)  73728       block_1a_relu[0][0]              
+01-10 02:42:29 DEBU __________________________________________________________________________________________________
+01-10 02:42:29 DEBU block_2a_bn_1 (BatchNormalizati (None, 128, 28, 28)  512         block_2a_conv_1[0][0]            
+01-10 02:42:29 DEBU __________________________________________________________________________________________________
+01-10 02:42:29 DEBU block_2a_relu_1 (Activation)    (None, 128, 28, 28)  0           block_2a_bn_1[0][0]              
+01-10 02:42:29 DEBU __________________________________________________________________________________________________
+01-10 02:42:29 DEBU block_2a_conv_2 (Conv2D)        (None, 128, 28, 28)  147456      block_2a_relu_1[0][0]            
+01-10 02:42:29 DEBU __________________________________________________________________________________________________
+01-10 02:42:29 DEBU block_2a_conv_shortcut (Conv2D) (None, 128, 28, 28)  8192        block_1a_relu[0][0]              
+01-10 02:42:29 DEBU __________________________________________________________________________________________________
+01-10 02:42:29 DEBU block_2a_bn_2 (BatchNormalizati (None, 128, 28, 28)  512         block_2a_conv_2[0][0]            
+01-10 02:42:29 DEBU __________________________________________________________________________________________________
+01-10 02:42:29 DEBU block_2a_bn_shortcut (BatchNorm (None, 128, 28, 28)  512         block_2a_conv_shortcut[0][0]     
+01-10 02:42:29 DEBU __________________________________________________________________________________________________
+01-10 02:42:29 DEBU add_2 (Add)                     (None, 128, 28, 28)  0           block_2a_bn_2[0][0]              
+01-10 02:42:29 DEBU                                                                  block_2a_bn_shortcut[0][0]       
+01-10 02:42:29 DEBU __________________________________________________________________________________________________
+01-10 02:42:29 DEBU block_2a_relu (Activation)      (None, 128, 28, 28)  0           add_2[0][0]                      
+01-10 02:42:29 DEBU __________________________________________________________________________________________________
+01-10 02:42:29 DEBU block_3a_conv_1 (Conv2D)        (None, 256, 14, 14)  294912      block_2a_relu[0][0]              
+01-10 02:42:29 DEBU __________________________________________________________________________________________________
+01-10 02:42:29 DEBU block_3a_bn_1 (BatchNormalizati (None, 256, 14, 14)  1024        block_3a_conv_1[0][0]            
+01-10 02:42:29 DEBU __________________________________________________________________________________________________
+01-10 02:42:29 DEBU block_3a_relu_1 (Activation)    (None, 256, 14, 14)  0           block_3a_bn_1[0][0]              
+01-10 02:42:29 DEBU __________________________________________________________________________________________________
+01-10 02:42:29 DEBU block_3a_conv_2 (Conv2D)        (None, 256, 14, 14)  589824      block_3a_relu_1[0][0]            
+01-10 02:42:29 DEBU __________________________________________________________________________________________________
+01-10 02:42:29 DEBU block_3a_conv_shortcut (Conv2D) (None, 256, 14, 14)  32768       block_2a_relu[0][0]              
+01-10 02:42:29 DEBU __________________________________________________________________________________________________
+01-10 02:42:29 DEBU block_3a_bn_2 (BatchNormalizati (None, 256, 14, 14)  1024        block_3a_conv_2[0][0]            
+01-10 02:42:29 DEBU __________________________________________________________________________________________________
+01-10 02:42:29 DEBU block_3a_bn_shortcut (BatchNorm (None, 256, 14, 14)  1024        block_3a_conv_shortcut[0][0]     
+01-10 02:42:29 DEBU __________________________________________________________________________________________________
+01-10 02:42:29 DEBU add_3 (Add)                     (None, 256, 14, 14)  0           block_3a_bn_2[0][0]              
+01-10 02:42:29 DEBU                                                                  block_3a_bn_shortcut[0][0]       
+01-10 02:42:29 DEBU __________________________________________________________________________________________________
+01-10 02:42:29 DEBU block_3a_relu (Activation)      (None, 256, 14, 14)  0           add_3[0][0]                      
+01-10 02:42:29 DEBU __________________________________________________________________________________________________
+01-10 02:42:29 DEBU block_4a_conv_1 (Conv2D)        (None, 512, 14, 14)  1179648     block_3a_relu[0][0]              
+01-10 02:42:29 DEBU __________________________________________________________________________________________________
+01-10 02:42:29 DEBU block_4a_bn_1 (BatchNormalizati (None, 512, 14, 14)  2048        block_4a_conv_1[0][0]            
+01-10 02:42:29 DEBU __________________________________________________________________________________________________
+01-10 02:42:29 DEBU block_4a_relu_1 (Activation)    (None, 512, 14, 14)  0           block_4a_bn_1[0][0]              
+01-10 02:42:29 DEBU __________________________________________________________________________________________________
+01-10 02:42:29 DEBU block_4a_conv_2 (Conv2D)        (None, 512, 14, 14)  2359296     block_4a_relu_1[0][0]            
+01-10 02:42:29 DEBU __________________________________________________________________________________________________
+01-10 02:42:29 DEBU block_4a_conv_shortcut (Conv2D) (None, 512, 14, 14)  131072      block_3a_relu[0][0]              
+01-10 02:42:29 DEBU __________________________________________________________________________________________________
+01-10 02:42:29 DEBU block_4a_bn_2 (BatchNormalizati (None, 512, 14, 14)  2048        block_4a_conv_2[0][0]            
+01-10 02:42:29 DEBU __________________________________________________________________________________________________
+01-10 02:42:29 DEBU block_4a_bn_shortcut (BatchNorm (None, 512, 14, 14)  2048        block_4a_conv_shortcut[0][0]     
+01-10 02:42:29 DEBU __________________________________________________________________________________________________
+01-10 02:42:32 DEBU add_4 (Add)                     (None, 512, 14, 14)  0           block_4a_bn_2[0][0]              
+01-10 02:42:32 DEBU                                                                  block_4a_bn_shortcut[0][0]       
+01-10 02:42:32 DEBU __________________________________________________________________________________________________
+01-10 02:42:32 DEBU block_4a_relu (Activation)      (None, 512, 14, 14)  0           add_4[0][0]                      
+01-10 02:42:32 DEBU __________________________________________________________________________________________________
+01-10 02:42:32 DEBU avg_pool (AveragePooling2D)     (None, 512, 1, 1)    0           block_4a_relu[0][0]              
+01-10 02:42:32 DEBU __________________________________________________________________________________________________
+01-10 02:42:32 DEBU flatten (Flatten)               (None, 512)          0           avg_pool[0][0]                   
+01-10 02:42:32 DEBU __________________________________________________________________________________________________
+01-10 02:42:32 DEBU predictions (Dense)             (None, 2)            1026        flatten[0][0]                    
+01-10 02:42:32 DEBU ==================================================================================================
+01-10 02:42:32 DEBU Total params: 4,897,946
+01-10 02:42:32 DEBU Trainable params: 4,823,762
+01-10 02:42:32 DEBU Non-trainable params: 74,184
+01-10 02:42:32 DEBU __________________________________________________________________________________________________
+01-10 02:42:33 INFO Inference ... Done ! 
+
+01-10 02:46:36 INFO Upd env: [EXPORT][INPUT_MODEL]=/workspace/tasks/classification/output_retrain/weights/resnet_009.tlt
+01-10 02:46:38 INFO Upd env: [EXPORT][INPUT_MODEL]=/workspace/tasks/classification/output_retrain/weights/resnet_010.tlt

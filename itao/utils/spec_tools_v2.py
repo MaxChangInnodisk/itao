@@ -1,6 +1,10 @@
 import json, os, shutil, datetime
 import glob, time
-from itao.utils.qt_logger import CustomLogger
+
+try:
+    from itao.utils.qt_logger import CustomLogger
+except:
+    from qt_logger import CustomLogger
 
 if __name__ == '__main__':
     import environ
@@ -130,6 +134,7 @@ class DefineSpec():
                 if key in cnt:
                     org_key, org_val = self.spec_cnt[idx].split(":")
                     if key == org_key.replace(" ", ""):
+                        self.logger.info('Upd spec: {} -> {}'.format(org_key, val))
                         self.spec_cnt[idx] = f"{org_key}: {val}\n"
                         found_key=True
                     else:
