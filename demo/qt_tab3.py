@@ -44,6 +44,7 @@ class Tab3(Init):
             'eval':True
         }
 
+    """ 取得 T3 應該執行的功能 """
     def update_t3_actions(self):
         act_enabled = []
         act_disabled = []
@@ -59,6 +60,7 @@ class Tab3(Init):
         self.logger.info("T3 Actions {} is enabled".format(act_enabled))
         self.logger.info("T3 Actions {} is disabled".format(act_disabled))
 
+    """ 第一次進入 tab 3 的事件 """
     def t3_first_time_event(self):
         # prune and retrain
         if self.t3_first_time:
@@ -123,6 +125,7 @@ class Tab3(Init):
             self.use_pretrained = True
         else:
             self.logger.error('Failed to load checkpoint ...')
+
     # Prune -------------------------------------------------------------------------------
 
     """ Prune 的事件 """
@@ -223,7 +226,6 @@ class Tab3(Init):
         epoch = self.ui.t3_retrain_epoch.text()
         self.itao_env.update2('PRUNE', 'EPOCH', epoch)
         
-
     """ 將QT中的PRUNE配置內容映射到PRUNE_CONF """
     def update_prune_conf(self):
         
@@ -466,5 +468,3 @@ class Tab3(Init):
             self.retrain_spec.mapping('pruned_model_path', '"{}"'.format(input_model))
 
         self.insert_text("Show Retrain Conifg", config=self.itao_env.get_env('RETRAIN'))
-
-            

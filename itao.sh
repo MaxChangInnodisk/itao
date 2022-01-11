@@ -70,7 +70,7 @@ function build_image(){
     IMG=$1
     DOCKER=$2
 
-    docker build -t ${IMG} -f ${DOCKER} ${ROOT} .
+    docker build -t ${IMG} -f ${DOCKER} .
 }
 # ---------------------------------------------------------
 function check_image(){ 
@@ -85,6 +85,7 @@ function run_container(){
     CNT=$1
     IMG=$2
     CAM=$3
+    WORK="/workspace"
 
     echo -e "Searching Container (${CNT}) ... \c"
     export DISPLAY=:0
@@ -101,18 +102,21 @@ function run_container(){
     else 
         echo -e "Failed \n"
 
-        docker run --gpus all --name ${CNT} -it \
-        --device=${CAM}:${CAM} \
-        -v=`pwd`:/workspace \
-        -v=`realpath ~/.docker/config.json`:/root/.docker/config.json \
-        -v=/var/run/docker.sock:/var/run/docker.sock \
-        -v=/tmp/.X11-unix:/tmp/.X11-unix:rw -e DISPLAY=unix$DISPLAY \
-        ${IMG} `python3 demo --docker`
+        echo -e "Runing a new one ... \n"
+        clear
+
+        docker run --gpus all --name ${CNT} --rm -it \
+        --device ${CAM}:${CAM} \
+        -w ${WORK} \
+        -v `pwd`:${WORK} \
+        -v `realpath ~/.docker/config.json`:/root/.docker/config.json \
+        -v /var/run/docker.sock:/var/run/docker.sock \
+        -v /tmp/.X11-unix:/tmp/.X11-unix:rw -e DISPLAY=unix$DISPLAY \
+        ${IMG}
+
+
     fi
 }
-
-#
-
 # ---------------------------------------------------------
 printd "Initialize ..." BG
 sudo apt-get install figlet boxes lolcat -qqy

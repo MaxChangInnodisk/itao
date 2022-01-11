@@ -1,68 +1,11 @@
 {
-  "KEY": "nvidia_tlt",
-  "NUM_GPUS": "1",
-  "LOCAL_PROJECT_DIR": "/workspace/tasks",
-  "LOCAL_DATA_DIR": "/workspace/data",
-  "LOCAL_EXPERIMENT_DIR": "/workspace/tasks/classification",
-  "PROJECT_DIR": "/workspace/tasks",
-  "USER_EXPERIMENT_DIR": "/workspace/tasks/classification",
-  "DATA_DOWNLOAD_DIR": "/workspace/tasks/classification",
-  "CLI": "ngccli_cat_linux.zip",
-  "NGC_TASK": "classification",
-  "TASK": "classification",
-  "BACKBONE": "resnet",
-  "TRAIN": {
-    "LOCAL_OUTPUT_DIR": "/workspace/tasks/classification/output",
-    "OUTPUT_DIR": "/workspace/tasks/classification/output",
-    "LOCAL_SPECS": "/workspace/tasks/classification/specs/classification_train_spec.cfg",
-    "SPECS": "/workspace/tasks/classification/specs/classification_train_spec.cfg",
-    "LOCAL_PRETRAINED_MODEL": "/workspace/tasks/classification/pretrained_resnet10/pretrained_classification_vresnet10/resnet_10.hdf5",
-    "PRETRAINED_MODEL": "/workspace/tasks/classification/pretrained_resnet10/pretrained_classification_vresnet10/resnet_10.hdf5",
-    "EPOCH": "10",
-    "INPUT_SHAPE": "3,224,224",
-    "LR": "0.006",
-    "BATCH_SIZE": "16",
-    "CUSTOM": "",
-    "OUTPUT_MODEL": "/workspace/tasks/classification/output/weights/resnet_010.tlt"
-  },
-  "LOCAL_SPECS_DIR": "/workspace/tasks/classification/specs",
-  "SPECS_DIR": "/workspace/tasks/classification/specs",
-  "RETRAIN": {
-    "LOCAL_SPECS": "/workspace/tasks/classification/specs/classification_retrain_spec.cfg",
-    "SPECS": "/workspace/tasks/classification/specs/classification_retrain_spec.cfg",
-    "INPUT_MODEL": "/workspace/tasks/classification/output/resnet10_pruned/resnet10_pruned.tlt",
-    "EPOCH": "10",
-    "BATCH_SIZE": "16",
-    "LR": "0.006",
-    "OUTPUT_DIR": "/workspace/tasks/classification/output_retrain",
-    "LOCAL_OUTPUT_DIR": "/workspace/tasks/classification/output_retrain",
-    "OUTPUT_MODEL": "/workspace/tasks/classification/output_retrain/weights/resnet_010.tlt"
-  },
-  "NLAYER": "10",
-  "LOCAL_DATASET": "/workspace/tasks/data/mask",
-  "DATASET": "/workspace/tasks/data/mask",
-  "PRUNE": {
-    "OUTPUT_MODEL": "/workspace/tasks/classification/output/resnet10_pruned/resnet10_pruned.tlt",
-    "LOCAL_OUTPUT_MODEL": "/workspace/tasks/classification/output/resnet10_pruned/resnet10_pruned.tlt",
-    "INPUT_MODEL": "/workspace/tasks/classification/output/weights/resnet_010.tlt",
-    "THRES": 0.3,
-    "EQ": "union",
-    "EPOCH": "10"
-  },
-  "INFER": {
-    "LOCAL_INPUT_DATA": "/workspace/tasks/data/mask/test/mask",
-    "INPUT_DATA": "/workspace/tasks/data/mask/test/mask",
-    "SPECS": "/workspace/tasks/classification/specs/classification_retrain_spec.cfg",
-    "INPUT_MODEL": "/workspace/tasks/classification/output_retrain/weights/resnet_010.tlt",
-    "BATCH_SIZE": "16",
-    "LOCAL_RESULTS_DIR": "/workspace/tasks/results",
-    "LOCAL_RES_IMG_DIR": "/workspace/tasks/results/classification/images",
-    "LOCAL_RES_LBL_DIR": "/workspace/tasks/results/classification/labels",
-    "RES_IMG_DIR": "/workspace/tasks/results/classification/images",
-    "RES_LBL_DIR": "/workspace/tasks/results/classification/labels",
-    "CLASS_MAP": "/workspace/tasks/classification/output_retrain/classmap.json"
-  },
-  "EXPORT": {
-    "INPUT_MODEL": "/workspace/tasks/classification/output_retrain/weights/resnet_010.tlt"
-  }
+    "KEY": "nvidia_tlt",
+    "NUM_GPUS": "1",
+    "LOCAL_PROJECT_DIR": "/workspace/tasks",
+    "LOCAL_DATA_DIR": "/workspace/tasks/data",
+    "LOCAL_EXPERIMENT_DIR": "",
+    "PROJECT_DIR": "/workspace/tasks",
+    "USER_EXPERIMENT_DIR": "",
+    "DATA_DOWNLOAD_DIR": "",
+    "CLI": "ngccli_cat_linux.zip"
 }

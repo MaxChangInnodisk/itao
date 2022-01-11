@@ -17,6 +17,7 @@ from demo.qt_init import Init
 from itao.utils import gpu_tools
 
 class Tab1(Init):
+    
     def __init__(self):
         super().__init__()
         
@@ -41,6 +42,7 @@ class Tab1(Init):
 
         self.debound = [0,0,0,0,0,0]
         self.setting_combo_box = False
+        self.t1_info = ""
 
     """ 安裝 NGC CLI """
     def install_ngc_event(self, data):
@@ -51,10 +53,11 @@ class Tab1(Init):
         else:
             self.consoles[self.current_page_id].insertPlainText(data)
 
-    """ 第一次進入 tab 1 的事件 """
+    """ 取得 T1 應該執行的功能 """
     def update_t1_actions(self):
         pass
 
+    """ 第一次進入 tab 1 的事件 """
     def t1_first_time_event(self):
         if self.t1_first_time:
             self.logger.info('First time loading tab 1 ... ')
@@ -129,6 +132,7 @@ class Tab1(Init):
         except:
             self.kmeans = ""
 
+    """ 更新選項以及進度條 -> 當使用者往回調整的時候做出對應變化 """
     def update_options_and_bar(self, idx=0):
 
         for i in range(len(self.sel_idx)):
@@ -361,7 +365,8 @@ class Tab1(Init):
         # 更新 進度條
         idx = 6
         self.update_options_and_bar(idx)
-             
+
+    """ 當 T1 的所有選項都選完了就會進行 Mapping Spec 的動作 """      
     def finish_options(self):
 
         if int(self.ui.t1_progress.value())>=100:
@@ -370,7 +375,8 @@ class Tab1(Init):
             self.logger.info(info)
 
             self.mapping_spec()
-        
+
+    """ 對應 Spec 的動作事件 """   
     def mapping_spec(self):
 
         # 更新 spec 裡面的 arch
@@ -393,13 +399,6 @@ class Tab1(Init):
                 self.train_spec.mapping(key_nlayer, self.itao_env.get_env('NLAYER'))
             else:
                 self.train_spec.add_spec_item(scope='model_config', key=key_nlayer, val=self.itao_env.get_env('NLAYER'), level=2)
-
-        # # 更新 specs 的 pretrained_model_path 的部份
-        # model_path = self.itao_env.get_env('TRAIN', 'LOCAL_PRETRAINED_MODEL')
-        # if 'classification' in self.itao_env.get_env('NGC_TASK'):
-        #     self.train_spec.mapping('pretrained_model_path', f'"{self.itao_env.replace_docker_root(model_path)}"')
-        # elif 'detection' in self.itao_env.get_env('NGC_TASK'):
-        #     self.train_spec.mapping('pretrain_model_path', f'"{self.itao_env.replace_docker_root(model_path)}"')
 
         # 更新dataset
         trg_folder_path = self.itao_env.get_env('DATASET')

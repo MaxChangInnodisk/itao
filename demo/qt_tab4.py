@@ -9,7 +9,7 @@ from PyQt5.QtWidgets import QFileDialog
 
 """ 自己的函式庫自己撈"""
 sys.path.append(os.path.abspath(f'{os.getcwd()}'))
-from itao.csv_tools import csv_to_list
+from itao.utils.csv_tools import csv_to_list
 from demo.qt_init import Init
         
 class Tab4(Init):
@@ -46,8 +46,7 @@ class Tab4(Init):
 
         self.infer_key = ['root: Registry', 'Loading experiment spec','Processing', 'Inference complete', 'Stopping container']
 
-
-
+    """ 取得 T4 應該執行的功能 """
     def update_t4_actions(self):
         act_enabled = []
         act_disabled = []
@@ -68,6 +67,7 @@ class Tab4(Init):
         self.logger.info("T4 Actions {} is enabled".format(act_enabled))
         self.logger.info("T4 Actions {} is disabled".format(act_disabled))
 
+    """ 第一次進入 tab 4 的事件 """
     def t4_first_time_event(self):
         if self.t4_first_time:
             self.update_t4_actions()
@@ -80,6 +80,7 @@ class Tab4(Init):
 
             self.t4_first_time = False
 
+    """ 取得要運行 Inference 的資料夾 """
     def get_infer_data_folder(self):
         folder_path = None
 
@@ -126,8 +127,8 @@ class Tab4(Init):
         else:
             self.export_finish()
 
-    """ """
-    def show_delete_exist_model_msg(self):
+    """ 警告視窗：刪除已存在的模型 """
+    def show_delete_msg(self):
         # set default
         title = 'Warning Message ( Delete Event )'
         msg = 'Do you want to delete the existed model ? \n( OK to continue, Cancel to backup and export again)'
@@ -161,7 +162,7 @@ class Tab4(Init):
         if os.path.exists(local_export_dir):
             import shutil
             self.logger.warning('Clean export directory.')
-            ret = self.run_t4_option['export'] = self.show_delete_exist_model_msg()
+            ret = self.run_t4_option['export'] = self.show_delete_msg()
             if ret:
                 shutil.rmtree( local_export_dir )
             else:
@@ -413,7 +414,3 @@ class Tab4(Init):
             self.insert_text(self.ls_infer_label[self.cur_pixmap], t_fmt=False)
         else:
             [ self.insert_text(f"{idx}: {cnt}", t_fmt=False) for idx,cnt in enumerate(self.ls_infer_label[self.cur_pixmap]) ]
-        
-        
-
-

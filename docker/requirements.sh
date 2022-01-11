@@ -34,7 +34,7 @@ case ${OPT} in
 
         printd "Update ... \c" Cy
         apt-get update -qq
-        apt-get install -qy figlet boxes lolcat > /dev/null 2>&1
+        apt-get install -qy figlet boxes > /dev/null 2>&1
         echo "Done"
 
         printd "Install Dependencies of OpenCV ... \c" Cy

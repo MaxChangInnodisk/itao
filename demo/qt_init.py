@@ -20,6 +20,7 @@ from demo.configs import OPT, ARCH_LAYER
 
 class Init(QtWidgets.QMainWindow):
 
+    """ 定義共用變數 """
     def __init__(self) -> None:
         super().__init__() # Call the inherited classes __init__ method
 
@@ -28,76 +29,65 @@ class Init(QtWidgets.QMainWindow):
 
         # iTAO 初始化
         self.logger.info('Initial iTAO ... ')
-        self.ui = uic.loadUi(os.path.join("ui", "itao_v0.2.ui"), self) # Load the  file   # 使用 ui 檔案的方式
-        # from demo.pyqt_gui import Ui_iTAO
-        # self.ui = Ui_iTAO() # 使用 pyuic 轉換成 python 後的使用方法
-        # self.ui.setupUi(self)
+        self.ui = uic.loadUi(os.path.join("ui", "itao_v0.3.ui"), self) # Load the  file   # 使用 ui 檔案的方式
         self.setWindowTitle('iTAO')
 
         # 基本常數設定
-        self.first_page_id = 0  # 1-1 = 0
-        self.end_page_id = 3    # 4-1 = 3
-        self.div_symbol = "----------------------------------------------------\n"
+        self.logger.info('Setting Basic Variable ... ')
         self.debug, self.debug_page, self.debug_opt, self.is_docker = None, None, None, None
 
         # 選項參數
         self.option, self.option_nlayer = OPT, ARCH_LAYER
 
-        # 頁面設定
-        self.t1_first_time, self.t2_firt_time, self.t3_first_time, self.t4_first_time = True, True, True, True   # 初次進入頁面
-        self.first_line = True  # 第一行
-
-
-        self.logger.info('Setting Basic Variable ... ')
-        """ 環境相關 """
-        self.train_cmd, self.eval_cmd, self.retrain_cmd, self.prune_cmd, self.infer_cmd, self.export_cmd = None, None, None, None, None, None
-        self.kmeans_cmd = None
-        self.train_spec, self.retrain_spec = None, None
-        # self.itao_env = SetupEnv()  # 建立 configs/itao_env.json 檔案，目的在於建立共用的變數以及 Docker 與 Local 之間的路徑
-        # self.itao_env.create_env_file(is_docker=self.is_docker) 
-        # self.ngc = InstallNGC() # NGC 的安裝Thread
-        # self.stop_tao = StopTAO() # 統一關閉 TAO 的方法
-
-        self.itao_env = None
-        self.ngc = None
-        self.stop_tao = StopTAO() # 統一關閉 TAO 的方法
+        # 頁面設定：初次進入頁面&第一行
+        self.first_page_id = 0  # 1-1 = 0
+        self.end_page_id = 3    # 4-1 = 3
+        self.t1_first_time, self.t2_firt_time, self.t3_first_time, self.t4_first_time = True, True, True, True
         
 
-        """ Console """
-        self.t1_info = ""
+        # 與 TAO 的命令相關
+        self.train_cmd, self.eval_cmd, self.retrain_cmd, self.prune_cmd, self.infer_cmd, self.export_cmd = None, None, None, None, None, None
+        self.kmeans_cmd = None
+
+        # 環境相關：spec的物件、env的物件、安裝ngc 的物件、關閉 tao 執行程式的物件
+        self.train_spec, self.retrain_spec = None, None
+        self.itao_env = None
+        self.ngc = None
+        self.stop_tao = None  
+        
+        # 與 Console 相關的參數
+        self.div_symbol = "----------------------------------------------------\n"
         self.console_cnt = ""
+        self.first_line = True
         self.div_is_inserted = False
-        self.space = len('learning_rate      ') # get longest width in console
 
-
-        """ 將元件統一 """
+        # 將元件統一
         self.page_buttons_status={0:[0,0], 1:[1,0], 2:[1,0], 3:[1,1]}
         self.tabs = [ self.ui.tab_1, self.ui.tab_2, self.ui.tab_3, self.ui.tab_4 ]
         self.progress = [ self.ui.t1_progress, self.ui.t2_progress, self.ui.t3_progress, self.ui.t4_progress]
         self.frames = [None, self.ui.t2_frame, self.ui.t3_frame, None]
         self.consoles = [ self.ui.t1_console, self.ui.t2_console, self.ui.t3_console, self.ui.t4_console]
 
-        [ self.ui.main_tab.setTabEnabled(i, False if not self.debug else True ) for i in range(len(self.tabs))]     # 將所有分頁都關閉
+        # 將所有分頁都關閉
+        [ self.ui.main_tab.setTabEnabled(i, False if not self.debug else True ) for i in range(len(self.tabs))]     
         
-
         """ 建立 & 初始化 Tab2 跟 Tab3 的圖表 """
-
         pg.setConfigOptions(antialias=True)
         pg.setConfigOption('background', 'w')
         self.pws = [None, pg.PlotWidget(self), pg.PlotWidget(self), None]
         self.pw_lyrs = [None, QVBoxLayout(), QVBoxLayout(), None]
         [ a.hide() for a in self.pws if a!=None ]    # 先關閉等待 init_console 的時候才開
 
-        """ 設定 Previous、Next 的按鈕 """
+        # 設定 Previous、Next 的按鈕，綁定事件
         self.current_page_id = self.first_page_id   # 將當前頁面編號 (current_page_id) 設定為 第一個 ( first_page_id )
-        
         self.ui.main_tab.setCurrentIndex(self.first_page_id)
         self.ui.bt_next.clicked.connect(self.ctrl_page_event)
         self.ui.bt_previous.clicked.connect(self.ctrl_page_event)
         
-        """ 設定 GPU 編號 (--gpu_index) """
+        # 設定 GPU 編號 (--gpu_index)
         self.gpu_idx = 0
 
+    """ 開始運行 iTAO 的事件 """
     def start(self, debug, debug_page, debug_opt, is_docker):
         
         self.logger.info('Setting up running mode ...')
@@ -113,14 +103,18 @@ class Init(QtWidgets.QMainWindow):
         self.update_page()  # 更新頁面資訊
         self.ui.main_tab.currentChanged.connect(self.update_page)
 
-        """ 設定全螢幕 """
-        self.change_font_event('Arial', 14)
+        # 設定全螢幕
+        self.change_font_size_event('Arial', 14)
         self.showFullScreen()   
+        # 顯示並顯示警告視窗
         self.show()   
+        self.show_warning_msg()
 
+    # --------------------------------------------------------------------------------------
+    """ 更新 Tab 要運行的功能 """
     def update_t1_actions(self):
         pass
-
+    
     def update_t2_actions(self):
         pass
 
@@ -129,7 +123,21 @@ class Init(QtWidgets.QMainWindow):
 
     def update_t4_actions(self):
         pass
+    # --------------------------------------------------------------------------------------
+    """ 第一次進入 Tab 的事件 """
+    def t1_first_time_event(self):
+        pass
 
+    def t2_first_time_event(self):
+        pass
+
+    def t3_first_time_event(self):
+        pass
+    
+    def t4_first_time_event(self):
+        pass
+    # --------------------------------------------------------------------------------------
+    """ 顯示警告視窗 """
     def show_warning_msg(self):
         # set default
         title = 'Warning Message ( Key Event )'
@@ -144,7 +152,7 @@ class Init(QtWidgets.QMainWindow):
         if returnValue == QMessageBox.Ok:
             self.logger.info('Press OK with the warning message.')
 
-
+    """ 按鍵按下的事件 """
     def keyPressEvent(self, event):
         
         if event.key() == QtCore.Qt.Key_Escape:
@@ -152,14 +160,15 @@ class Init(QtWidgets.QMainWindow):
             sys.exit(0)
         if event.key() == QtCore.Qt.Key_F12:
             if self.isFullScreen():
-                self.change_font_event('Arial', 11)
+                self.change_font_size_event('Arial', 11)
                 
                 self.showNormal()
             else:
-                self.change_font_event('Arial', 14)
+                self.change_font_size_event('Arial', 14)
                 self.showFullScreen()
     
-    def change_font_event(self, style='Arial', size=11):
+    """ 修改所有的字體大小 """
+    def change_font_size_event(self, style='Arial', size=11):
         # setFont(QFont(style, size))
         self.ui.setFont(QFont(style, size)) # not work in all widgets
 
@@ -176,73 +185,10 @@ class Init(QtWidgets.QMainWindow):
         # other
         self.ui.t1_option.setFont(QFont(style, size))
         
-
     """ 檢查 tao 的狀況 """
     def check_tao(self):
         proc = subprocess.run( ['tao','-h'], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, encoding="utf-8", timeout=1)      
         return 1 if proc.returncode == 0 else 0
-
-    """ 取得資料夾路徑 """
-    # def get_folder(self):
-    #     folder_path = None
-    #     if self.current_page_id==0:
-    #         folder_path = QFileDialog.getExistingDirectory(self, "Open folder", "./tasks/data", options=QFileDialog.DontUseNativeDialog)
-    #         trg_folder_path = self.itao_env.replace_docker_root(folder_path)
-            
-    #         if 'classi' == self.itao_env.get_env('NGC_TASK'):
-    #             self.train_spec.mapping('train_dataset_path', '"{}"'.format(os.path.join(trg_folder_path, 'train')))
-    #             self.train_spec.mapping('val_dataset_path', '"{}"'.format(os.path.join(trg_folder_path, 'val')))
-    #             self.train_spec.mapping('eval_dataset_path', '"{}"'.format(os.path.join(trg_folder_path, 'test')))
-                
-    #         elif 'detection' in self.itao_env.get_env('NGC_TASK'):
-    #             self.train_spec.mapping('image_directory_path', '"{}"'.format(os.path.join(trg_folder_path, 'images')))
-    #             self.train_spec.mapping('label_directory_path', '"{}"'.format(os.path.join(trg_folder_path, 'labels')))
-
-    #         self.itao_env.update('LOCAL_DATASET', folder_path)
-    #         self.itao_env.update('DATASET', trg_folder_path)
-            
-    #         self.sel_idx[5]=1 
-    #         self.update_progress(self.current_page_id, self.sel_idx.count(1), len(self.t1_objects))
-
-    #         self.ui.t1_combo_gpus.setEnabled(True)
-            
-    #     elif self.current_page_id==3:
-    #         root = "./tasks/data"
-    #         folder_path = QFileDialog.getExistingDirectory(self, "Open folder", root, options=QFileDialog.DontUseNativeDialog)
-    #         self.infer_folder = folder_path
-    #         self.itao_env.update2('INFER', 'LOCAL_INPUT_DATA', folder_path)
-    #         self.itao_env.update2('INFER', 'INPUT_DATA', self.itao_env.replace_docker_root(folder_path))
-    #     else:
-    #         folder_path = QFileDialog.getExistingDirectory(self, "Open folder", "./", options=QFileDialog.DontUseNativeDialog)
-
-    #     self.logger.info('Selected Folder: {}'.format(folder_path))
-
-    # """ 取得檔案路徑 """
-    # def get_file(self):
-        
-    #     filename, filetype = QFileDialog.getOpenFileNames(self, "Open file", "./", options =QFileDialog.DontUseNativeDialog)
-    #     if self.current_page_id==0:
-    #         pass
-    #     elif self.current_page_id==3:
-    #         self.infer_files = filename
-
-    #     self.logger.info('Selected File: {}'.format(filename))
-
-    """ 第一次進入 tab 1 的事件 """
-    def t1_first_time_event(self):
-        pass
-
-    """ 第一次進入 tab 2 的事件 """
-    def t2_first_time_event(self):
-        pass
-
-    """ 第一次進入 tab 3 的事件 """
-    def t3_first_time_event(self):
-        pass
-    
-    """ 第一次進入 tab 4 的事件 """
-    def t4_first_time_event(self):
-        pass
 
     """ 更新頁面與按鈕 """
     def update_page(self):
@@ -378,11 +324,11 @@ class Init(QtWidgets.QMainWindow):
         self.mv_cursor(pos='end')
         self.consoles[self.current_page_id].update()
     
-    """ backup all content """
+    """ 備份所有 Console 內容 """
     def backup_console(self):
         self.console_cnt = self.consoles[self.current_page_id].toPlainText()
     
-    """ restore all content """
+    """ 回覆剛剛備份的 Console 內容 """
     def restore_console(self):
         self.consoles[self.current_page_id].setPlainText(self.console_cnt)
 
@@ -403,6 +349,7 @@ class Init(QtWidgets.QMainWindow):
             self.consoles[self.current_page_id].setTextCursor(cursor)
             self.consoles[self.current_page_id].ensureCursorVisible()                               # 將位置移到LOG最下方 (2)
 
+    """ 停止所有的 TAO """
     def tao_stop_event(self, data):
         if data == "end":
             self.insert_text('Done', t_fmt=False)

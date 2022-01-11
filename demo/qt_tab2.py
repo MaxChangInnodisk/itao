@@ -39,6 +39,7 @@ class Tab2(Init):
             'eval':True
         }
 
+    """ 取得 T2 應該執行的功能 """
     def update_t2_actions(self):
         act_enabled = []
         act_disabled = []
@@ -54,6 +55,7 @@ class Tab2(Init):
         self.logger.info("T2 Actions {} is enabled".format(act_enabled))
         self.logger.info("T2 Actions {} is disabled".format(act_disabled))
 
+    """ 第一次進入 tab 2 的事件 """
     def t2_first_time_event(self):
         if self.t2_firt_time:
             self.logger.info('First time loading tab 2 ... ')
@@ -73,7 +75,6 @@ class Tab2(Init):
             self.insert_text('Batch Size -> 4, 8, 16 ( Higher value needs more memory of the GPU)', t_fmt=False)
             self.mv_cursor(pos='end')
             self.t2_firt_time=False
-
 
     """ 按下 stop 的事件 """
     def stop_event(self):
@@ -133,14 +134,7 @@ class Tab2(Init):
 
     # Train -------------------------------------------------------------------------------
 
-    """ 
-    Do training event when press 'train' button:
-    1. do `train_prep` to prepare 
-    2. define arguments of training command line
-    4. instance the training object
-    5. start training if not setting debug 
-    6. do `train_finish` if setting debug
-    """
+    """ 運行訓練的事件 """
     def train_event(self):
 
         self.train_prep()
@@ -387,4 +381,3 @@ class Tab2(Init):
         #     )
 
         # self.ui.t2_model_name.setText(output_model)
-        

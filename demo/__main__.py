@@ -20,8 +20,6 @@ if __name__ == '__main__':
     parser.add_argument("--page", type=int, default=0, help="")
     parser.add_argument("--opt", type=str, default=None, help="")
     args = parser.parse_args()
-    
-    print('\n', args, '\n')
 
     itao = UI()
     
@@ -30,5 +28,5 @@ if __name__ == '__main__':
         debug_opt=args.opt,
         is_docker=args.docker
         )
-    itao.show_warning_msg()
+    
     sys.exit(app.exec_())
