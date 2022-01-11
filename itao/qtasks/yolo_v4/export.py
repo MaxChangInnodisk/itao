@@ -48,6 +48,10 @@ class ExportCMD(QThread):
             "--data_type", f"{ new_args['dtype'].lower() }"
         ]
 
+        # check is in docker
+        if args['is_docker'] and args['is_docker']==True:
+            self.cmd.pop(0)
+            
         self.logger.info('----------------')
         self.logger.info(self.cmd)
         self.logger.info('----------------')

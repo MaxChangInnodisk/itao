@@ -46,6 +46,10 @@ class PruneCMD(QThread):
             "-k", f"{ new_args['key'] }",
         ]
 
+        # check is in docker
+        if args['is_docker'] and args['is_docker']==True:
+            self.cmd.pop(0)
+            
         if 'nums_gpu' in args.keys():
             self.cmd.append("--gpus")
             self.cmd.append(f"{ args['num_gpus'] }")

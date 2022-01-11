@@ -281,12 +281,13 @@ class Init(QtWidgets.QMainWindow):
     """ 進度條滿了 -> 頁面任務完成 -> 對應對動作 """
     def page_finished_event(self):
         if self.current_page_id==0:
-            self.mount_env()
-            self.insert_text("Show config", config=self.itao_env.get_env('TRAIN'))
-            self.swith_page_button(previous=0, next=1)
+            pass
+            # self.mount_env()
+            # self.insert_text("Show config", config=self.itao_env.get_env('TRAIN'))
+            # self.swith_page_button(previous=0, next=1)
             
-            if 'detection' in self.itao_env.get_env('TASK'):
-                self.train_spec.set_label_for_detection(key='target_class_mapping')
+            # if 'detection' in self.itao_env.get_env('TASK'):
+            #     self.train_spec.set_label_for_detection(key='target_class_mapping')
         elif self.current_page_id==1:
             pass
         elif self.current_page_id==2:

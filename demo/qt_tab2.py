@@ -26,7 +26,6 @@ class Tab2(Init):
         self.worker, self.worker_eval = None, None
         self.ui.t2_bt_train.clicked.connect(self.train_event)
         self.ui.t2_bt_stop.clicked.connect(self.stop_event)
-        self.ui.t2_epoch.textChanged.connect(self.update_epoch_event)
         self.ui.t2_bt_checkpoint.clicked.connect(self.ckpt_to_pretrained)
 
         self.backup = False
@@ -360,24 +359,3 @@ class Tab2(Init):
 
         self.swith_page_button(previous=1, next=1)
     
-    """ 即時更新與 epoch 相關的資訊 (已棄用) """
-    def update_epoch_event(self):
-        self.logger.warning('unused method -> update_epoch_event')
-        pass
-        # task = self.itao_env.get_env('TASK')
-        # epoch = self.ui.t2_epoch.text()
-        
-        # if 'yolo' in self.itao_env.get_env('TASK'):
-        #     output_model = "{}_{}{}_epoch_{:03}.tlt".format(
-        #         self.itao_env.get_env('TASK').replace('_',""),
-        #         self.itao_env.get_env('BACKBONE'), 
-        #         self.itao_env.get_env('NLAYER'),
-        #         int(epoch)
-        #     )
-        # elif 'classi' in self.itao_env.get_env('TASK'):
-        #     output_model = "{}_{:03}.tlt".format(
-        #         self.itao_env.get_env('BACKBONE'), 
-        #         int(epoch)
-        #     )
-
-        # self.ui.t2_model_name.setText(output_model)

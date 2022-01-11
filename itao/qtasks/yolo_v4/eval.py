@@ -43,7 +43,10 @@ class EvalCMD(QThread):
             "-k", f"{ new_args['key'] }",
             "-m", f"{ new_args['model'] }"
         ]
-
+        # check is in docker
+        if args['is_docker'] and args['is_docker']==True:
+            self.cmd.pop(0)
+            
         # add gpus if needed
         if 'num_gpus' in args.keys():
             self.cmd.append("--gpus")

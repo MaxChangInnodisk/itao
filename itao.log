@@ -1,11 +1,39 @@
-01-10 08:03:16 INFO Create Logger: dev
-01-10 08:03:16 INFO Initial iTAO ... 
-01-10 08:03:17 INFO Setting Basic Variable ... 
-01-10 08:03:17 INFO Setting up running mode ...
-01-10 08:03:17 WARN Running in docker ...
-01-10 08:03:17 INFO Created Environment File
-01-10 08:03:17 INFO Page Change: Tab 1 
-01-10 08:03:17 INFO First time loading tab 1 ... 
-01-10 08:03:17 INFO Checking environment (iTAO) ... Actived
-01-10 08:03:17 INFO Installed NGC CLI
-01-10 08:03:18 INFO Press OK with the warning message.
+01-11 09:07:57 INFO Create Logger: dev
+01-11 09:07:57 INFO Initial iTAO ... 
+01-11 09:07:57 INFO Setting Basic Variable ... 
+01-11 09:07:57 INFO Setting up running mode ...
+01-11 09:07:57 WARN Running in docker ...
+01-11 09:07:57 INFO Created Environment File
+01-11 09:07:57 INFO Page Change: Tab 1 
+01-11 09:07:57 INFO First time loading tab 1 ... 
+01-11 09:07:57 INFO Checking environment (iTAO) ... Actived
+01-11 09:07:57 INFO Installed NGC CLI
+01-11 09:07:59 INFO Press OK with the warning message.
+01-11 09:08:01 INFO Update combo box: task
+01-11 09:08:01 INFO Upd env: "NGC_TASK" -> object_detection
+01-11 09:08:03 INFO Update combo box: model
+01-11 09:08:03 INFO Upd env: "TASK" -> yolo_v4
+01-11 09:08:05 INFO Update combo box: backbone
+01-11 09:08:05 INFO Upd env: "BACKBONE" -> resnet
+01-11 09:08:05 INFO Upd env: "LOCAL_PROJECT_DIR" -> /workspace/tasks
+01-11 09:08:05 INFO Upd env: "LOCAL_EXPERIMENT_DIR" -> /workspace/tasks/yolo_v4
+01-11 09:08:05 INFO Upd env: "USER_EXPERIMENT_DIR" -> /workspace/tasks/yolo_v4
+01-11 09:08:05 INFO Upd env: "LOCAL_DATA_DIR" -> /workspace/data
+01-11 09:08:05 INFO Upd env: "DATA_DOWNLOAD_DIR" -> /workspace/tasks/yolo_v4
+01-11 09:08:05 INFO Upd env: [TRAIN][LOCAL_OUTPUT_DIR]=/workspace/tasks/yolo_v4/output
+01-11 09:08:05 INFO Upd env: [TRAIN][OUTPUT_DIR]=/workspace/tasks/yolo_v4/output
+01-11 09:08:05 INFO Upd env: "LOCAL_SPECS_DIR" -> /workspace/tasks/yolo_v4/specs
+01-11 09:08:05 INFO Upd env: "SPECS_DIR" -> /workspace/tasks/yolo_v4/specs
+01-11 09:08:05 INFO Get specification ... 
+01-11 09:08:05 INFO Upd env: [TRAIN][LOCAL_SPECS]=/workspace/tasks/yolo_v4/specs/yolo_v4_train_kitti_seq_spec.txt
+01-11 09:08:05 INFO Upd env: [TRAIN][SPECS]=/workspace/tasks/yolo_v4/specs/yolo_v4_train_kitti_seq_spec.txt
+01-11 09:08:05 INFO Get specification ... 
+01-11 09:08:05 INFO Upd env: [RETRAIN][LOCAL_SPECS]=/workspace/tasks/yolo_v4/specs/yolo_v4_retrain_kitti_seq_spec.txt
+01-11 09:08:05 INFO Upd env: [RETRAIN][SPECS]=/workspace/tasks/yolo_v4/specs/yolo_v4_retrain_kitti_seq_spec.txt
+01-11 09:08:05 INFO Loading Target Module ... 
+01-11 09:08:58 INFO Update combo box: n_layers
+01-11 09:08:58 INFO Upd env: "NLAYER" -> 10
+01-11 09:09:11 INFO Update combo box: model
+01-11 09:09:11 INFO Upd env: "TASK" -> detectnet_v2
+01-11 09:09:16 INFO Update combo box: task
+01-11 09:09:16 INFO Upd env: "NGC_TASK" -> classification

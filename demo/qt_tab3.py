@@ -424,10 +424,11 @@ class Tab3(Init):
         self.itao_env.update2('RETRAIN', 'OUTPUT_DIR', output_model_dir)
         self.itao_env.update2('RETRAIN', 'LOCAL_OUTPUT_DIR', self.itao_env.replace_docker_root(output_model_dir, mode='root'))
 
-        if 'classification' in self.itao_env.get_env('TASK'):
-            self.retrain_spec.mapping('arch', '"{}"'.format(backbone))            
-            self.retrain_spec.mapping('batch_size_per_gpu', int(batch_size))
+        self.retrain_spec.mapping('arch', '"{}"'.format(backbone))            
+        self.retrain_spec.mapping('batch_size_per_gpu', int(batch_size))
 
+        if 'classification' in self.itao_env.get_env('TASK'):
+            
             self.retrain_spec.mapping('n_layer', nlayer)
             self.retrain_spec.mapping('n_epochs', epoch)
             self.retrain_spec.mapping('input_image_size', '"{}"'.format(self.train_spec.find_key('input_image_size')))
@@ -447,10 +448,8 @@ class Tab3(Init):
 
             # epoch, arch, nlayers, batch_size_per_gpu
             self.retrain_spec.mapping('num_epochs', epoch)
-            self.retrain_spec.mapping('arch', '"{}"'.format(backbone))            
             self.retrain_spec.mapping('nlayers', nlayer)
-            self.retrain_spec.mapping('batch_size_per_gpu', int(batch_size))
-
+            
             # data augmentation's shape
             c, w, h = [ int(x) for x in self.itao_env.get_env('TRAIN','INPUT_SHAPE').split(',')]
             self.retrain_spec.mapping('output_width', w)
@@ -461,8 +460,18 @@ class Tab3(Init):
             self.retrain_spec.set_label_for_detection(key='target_class_mapping')
 
             # dataset
-            self.retrain_spec.mapping('image_directory_path', '"{}"'.format( self.train_spec.find_key('image_directory_path') ))
-            self.retrain_spec.mapping('label_directory_path', '"{}"'.format( self.train_spec.find_key('label_directory_path') ))
+            train_src = 'data_sources'
+            val_src = 'validation_data_sources'
+            img_dir = 'image_directory_path'
+            lbl_dir = 'label_directory_path'
+            self.retrain_spec.mapping_with_scope(train_src, img_dir, '"{}"'.format(self.train_spec.find_key_with_scope(train_src, img_dir)))
+            self.retrain_spec.mapping_with_scope(train_src, lbl_dir, '"{}"'.format(self.train_spec.find_key_with_scope(train_src, lbl_dir)))
+            
+            self.retrain_spec.mapping_with_scope(val_src, img_dir, '"{}"'.format(self.train_spec.find_key_with_scope(val_src, img_dir)))
+            self.retrain_spec.mapping_with_scope(val_src, lbl_dir, '"{}"'.format(self.train_spec.find_key_with_scope(val_src, img_dir)))
+        
+            # self.retrain_spec.mapping('image_directory_path', '"{}"'.format( self.train_spec.find_key('image_directory_path') ))
+            # self.retrain_spec.mapping('label_directory_path', '"{}"'.format( self.train_spec.find_key('label_directory_path') ))
                 
             # model path
             self.retrain_spec.mapping('pruned_model_path', '"{}"'.format(input_model))

@@ -125,6 +125,30 @@ class DefineSpec():
                     return trg
         return None
 
+    """ find value of `key` in spec """
+    def find_key_with_scope(self, scope_key , key, rm_space=True):
+
+        if self.spec_path == None: 
+            self.spec_path = self.get_spec_path()
+
+        scope_range = self.get_scope(self.spec_cnt, scope_key)
+        cur_start, cur_end = map(lambda x:int(x), scope_range[0].split(':'))
+
+        self.spec_cnt = self.spec_to_list()
+
+        for idx, cnt in enumerate(self.spec_cnt):
+            if ':' in cnt:
+                if key in cnt:
+                    org_key, org_val = self.spec_cnt[idx].split(":")
+                    if key == org_key.replace(" ", "") and (idx>=cur_start and idx<=cur_end):
+                        self.logger.debug('Find {}:{}'.format(key, org_val))
+                        val = org_val.rstrip("\n").replace('"','')
+                        if rm_space:
+                            val = val.replace(" ", "")
+                        return val
+
+        return None
+
     """ mapping val of key """
     def mapping(self, key, val=""):
         self.spec_cnt = self.spec_to_list()
@@ -147,14 +171,18 @@ class DefineSpec():
             self.logger.warning('Not found any key ({}) in spec ({}).'.format(key, self.mode))
 
     """ mapping val of key """
-    def mapping2(self, scope, key, val=""):
+    def mapping_with_scope(self, scope_key, key, val=""):
         self.spec_cnt = self.spec_to_list()
+
+        scope_range = self.get_scope(self.spec_cnt, scope_key)
+        cur_start, cur_end = map(lambda x:int(x), scope_range[0].split(':'))
+
         found_key = False
         for idx, cnt in enumerate(self.spec_cnt):
             if ':' in cnt:
                 if key in cnt:
                     org_key, org_val = self.spec_cnt[idx].split(":")
-                    if key == org_key.replace(" ", ""):
+                    if key == org_key.replace(" ", "") and (idx>=cur_start and idx<=cur_end):
                         self.logger.info('Upd spec: {} -> {}'.format(org_key, val))
                         self.spec_cnt[idx] = f"{org_key}: {val}\n"
                         found_key=True
@@ -237,7 +265,9 @@ class DefineSpec():
         self.spec_cnt = self.spec_to_list()
         
         # get labels and seting format (args)
-        labels = self.get_label_list(label_dir=os.path.join(self.env.get_env('LOCAL_DATASET'), 'labels'))
+        train_data_path = os.path.join(self.env.get_env('LOCAL_DATASET'), 'train')
+        labels = self.get_label_list(label_dir=os.path.join(train_data_path, 'labels'))
+
         args = []
         [ args.append({'key':f'"{lbl}"', 'value':f'"{lbl}"'}) for lbl in labels ]
             
@@ -283,7 +313,7 @@ class DefineSpec():
         # remove unused scope
         if len(scopes)>len(args):  
             pop_nums, cur_scope = 0, 0
-            for scope in scopes[len(args):]:
+            for scope in scopes[len(args):-1]:
                 start, end = map(lambda x:int(x), scope.split(':'))
                 for i in range(start, end+1):
                     self.spec_cnt.pop(i-pop_nums)

@@ -55,6 +55,9 @@ class TrainCMD(QThread):
             "-k", f"{ new_args['key'] }",
             "--gpus", f"{ new_args['num_gpus'] }"
         ]
+        # check is in docker
+        if args['is_docker'] and args['is_docker']==True:
+            self.cmd.pop(0)
 
         # add gpu index if need 
         if 'gpu_index' in args.keys():

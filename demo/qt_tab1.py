@@ -373,8 +373,15 @@ class Tab1(Init):
             info = 'Page 1 is finished, mapping varible into spec'
             self.insert_text(info)
             self.logger.info(info)
-
             self.mapping_spec()
+            
+            self.mount_env()
+            self.insert_text("Show config", config=self.itao_env.get_env('TRAIN'))
+            self.swith_page_button(previous=0, next=1)
+            
+            if 'detection' in self.itao_env.get_env('NGC_TASK'):
+                self.train_spec.set_label_for_detection(key='target_class_mapping')
+            
 
     """ 對應 Spec 的動作事件 """   
     def mapping_spec(self):
@@ -402,12 +409,20 @@ class Tab1(Init):
 
         # 更新dataset
         trg_folder_path = self.itao_env.get_env('DATASET')
-        if 'classification' in self.itao_env.get_env('NGC_TASK'):        
+        task = self.itao_env.get_env('TASK')
+        if task=='classification':       
             self.train_spec.mapping('train_dataset_path', '"{}"'.format(os.path.join(trg_folder_path, 'train')))
             self.train_spec.mapping('val_dataset_path', '"{}"'.format(os.path.join(trg_folder_path, 'val')))
             self.train_spec.mapping('eval_dataset_path', '"{}"'.format(os.path.join(trg_folder_path, 'test')))
 
-        elif 'detection' in self.itao_env.get_env('NGC_TASK'):
-            self.train_spec.mapping('image_directory_path', '"{}"'.format(os.path.join(trg_folder_path, 'images')))
-            self.train_spec.mapping('label_directory_path', '"{}"'.format(os.path.join(trg_folder_path, 'labels')))
+        elif task=='yolo_v4':
+            train_folder = os.path.join(trg_folder_path, 'train')
+            test_folder = os.path.join(trg_folder_path, 'test')
+            val_folder = os.path.join(trg_folder_path, 'val')
+
+            self.train_spec.mapping_with_scope('data_sources', 'image_directory_path', '"{}"'.format(os.path.join(train_folder, 'images')))
+            self.train_spec.mapping_with_scope('data_sources', 'label_directory_path', '"{}"'.format(os.path.join(train_folder, 'labels')))
+            
+            self.train_spec.mapping_with_scope('validation_data_sources', 'image_directory_path', '"{}"'.format(os.path.join(val_folder, 'images')))
+            self.train_spec.mapping_with_scope('validation_data_sources', 'label_directory_path', '"{}"'.format(os.path.join(val_folder, 'labels')))
         

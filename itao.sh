@@ -103,24 +103,23 @@ function run_container(){
         echo -e "Failed \n"
 
         echo -e "Runing a new one ... \n"
-        clear
+        # clear
 
-        docker run --gpus all --name ${CNT} --rm -it \
-        --device ${CAM}:${CAM} \
+        docker run --gpus all --name ${CNT} -it \
+        --device=${CAM}:${CAM} \
         -w ${WORK} \
         -v `pwd`:${WORK} \
         -v `realpath ~/.docker/config.json`:/root/.docker/config.json \
         -v /var/run/docker.sock:/var/run/docker.sock \
-        -v /tmp/.X11-unix:/tmp/.X11-unix:rw -e DISPLAY=unix$DISPLAY \
+        -v /tmp/.X11-unix:/tmp/.X11-unix:rw \
+        -e DISPLAY=unix$DISPLAY \
         ${IMG}
-
-
     fi
 }
 # ---------------------------------------------------------
 printd "Initialize ..." BG
 sudo apt-get install figlet boxes lolcat -qqy
-clear
+
 
 while getopts ":h:i" option; do
    case $option in
@@ -144,7 +143,7 @@ CNT="itao"
 # ---------------------------------------------------------
 if [[ -z ${MODE} ]] || [[ ${MODE} == "help" ]];then
     help
-    exit 1
+
 elif [[ ${MODE} = "build" ]];then
     # build
     
@@ -164,4 +163,6 @@ elif [[ ${MODE} = "run" ]];then
     run_container ${CNT} ${IMG} ${CAM}
 
     exit 
+else
+    help
 fi
