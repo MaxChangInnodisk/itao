@@ -369,6 +369,7 @@ class Init(QtWidgets.QMainWindow):
         new_trained_model_list =[ model for model in trained_model_list if self.train_spec.find_key('arch') in model ]
 
         min_idx, max_idx = 0, len(new_trained_model_list)
+
         for cur_idx, model in enumerate(new_trained_model_list):
             cur_epoch = os.path.splitext(model)[0].split('_')[-1]
             if cur_epoch.isdigit(): 

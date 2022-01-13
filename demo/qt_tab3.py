@@ -361,20 +361,24 @@ class Tab3(Init):
         self.ui.t4_combo_export_model.setCurrentIndex(0)
         
         # 取得最後一個或是選擇的模型
-        local_target_model = local_model_list[0]  # last model
-        for model in local_model_list:
-            cur_epoch = os.path.splitext(model)[0].split('_')[-1]
-            if cur_epoch.isdigit(): 
-                cur_epoch = int(cur_epoch)
-                if cur_epoch == int(self.itao_env.get_env('TRAIN', 'EPOCH')):
-                    local_target_model = model
-        
-        target_model = self.itao_env.replace_docker_root(local_target_model)
-        self.itao_env.update2('RETRAIN', 'OUTPUT_MODEL', target_model)
+        if len(local_model_list) == 0:
+            self.logger.error('Can not found trained model.')
+            return
+        else:
+            local_target_model = local_model_list[0]  # last model
+            for model in local_model_list:
+                cur_epoch = os.path.splitext(model)[0].split('_')[-1]
+                if cur_epoch.isdigit(): 
+                    cur_epoch = int(cur_epoch)
+                    if cur_epoch == int(self.itao_env.get_env('TRAIN', 'EPOCH')):
+                        local_target_model = model
+            
+            target_model = self.itao_env.replace_docker_root(local_target_model)
+            self.itao_env.update2('RETRAIN', 'OUTPUT_MODEL', target_model)
 
-        # 因為 train 之後馬上接 eval 所以我這邊直接給 spec 最後一個模型
-        if 'classification' in self.itao_env.get_env('TASK'):
-            self.retrain_spec.mapping('model_path', f'"{target_model}"')
+            # 因為 train 之後馬上接 eval 所以我這邊直接給 spec 最後一個模型
+            if 'classification' in self.itao_env.get_env('TASK'):
+                self.retrain_spec.mapping('model_path', f'"{target_model}"')
 
     """ 當 retrain 完成 """
     def retrain_finish(self):
@@ -468,7 +472,7 @@ class Tab3(Init):
             self.retrain_spec.mapping_with_scope(train_src, lbl_dir, '"{}"'.format(self.train_spec.find_key_with_scope(train_src, lbl_dir)))
             
             self.retrain_spec.mapping_with_scope(val_src, img_dir, '"{}"'.format(self.train_spec.find_key_with_scope(val_src, img_dir)))
-            self.retrain_spec.mapping_with_scope(val_src, lbl_dir, '"{}"'.format(self.train_spec.find_key_with_scope(val_src, img_dir)))
+            self.retrain_spec.mapping_with_scope(val_src, lbl_dir, '"{}"'.format(self.train_spec.find_key_with_scope(val_src, lbl_dir)))
         
             # self.retrain_spec.mapping('image_directory_path', '"{}"'.format( self.train_spec.find_key('image_directory_path') ))
             # self.retrain_spec.mapping('label_directory_path', '"{}"'.format( self.train_spec.find_key('label_directory_path') ))
