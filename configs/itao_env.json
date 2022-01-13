@@ -8,20 +8,44 @@
   "USER_EXPERIMENT_DIR": "/workspace/tasks/yolo_v4",
   "DATA_DOWNLOAD_DIR": "/workspace/tasks/yolo_v4",
   "CLI": "ngccli_cat_linux.zip",
-  "NGC_TASK": "classification",
-  "TASK": "detectnet_v2",
-  "BACKBONE": "resnet",
+  "NGC_TASK": "object_detection",
+  "TASK": "yolo_v4",
+  "BACKBONE": "darknet",
   "TRAIN": {
     "LOCAL_OUTPUT_DIR": "/workspace/tasks/yolo_v4/output",
     "OUTPUT_DIR": "/workspace/tasks/yolo_v4/output",
     "LOCAL_SPECS": "/workspace/tasks/yolo_v4/specs/yolo_v4_train_kitti_seq_spec.txt",
-    "SPECS": "/workspace/tasks/yolo_v4/specs/yolo_v4_train_kitti_seq_spec.txt"
+    "SPECS": "/workspace/tasks/yolo_v4/specs/yolo_v4_train_kitti_seq_spec.txt",
+    "LOCAL_PRETRAINED_MODEL": "/workspace/tasks/yolo_v4/pretrained_darknet53/pretrained_object_detection_vdarknet53/darknet_53.hdf5",
+    "PRETRAINED_MODEL": "/workspace/tasks/yolo_v4/pretrained_darknet53/pretrained_object_detection_vdarknet53/darknet_53.hdf5",
+    "EPOCH": "100",
+    "INPUT_SHAPE": "3,608,608",
+    "LR": "0.006",
+    "BATCH_SIZE": "1",
+    "CUSTOM": "",
+    "OUTPUT_MODEL": "/workspace/tasks/yolo_v4/output/weights/yolov4_darknet53_epoch_100.tlt"
   },
   "LOCAL_SPECS_DIR": "/workspace/tasks/yolo_v4/specs",
   "SPECS_DIR": "/workspace/tasks/yolo_v4/specs",
   "RETRAIN": {
     "LOCAL_SPECS": "/workspace/tasks/yolo_v4/specs/yolo_v4_retrain_kitti_seq_spec.txt",
-    "SPECS": "/workspace/tasks/yolo_v4/specs/yolo_v4_retrain_kitti_seq_spec.txt"
+    "SPECS": "/workspace/tasks/yolo_v4/specs/yolo_v4_retrain_kitti_seq_spec.txt",
+    "INPUT_MODEL": "/workspace/tasks/yolo_v4/output/darknet53_pruned/darknet53_pruned.tlt",
+    "EPOCH": "100",
+    "BATCH_SIZE": "2",
+    "LR": "0.006",
+    "OUTPUT_DIR": "/workspace/tasks/yolo_v4/output_retrain",
+    "LOCAL_OUTPUT_DIR": "/workspace/tasks/yolo_v4/output_retrain"
   },
-  "NLAYER": "10"
+  "NLAYER": "53",
+  "LOCAL_DATASET": "/workspace/tasks/data/usb_shell",
+  "DATASET": "/workspace/tasks/data/usb_shell",
+  "PRUNE": {
+    "OUTPUT_MODEL": "/workspace/tasks/yolo_v4/output/darknet53_pruned/darknet53_pruned.tlt",
+    "LOCAL_OUTPUT_MODEL": "/workspace/tasks/yolo_v4/output/darknet53_pruned/darknet53_pruned.tlt",
+    "INPUT_MODEL": "/workspace/tasks/yolo_v4/output/weights/yolov4_darknet53_epoch_100.tlt",
+    "THRES": 0.3,
+    "EQ": "intersection",
+    "EPOCH": "100"
+  }
 }

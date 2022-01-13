@@ -1,12 +1,12 @@
 random_seed: 42
 yolov4_config {
-  big_anchor_shape: "[(74.79,94.32), (91.37,78.99), (82.53,87.68)]"
-  mid_anchor_shape: "[(60.79,99.47), (68.89,98.26), (96.34,70.74)]"
-  small_anchor_shape: "[(56.00,93.21), (94.13,63.37), (65.21,91.92)]"
+  big_anchor_shape: "[(195.20,263.00), (245.00,216.80), (222.20,242.00)]"
+  mid_anchor_shape: "[(167.00,271.00), (179.00,256.40), (262.00,194.00)]"
+  small_anchor_shape: "[(142.00,255.00), (161.50,252.50), (255.50,173.80)]"
   box_matching_iou: 0.25
   matching_neutral_box_iou: 0.5
-  arch: "resnet"
-  nlayers: 10
+  arch: "darknet"
+  nlayers: 53
   arch_conv_blocks: 2
   loss_loc_weight: 0.8
   loss_neg_obj_weights: 100.0
@@ -20,8 +20,8 @@ yolov4_config {
   force_relu: false
 }
 training_config {
-  batch_size_per_gpu: 16
-  num_epochs: 5
+  batch_size_per_gpu: 1
+  num_epochs: 100
   enable_qat: false
   checkpoint_interval: 5
   learning_rate {
@@ -43,7 +43,7 @@ training_config {
       amsgrad: false
     }
   }
-  pretrain_model_path: "/workspace/tasks/yolo_v4/pretrained_resnet10/pretrained_object_detection_vresnet10/resnet_10.hdf5"
+  pretrain_model_path: "/workspace/tasks/yolo_v4/pretrained_darknet53/pretrained_object_detection_vdarknet53/darknet_53.hdf5"
 }
 eval_config {
   average_precision_mode: SAMPLE
@@ -62,8 +62,8 @@ augmentation_config {
   vertical_flip:0
   horizontal_flip: 0.5
   jitter: 0.3
-  output_width: 224
-  output_height: 224
+  output_width: 608
+  output_height: 608
   output_channel: 3
   randomize_input_shape_period: 0
   mosaic_prob: 0.5
@@ -71,8 +71,8 @@ augmentation_config {
 }
 dataset_config {
   data_sources: {
-      label_directory_path: "/workspace/tasks/data/usb_shell/train/labels"
       image_directory_path: "/workspace/tasks/data/usb_shell/train/images"
+      label_directory_path: "/workspace/tasks/data/usb_shell/train/labels"
   }
   include_difficult_in_training: true
   target_class_mapping {
@@ -84,7 +84,7 @@ dataset_config {
       value: "OK"
   }
   validation_data_sources: {
-      label_directory_path: "/workspace/tasks/data/usb_shell/val/labels"
       image_directory_path: "/workspace/tasks/data/usb_shell/val/images"
+      label_directory_path: "/workspace/tasks/data/usb_shell/val/labels"
   }
 }

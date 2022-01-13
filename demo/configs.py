@@ -1,26 +1,26 @@
 OPT = {
     "Image Classification":{
         "ResNet":{"ResNet"}, 
-        "VGG":{"VGG"}, 
-        "GoogleNet":{"GoogleNet"}, 
-        "AlexNet":{"AlexNet"},
+        # "VGG":{"VGG"}, 
+        # "GoogleNet":{"GoogleNet"}, 
+        # "AlexNet":{"AlexNet"},
         "MobileNet":{"MobileNet"}
     },
     "Object Detection":{
-        "DetectNet_v2":{"ResNet", "VGG", "GoogleNet", "AlexNet"}, 
-        "SSD":{"ResNet", "VGG", "GoogleNet", "AlexNet"}, 
-        "YOLO_v3":{"ResNet", "VGG", "EfficientNet", "MobileNet", "DarkNet", "CSPDarkNet"}, 
+        # "DetectNet_v2":{"ResNet", "VGG", "GoogleNet", "AlexNet"}, 
+        # "SSD":{"ResNet", "VGG", "GoogleNet", "AlexNet"}, 
+        # "YOLO_v3":{"ResNet", "VGG", "EfficientNet", "MobileNet", "DarkNet", "CSPDarkNet"}, 
         "YOLO_v4":{"ResNet", "VGG", "EfficientNet", "MobileNet", "DarkNet", "CSPDarkNet"}, 
     },
-    "Semantic Segmentation":{
-        "ResNet":{"ResNet"}, 
-        "VGG":{"VGG"}, 
-        "GoogleNet":{"GoogleNet"}, 
-        "AlexNet":{"AlexNet"}
-    },
-    "Other":{
-        None
-    }
+    # "Semantic Segmentation":{
+    #     "ResNet":{"ResNet"}, 
+    #     "VGG":{"VGG"}, 
+    #     "GoogleNet":{"GoogleNet"}, 
+    #     "AlexNet":{"AlexNet"}
+    # },
+    # "Other":{
+    #     None
+    # }
 }
 
 ARCH_LAYER= {
