@@ -35,7 +35,8 @@
     "BATCH_SIZE": "2",
     "LR": "0.006",
     "OUTPUT_DIR": "/workspace/tasks/yolo_v4/output_retrain",
-    "LOCAL_OUTPUT_DIR": "/workspace/tasks/yolo_v4/output_retrain"
+    "LOCAL_OUTPUT_DIR": "/workspace/tasks/yolo_v4/output_retrain",
+    "OUTPUT_MODEL": "/workspace/tasks/yolo_v4/output_retrain/weights/yolov4_darknet53_epoch_100.tlt"
   },
   "NLAYER": "53",
   "LOCAL_DATASET": "/workspace/tasks/data/usb_shell",
