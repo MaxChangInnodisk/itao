@@ -5,8 +5,8 @@ yolov4_config {
   small_anchor_shape: "[(142.00,255.00), (161.50,252.50), (255.50,173.80)]"
   box_matching_iou: 0.25
   matching_neutral_box_iou: 0.5
-  arch: "darknet"
-  nlayers: 53
+  arch: "resnet"
+  nlayers: 10
   arch_conv_blocks: 2
   loss_loc_weight: 0.8
   loss_neg_obj_weights: 100.0
