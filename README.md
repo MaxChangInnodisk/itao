@@ -13,10 +13,11 @@ auto build the docker image
 ./itao.sh build
 ```
 
-## Run
+## Activate Environment and Run iTAO.
 activate the container with iTAO.
 ```bash
 ./itao.sh run
+python3 demo --docker
 ```
 
 ## Debug Mode

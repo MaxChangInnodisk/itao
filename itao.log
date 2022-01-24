@@ -1,77 +1,11 @@
-01-13 09:04:40 INFO Create Logger: dev
-01-13 09:04:40 INFO Initial iTAO ... 
-01-13 09:04:40 INFO Setting Basic Variable ... 
-01-13 09:04:40 INFO Setting up running mode ...
-01-13 09:04:40 WARN Running in docker ...
-01-13 09:04:40 INFO Created Environment File
-01-13 09:04:40 INFO Page Change: Tab 1 
-01-13 09:04:40 INFO First time loading tab 1 ... 
-01-13 09:04:40 INFO Checking environment (iTAO) ... Actived
-01-13 09:04:40 INFO Installed NGC CLI
-01-13 09:04:41 INFO Press OK with the warning message.
-01-13 09:04:45 INFO Update combo box: task
-01-13 09:04:45 INFO Upd env: "NGC_TASK" -> object_detection
-01-13 09:06:24 INFO Update combo box: model
-01-13 09:06:24 INFO Upd env: "TASK" -> yolo_v4
-01-13 09:06:33 INFO Update combo box: backbone
-01-13 09:06:33 INFO Upd env: "BACKBONE" -> resnet
-01-13 09:06:33 INFO Upd env: "LOCAL_PROJECT_DIR" -> /workspace/tasks
-01-13 09:06:33 INFO Upd env: "LOCAL_EXPERIMENT_DIR" -> /workspace/tasks/yolo_v4
-01-13 09:06:33 INFO Upd env: "USER_EXPERIMENT_DIR" -> /workspace/tasks/yolo_v4
-01-13 09:06:33 INFO Upd env: "LOCAL_DATA_DIR" -> /workspace/data
-01-13 09:06:33 INFO Upd env: "DATA_DOWNLOAD_DIR" -> /workspace/tasks/yolo_v4
-01-13 09:06:33 INFO Upd env: [TRAIN][LOCAL_OUTPUT_DIR]=/workspace/tasks/yolo_v4/output
-01-13 09:06:33 INFO Upd env: [TRAIN][OUTPUT_DIR]=/workspace/tasks/yolo_v4/output
-01-13 09:06:33 INFO Upd env: "LOCAL_SPECS_DIR" -> /workspace/tasks/yolo_v4/specs
-01-13 09:06:33 INFO Upd env: "SPECS_DIR" -> /workspace/tasks/yolo_v4/specs
-01-13 09:06:33 INFO Get specification ... 
-01-13 09:06:33 INFO Upd env: [TRAIN][LOCAL_SPECS]=/workspace/tasks/yolo_v4/specs/yolo_v4_train_kitti_seq_spec.txt
-01-13 09:06:33 INFO Upd env: [TRAIN][SPECS]=/workspace/tasks/yolo_v4/specs/yolo_v4_train_kitti_seq_spec.txt
-01-13 09:06:33 INFO Get specification ... 
-01-13 09:06:33 INFO Upd env: [RETRAIN][LOCAL_SPECS]=/workspace/tasks/yolo_v4/specs/yolo_v4_retrain_kitti_seq_spec.txt
-01-13 09:06:33 INFO Upd env: [RETRAIN][SPECS]=/workspace/tasks/yolo_v4/specs/yolo_v4_retrain_kitti_seq_spec.txt
-01-13 09:06:33 INFO Loading Target Module ... 
-01-13 09:06:34 INFO Update combo box: n_layers
-01-13 09:06:34 INFO Upd env: "NLAYER" -> 10
-01-13 09:06:35 INFO Start to download model ... 
-01-13 09:06:35 INFO Upd env: [TRAIN][LOCAL_PRETRAINED_MODEL]=/workspace/tasks/yolo_v4/pretrained_resnet10/pretrained_object_detection_vresnet10/resnet_10.hdf5
-01-13 09:06:35 INFO Upd env: [TRAIN][PRETRAINED_MODEL]=/workspace/tasks/yolo_v4/pretrained_resnet10/pretrained_object_detection_vresnet10/resnet_10.hdf5
-01-13 09:06:35 INFO Pre-trained Model is downloaded. (/workspace/tasks/yolo_v4/pretrained_resnet10/pretrained_object_detection_vresnet10/resnet_10.hdf5)
-01-13 09:06:37 INFO Upd env: "LOCAL_DATASET" -> /workspace/tasks/data/usb_shell
-01-13 09:06:37 INFO Upd env: "DATASET" -> /workspace/tasks/data/usb_shell
-01-13 09:06:37 INFO Selected Folder: /workspace/tasks/data/usb_shell
-01-13 09:06:37 INFO Select GPU:0 (NVIDIA GeForce RTX 2070 SUPER)
-01-13 09:06:37 INFO Page 1 is finished, mapping varible into spec
-01-13 09:06:37 INFO Upd spec:   arch -> "resnet"
-01-13 09:06:37 WARN Original key:   arch_conv_blocks, Mapping key: arch
-01-13 09:06:37 INFO Upd spec:   nlayers -> 10
-01-13 09:06:37 INFO Upd spec:       image_directory_path -> "/workspace/tasks/data/usb_shell/train/images"
-01-13 09:06:37 WARN Original key:       image_directory_path, Mapping key: image_directory_path
-01-13 09:06:37 INFO Upd spec:       label_directory_path -> "/workspace/tasks/data/usb_shell/train/labels"
-01-13 09:06:37 WARN Original key:       label_directory_path, Mapping key: label_directory_path
-01-13 09:06:37 WARN Original key:       image_directory_path, Mapping key: image_directory_path
-01-13 09:06:37 INFO Upd spec:       image_directory_path -> "/workspace/tasks/data/usb_shell/val/images"
-01-13 09:06:37 WARN Original key:       label_directory_path, Mapping key: label_directory_path
-01-13 09:06:37 INFO Upd spec:       label_directory_path -> "/workspace/tasks/data/usb_shell/val/labels"
-01-13 09:06:37 INFO Update environ of mount file ... 
-01-13 09:06:37 INFO Creating json file for mount path into docker ... 
-01-13 09:06:37 INFO Calculating number of labels ...
-01-13 09:06:37 INFO Find 2 classes (0.01s)
-01-13 09:06:37 DEBU --------------------
-01-13 09:06:37 DEBU [0] NG
-01-13 09:06:37 DEBU [1] OK
-01-13 09:06:37 DEBU [078]       key: "NG"      ->       key: "NG"
-    
-01-13 09:06:37 DEBU [079]       value: "NG"    ->       value: "NG"
-  
-01-13 09:06:37 DEBU [082]       key: "OK"      ->       key: "OK"
-    
-01-13 09:06:37 DEBU [083]       value: "OK"    ->       value: "OK"
-  
-01-13 09:06:37 DEBU Done
-01-13 09:07:01 INFO Select GPU:0 (NVIDIA GeForce RTX 2070 SUPER)
-01-13 09:34:39 INFO Page Change: Tab 2 
-01-13 09:34:39 INFO First time loading tab 2 ... 
-01-13 09:34:39 INFO T2 Actions [] is enabled
-01-13 09:34:39 INFO T2 Actions ['kmeans', 'train', 'eval'] is disabled
-01-13 09:34:45 INFO Page Change: Tab 1 
+01-24 01:39:02 INFO Create Logger: dev
+01-24 01:39:02 INFO Initial iTAO ... 
+01-24 01:39:02 INFO Setting Basic Variable ... 
+01-24 01:39:02 INFO Setting up running mode ...
+01-24 01:39:02 WARN Running in docker ...
+01-24 01:39:02 INFO Created Environment File
+01-24 01:39:02 INFO Page Change: Tab 1 
+01-24 01:39:02 INFO First time loading tab 1 ... 
+01-24 01:39:03 INFO Checking environment (iTAO) ... Actived
+01-24 01:39:03 INFO Installed NGC CLI
+01-24 01:39:05 INFO Press OK with the warning message.

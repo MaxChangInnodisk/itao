@@ -1,31 +1,11 @@
 {
-  "KEY": "nvidia_tlt",
-  "NUM_GPUS": "1",
-  "LOCAL_PROJECT_DIR": "/workspace/tasks",
-  "LOCAL_DATA_DIR": "/workspace/data",
-  "LOCAL_EXPERIMENT_DIR": "/workspace/tasks/yolo_v4",
-  "PROJECT_DIR": "/workspace/tasks",
-  "USER_EXPERIMENT_DIR": "/workspace/tasks/yolo_v4",
-  "DATA_DOWNLOAD_DIR": "/workspace/tasks/yolo_v4",
-  "CLI": "ngccli_cat_linux.zip",
-  "NGC_TASK": "object_detection",
-  "TASK": "yolo_v4",
-  "BACKBONE": "resnet",
-  "TRAIN": {
-    "LOCAL_OUTPUT_DIR": "/workspace/tasks/yolo_v4/output",
-    "OUTPUT_DIR": "/workspace/tasks/yolo_v4/output",
-    "LOCAL_SPECS": "/workspace/tasks/yolo_v4/specs/yolo_v4_train_kitti_seq_spec.txt",
-    "SPECS": "/workspace/tasks/yolo_v4/specs/yolo_v4_train_kitti_seq_spec.txt",
-    "LOCAL_PRETRAINED_MODEL": "/workspace/tasks/yolo_v4/pretrained_resnet10/pretrained_object_detection_vresnet10/resnet_10.hdf5",
-    "PRETRAINED_MODEL": "/workspace/tasks/yolo_v4/pretrained_resnet10/pretrained_object_detection_vresnet10/resnet_10.hdf5"
-  },
-  "LOCAL_SPECS_DIR": "/workspace/tasks/yolo_v4/specs",
-  "SPECS_DIR": "/workspace/tasks/yolo_v4/specs",
-  "RETRAIN": {
-    "LOCAL_SPECS": "/workspace/tasks/yolo_v4/specs/yolo_v4_retrain_kitti_seq_spec.txt",
-    "SPECS": "/workspace/tasks/yolo_v4/specs/yolo_v4_retrain_kitti_seq_spec.txt"
-  },
-  "NLAYER": "10",
-  "LOCAL_DATASET": "/workspace/tasks/data/usb_shell",
-  "DATASET": "/workspace/tasks/data/usb_shell"
+    "KEY": "nvidia_tlt",
+    "NUM_GPUS": "1",
+    "LOCAL_PROJECT_DIR": "/workspace/tasks",
+    "LOCAL_DATA_DIR": "/workspace/tasks/data",
+    "LOCAL_EXPERIMENT_DIR": "",
+    "PROJECT_DIR": "/workspace/tasks",
+    "USER_EXPERIMENT_DIR": "",
+    "DATA_DOWNLOAD_DIR": "",
+    "CLI": "ngccli_cat_linux.zip"
 }
