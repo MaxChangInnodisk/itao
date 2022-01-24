@@ -43,5 +43,3 @@ please check `README-DEV.md` ...
   - [x] classification:resnet
   - [x] objected detection ( YoloV4 ):resnet
   - [ ] instance segmentation ( UNet ? not sure )
-
-
