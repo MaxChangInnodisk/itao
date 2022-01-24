@@ -106,7 +106,6 @@ function run_container(){
         # clear
 
         docker run --gpus all --name ${CNT} -it \
-        --device=${CAM}:${CAM} \
         -w ${WORK} \
         -v `pwd`:${WORK} \
         -v `realpath ~/.docker/config.json`:/root/.docker/config.json \
