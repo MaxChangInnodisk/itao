@@ -35,10 +35,13 @@ case ${OPT} in
         printd "Update ... \c" Cy
         apt-get update -qq
         apt-get install -qy figlet boxes > /dev/null 2>&1
+        pip3 install --upgrade -q pip > /dev/null 2>&1
         echo "Done"
 
+        # Pyth
         printd "Install Dependencies of OpenCV ... \c" Cy
-        apt-get install -qy ffmpeg libsm6 libxext6 > /dev/null 2>&1
+        apt-get install -qy libxrender1 libsm6 libxext6 > /dev/null 2>&1
+        pip3 install -q opencv-python tqdm colorlog > /dev/null 2>&1
         echo "Done"
 
         # TLT Converter
@@ -50,15 +53,15 @@ case ${OPT} in
 
         # Python Packages
         printd "Install Some Python Packages ... \c" Cy
-        pip3 install --upgrade -q pip > /dev/null 2>&1
-        pip3 install -q opencv-python tqdm colorlog > /dev/null 2>&1
         echo -e "Done${REST}"
 
         printd "Install Dependencies of iTAO ... \c" Cy
-        apt-get -y update && apt-get install -y libxcb-xinerama0 qt5-default
+        apt-get install libxcb-xkb1 libxcb-icccm4 libxcb-image0 libxcb-render-util0 -y
+        apt-get install -y libxcb-xinerama0 qt5-default
         if [[ -z $(pip3 list --disable-pip-version-check | grep pyindex) ]];then pip3 install nvidia-pyindex -q --disable-pip-version-check;fi
         if [[ -z $(pip3 list --disable-pip-version-check | grep tao) ]];then pip3 install nvidia-tao==0.1.19 -q --disable-pip-version-check;fi        
-        pip3 --disable-pip-version-check install PyQt5 pyqtgraph wget GPUtil
+        apt-get install python3-pyqt5 -yq
+        pip3 --disable-pip-version-check install pyqtgraph wget GPUtil
         # 
         echo -e "Done${REST}"
         ;;

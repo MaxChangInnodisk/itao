@@ -7,6 +7,9 @@ COPY ["./docker/requirements.sh", "./assets/env_tools", "/"]
 
 # 由於 安裝套件有互動界面會導致報錯 所以先行關閉
 ENV DEBIAN_FRONTEND noninteractive
+RUN rm /etc/apt/sources.list.d/cuda.list
+RUN rm /etc/apt/sources.list.d/nvidia-ml.list
+
 RUN chmod +x /requirements.sh \
 && /requirements.sh tensorrt-dev \
 && rm /requirements.sh \
