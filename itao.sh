@@ -88,8 +88,8 @@ function run_container(){
     WORK="/workspace"
 
     echo -e "Searching Container (${CNT}) ... \c"
-    export DISPLAY=:0
-    `xhost +` > /dev/null 2>&1
+
+    xhost + > /dev/null 2>&1
 
     if [[ $( check_container ${CNT} ) -gt 0 ]]; then
         
