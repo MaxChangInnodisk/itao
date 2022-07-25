@@ -428,7 +428,12 @@ class Tab3(Init):
         self.itao_env.update2('RETRAIN', 'OUTPUT_DIR', output_model_dir)
         self.itao_env.update2('RETRAIN', 'LOCAL_OUTPUT_DIR', self.itao_env.replace_docker_root(output_model_dir, mode='root'))
 
-        self.retrain_spec.mapping('arch', '"{}"'.format(backbone))            
+        self.logger.warning("\n")
+        self.logger.warning(backbone)
+        self.logger.warning(nlayer)
+        self.logger.warning("\n")
+
+        self.retrain_spec.mapping('arch', '"{}_{}"'.format(backbone, nlayer))            
         self.retrain_spec.mapping('batch_size_per_gpu', int(batch_size))
 
         if 'classification' in self.itao_env.get_env('TASK'):
